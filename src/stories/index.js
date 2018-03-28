@@ -11,8 +11,10 @@ import LinkButton from '../components/LinkButton';
 import Input from '../components/Input';
 import ArticleEditor from '../components/ArticleEditor';
 
-import Icon from '../components/Icon/Icon';
+import Icon from '../components/Icon';
 import ICONS from '../constants/icons';
+
+import Avatar from '../components/Avatar';
 
 storiesOf('Welcome', module).add('to Storybook', () => (
   <Welcome showApp={linkTo('Button')} />
@@ -35,6 +37,17 @@ storiesOf('Input', module).add('default input', () => (
   <Input type="text" placeholder="Test" />
 ));
 
-storiesOf('ArticleEditor', module).add('default', () => <ArticleEditor />);
-
 storiesOf('Icons', module).add('people', () => <Icon name={ICONS.people} />);
+
+storiesOf('Avatars', module)
+  .add('Small - sm', () => (
+    <Avatar size="sm" src="https://picsum.photos/100" alt="John Doe" />
+  ))
+  .add('Medium - md', () => (
+    <Avatar size="md" src="https://picsum.photos/100" alt="John Doe" />
+  ))
+  .add('Large - lg', () => (
+    <Avatar size="lg" src="https://picsum.photos/100" alt="John Doe" />
+  ));
+
+storiesOf('ArticleEditor', module).add('default', () => <ArticleEditor />);

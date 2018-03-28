@@ -3,11 +3,6 @@
  * Variables and scales for styling
  */
 
-export const white = '#fff';
-export const black = '#111';
-export const blue = '#07c';
-export const primary = blue;
-
 export const grays = [
   '#f8f9f9',
   '#ebedee',
@@ -20,6 +15,12 @@ export const grays = [
   '#5f6e78',
   '#374047',
 ];
+
+export const white = '#fff';
+export const black = grays[9];
+
+export const blue = '#07c';
+export const primary = black;
 
 export const colors = {
   white,
