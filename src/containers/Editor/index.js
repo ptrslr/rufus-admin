@@ -5,9 +5,10 @@ import { EditorState } from 'draft-js';
 // import 'draft-js/dist/Draft.css';
 import styled from 'styled-components';
 
+import Toolbar from '../../components/RichEditor/Toolbar';
 import TitleEditor from '../../components/TitleEditor';
 import SubtitleEditor from '../../components/SubtitleEditor';
-import ContentEditor from '../../components/ContentEditor';
+import RichEditor from '../../components/RichEditor';
 
 import { colors } from '../../utils/theme';
 
@@ -42,6 +43,10 @@ class Editor extends React.Component<Props, State> {
   render() {
     return (
       <Wrapper>
+        <Toolbar
+          editorState={this.state.contentState}
+          onChange={this.onContentChange}
+        />
         <TitleEditor
           editorState={this.state.titleState}
           onChange={this.onTitleChange}
@@ -50,9 +55,9 @@ class Editor extends React.Component<Props, State> {
           editorState={this.state.leadState}
           onChange={this.onLeadChange}
         />
-        <ContentEditor
+        <RichEditor
           editorState={this.state.contentState}
-          onEditorStateChange={this.onContentChange}
+          onChange={this.onContentChange}
         />
       </Wrapper>
     );

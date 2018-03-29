@@ -40,10 +40,22 @@ const StyledButton = styled.button`
 `;
 
 const IconLeft = styled(Icon)`
-  ${props => (props.value ? `margin-right: ${space[1]};` : '')};
+  ${props =>
+    props.value
+      ? `
+    margin-right: ${space[0]};
+    margin-left: -0.1875em;
+  `
+      : ''};
 `;
 const IconRight = styled(Icon)`
-  ${props => (props.value ? `margin-left: ${space[1]};` : '')};
+  ${props =>
+    props.value
+      ? `
+    margin-right: -0.1875em;
+    margin-left: ${space[0]};
+  `
+      : ''};
 `;
 
 type Props = {

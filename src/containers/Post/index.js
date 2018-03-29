@@ -48,11 +48,7 @@ const Post = (props: Props) => {
 
         <Actions>
           <Action>
-            <Button
-              theme="secondary"
-              value="Back"
-              iconLeft={ICONS.chevronLeft}
-            />
+            <Button theme="secondary" value="Back" iconLeft={ICONS.arrowLeft} />
           </Action>
           <Action>
             <Button theme="primary" value="Save" iconLeft={ICONS.check} />
