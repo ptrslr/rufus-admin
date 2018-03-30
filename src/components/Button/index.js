@@ -37,6 +37,10 @@ const StyledButton = styled.button`
     outline: none;
     box-shadow: 0 0 0 2px ${props => rgba(props.backgroundColor, 0.5)};
   }
+
+  &:active {
+    background: ${props => darken(0.15, props.backgroundColor)};
+  }
 `;
 
 const IconLeft = styled(Icon)`

@@ -25,7 +25,7 @@ const Image = styled.img`
 `;
 
 const Avatar = (props: Props) => {
-  const { size, src, alt, ...other } = props;
+  const { size, src, alt } = props;
 
   return <Image size={size} src={src} alt={alt} />;
 };

@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import AvatarBox from '../AvatarBox';
-import { colors, space, grays } from '../../utils/theme';
+import { space, grays } from '../../utils/theme';
 
 const Wrapper = styled.div`
   flex: 0 0 auto;

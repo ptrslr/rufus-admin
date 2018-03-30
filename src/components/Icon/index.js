@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import styled, { withComponent } from 'styled-components';
+import styled from 'styled-components';
 // import IconSvg from './icons/People.js';
 
 type Props = {

@@ -10,15 +10,15 @@ type Props = {
 };
 
 const BLOCK_TYPES = [
-  // { label: 'H1', style: 'header-two' },
-  // { label: 'H2', style: 'header-three' },
-  // { label: 'H3', style: 'header-four' },
+  { label: 'H1', style: 'header-two' },
+  { label: 'H2', style: 'header-three' },
+  { label: 'H3', style: 'header-four' },
   { label: 'Blockquote', style: 'blockquote' },
   { label: 'Ul', style: 'unordered-list-item' },
   { label: 'Ol', style: 'ordered-list-item' },
 ];
 
-const BlockStyleControls = (props: Props) => {
+const BlockTypeControls = (props: Props) => {
   const { editorState, onClick } = props;
 
   const selection = editorState.getSelection();
@@ -32,6 +32,7 @@ const BlockStyleControls = (props: Props) => {
       {BLOCK_TYPES.map(item => (
         <Button
           key={item.label}
+          active={item.style === blockType}
           label={item.label}
           icon={item.label}
           onClick={onClick}
@@ -42,4 +43,4 @@ const BlockStyleControls = (props: Props) => {
   );
 };
 
-export default BlockStyleControls;
+export default BlockTypeControls;
