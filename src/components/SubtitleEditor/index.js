@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import * as Immutable from 'immutable';
 
 import { Editor, EditorState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
@@ -14,6 +13,8 @@ type Props = {
 };
 
 const EditorWrapper = styled.div`
+  margin-bottom: 1.5rem;
+
   .public-DraftEditorPlaceholder-root,
   .DraftEditor-editorContainer {
     font-size: 1.3125rem;

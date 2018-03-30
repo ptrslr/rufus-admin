@@ -6,7 +6,7 @@ import Post from './screens/Post';
 
 import { BrowserRouter, Route } from 'react-router-dom';
 import styled from 'styled-components';
-import { space, colors } from './utils/theme';
+import { colors } from './utils/theme';
 
 const Layout = styled.div`
   display: flex;

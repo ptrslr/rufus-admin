@@ -5,12 +5,12 @@ import { EditorState } from 'draft-js';
 // import 'draft-js/dist/Draft.css';
 import styled from 'styled-components';
 
-import Toolbar from '../../components/RichEditor/Toolbar';
+import Toolbar from '../../components/Toolbar';
 import TitleEditor from '../../components/TitleEditor';
 import SubtitleEditor from '../../components/SubtitleEditor';
 import RichEditor from '../../components/RichEditor';
 
-import { colors } from '../../utils/theme';
+// import { colors } from '../../utils/theme';
 
 type Props = {};
 
@@ -21,7 +21,20 @@ type State = {
 };
 
 const Wrapper = styled.div`
-  max-width: 33rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+const Inner = styled.div`
+  flex: 1 1 auto;
+  overflow-y: auto;
+  width: 100%;
+  padding: 3rem 0;
+  margin: 0 auto;
+`;
+const Measure = styled.div`
+  max-width: 35rem;
   margin: 0 auto;
 `;
 
@@ -47,18 +60,24 @@ class Editor extends React.Component<Props, State> {
           editorState={this.state.contentState}
           onChange={this.onContentChange}
         />
-        <TitleEditor
-          editorState={this.state.titleState}
-          onChange={this.onTitleChange}
-        />
-        <SubtitleEditor
-          editorState={this.state.leadState}
-          onChange={this.onLeadChange}
-        />
-        <RichEditor
-          editorState={this.state.contentState}
-          onChange={this.onContentChange}
-        />
+
+        <Inner>
+          <Measure>
+            <TitleEditor
+              editorState={this.state.titleState}
+              onChange={this.onTitleChange}
+            />
+            <SubtitleEditor
+              editorState={this.state.leadState}
+              onChange={this.onLeadChange}
+            />
+            <RichEditor
+              editorState={this.state.contentState}
+              onChange={this.onContentChange}
+              stripPastedStyles={true}
+            />
+          </Measure>
+        </Inner>
       </Wrapper>
     );
   }

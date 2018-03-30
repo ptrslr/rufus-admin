@@ -4,7 +4,7 @@ import { EditorState, RichUtils } from 'draft-js';
 import styled from 'styled-components';
 
 import InlineStyleControls from './InlineStyleControls';
-import BlockStyleControls from './BlockStyleControls';
+import BlockTypeControls from './BlockTypeControls';
 import { colors } from '../../utils/theme';
 
 type Props = {
@@ -13,8 +13,22 @@ type Props = {
 };
 
 const StyledToolbar = styled.div`
+  width: 100%;
   background: white;
   border-bottom: 1px solid ${colors.grays[2]};
+`;
+const Inner = styled.div`
+  display: flex;
+  max-width: 35rem;
+  margin: 0 auto;
+`;
+
+const ControlsWrapper = styled.div`
+  margin-bottom: -1px;
+
+  & + & {
+    margin-left: -1px;
+  }
 `;
 
 const Toolbar = (props: Props) => {
@@ -30,11 +44,20 @@ const Toolbar = (props: Props) => {
 
   return (
     <StyledToolbar>
-      <InlineStyleControls
-        editorState={editorState}
-        onClick={toggleInlineStyle}
-      />
-      <BlockStyleControls editorState={editorState} onClick={toggleBlockType} />
+      <Inner>
+        <ControlsWrapper>
+          <InlineStyleControls
+            editorState={editorState}
+            onClick={toggleInlineStyle}
+          />
+        </ControlsWrapper>
+        <ControlsWrapper>
+          <BlockTypeControls
+            editorState={editorState}
+            onClick={toggleBlockType}
+          />
+        </ControlsWrapper>
+      </Inner>
     </StyledToolbar>
   );
 };

@@ -1,12 +1,11 @@
 // @flow
 import * as React from 'react';
-import { Editor, EditorState, RichUtils } from 'draft-js';
+import { Editor, EditorState, RichUtils, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 
 import styled from 'styled-components';
 
-import { colors } from '../../utils/theme';
-import ICONS from '../../constants/icons';
+// import { colors } from '../../utils/theme';
 
 type Props = {
   editorState: EditorState,
@@ -15,10 +14,25 @@ type Props = {
 
 const EditorWrapper = styled.div`
   line-height: 1.5;
+
+  &.is-hiddenPlaceholder .public-DraftEditorPlaceholder-root {
+    display: none;
+  }
+
+  div {
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const RichEditor = (props: Props) => {
   const { editorState, onChange } = props;
+  let editor = null;
+
+  // const focus = () => editor.focus();
+
+  const onBlur = e => {
+    console.log(e.target);
+  };
 
   const handleKeyCommand = command => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -31,26 +45,43 @@ const RichEditor = (props: Props) => {
     return 'not-handled';
   };
 
-  const toggleBlockType = blockType => {
-    onChange(RichUtils.toggleBlockType(editorState, blockType));
+  const mapKeyToEditorCommand = e => {
+    if (e.keyCode === 9 /* TAB */) {
+      const newEditorState = RichUtils.onTab(e, editorState, 4 /* maxDepth */);
+      if (newEditorState !== editorState) {
+        onChange(newEditorState);
+      }
+      return;
+    }
+    return getDefaultKeyBinding(e);
   };
 
-  const toggleInlineStyle = inlineStyle => {
-    onChange(RichUtils.toggleInlineStyle(editorState, inlineStyle));
-  };
+  let className = '';
 
-  // if (!editorState.hasText()) {
-  // if (editorState.getBlockMap().first().getType() !== 'unstyled') {
-  //   className += ' RichEditor-hidePlaceholder';
-  // }
+  const contentState = editorState.getCurrentContent();
+  className +=
+    !contentState.hasText() &&
+    contentState
+      .getBlockMap()
+      .first()
+      .getType() !== 'unstyled'
+      ? 'is-hiddenPlaceholder'
+      : '';
 
   return (
-    <EditorWrapper>
+    <EditorWrapper
+      className={className}
+      onClick={() => editor && editor.focus()}
+    >
       <Editor
         editorState={editorState}
         handleKeyCommand={handleKeyCommand}
         onChange={onChange}
+        keyBindingFn={mapKeyToEditorCommand}
+        ref={node => (editor = node)}
         placeholder="Start writing here..."
+        onBlur={onBlur}
+        onTab={mapKeyToEditorCommand}
       />
     </EditorWrapper>
   );

@@ -1,13 +1,12 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 import Account from '../../components//Account';
 import Menu from '../../components/MainMenu';
 import Footer from '../../components/Footer';
 
-import { colors, space, grays } from '../../utils/theme';
+import { colors } from '../../utils/theme';
 
 type Props = {};
 

@@ -6,7 +6,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState } from 'draft-js';
 import styled from 'styled-components';
 
-import { colors } from '../../utils/theme';
+// import { colors } from '../../utils/theme';
 import toolbarConf from './toolbarConf';
 
 type Props = {

@@ -6,7 +6,7 @@ import { Editor, EditorState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import styled from 'styled-components';
 
-import { colors } from '../../utils/theme';
+// import { colors } from '../../utils/theme';
 
 type Props = {
   editorState: EditorState,
@@ -20,6 +20,8 @@ const blockRenderMap = Immutable.Map({
 });
 
 const EditorWrapper = styled.div`
+  margin-bottom: 1.5rem;
+
   .public-DraftEditorPlaceholder-root,
   h1 {
     margin: 0;

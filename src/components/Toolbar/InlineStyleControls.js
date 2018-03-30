@@ -17,12 +17,14 @@ const INLINE_TYPES = [
 
 const InlineStyleControls = (props: Props) => {
   const { editorState, onClick } = props;
+  const currentStyle = editorState.getCurrentInlineStyle();
 
   return (
     <div>
       {INLINE_TYPES.map(item => (
         <Button
           key={item.label}
+          active={currentStyle.has(item.style)}
           label={item.label}
           icon={item.label}
           onClick={onClick}

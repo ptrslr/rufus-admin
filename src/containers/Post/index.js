@@ -37,7 +37,8 @@ const Action = styled.div`
 `;
 const Body = styled.div`
   flex: 1 1 auto;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Post = (props: Props) => {
