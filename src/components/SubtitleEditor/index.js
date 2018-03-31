@@ -10,6 +10,7 @@ import { colors } from '../../utils/theme';
 type Props = {
   editorState: EditorState,
   onChange: Function,
+  editorRef?: Editor,
 };
 
 const EditorWrapper = styled.div`
@@ -26,7 +27,17 @@ const EditorWrapper = styled.div`
 `;
 
 const SubtitleEditor = (props: Props) => {
-  const { editorState, onChange } = props;
+  const { editorState, onChange, editorRef } = props;
+  // let editor = null;
+
+  // const focus = () => {
+  //   editor && editor.focus();
+  // };
+
+  const handleReturn = e => {
+    props.handleReturn();
+    return 'handled';
+  };
 
   return (
     <EditorWrapper>
@@ -34,6 +45,8 @@ const SubtitleEditor = (props: Props) => {
         editorState={editorState}
         onChange={onChange}
         placeholder="Subtitle"
+        handleReturn={handleReturn}
+        ref={editorRef}
       />
     </EditorWrapper>
   );

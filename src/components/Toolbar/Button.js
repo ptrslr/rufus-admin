@@ -67,8 +67,9 @@ const Button = (props: Props) => {
   return (
     <StyledButton
       className={active ? 'is-active' : ''}
-      onClick={onButtonClick}
+      onMouseDown={onButtonClick}
       active={active}
+      type="button"
     >
       <StyledIcon name={icon} />
       <StyledLabel>{label}</StyledLabel>

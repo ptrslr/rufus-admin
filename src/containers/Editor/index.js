@@ -39,6 +39,9 @@ const Measure = styled.div`
 `;
 
 class Editor extends React.Component<Props, State> {
+  subtitleEditor: ?Editor;
+  richEditor: ?Editor;
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -46,12 +49,27 @@ class Editor extends React.Component<Props, State> {
       leadState: EditorState.createEmpty(),
       contentState: EditorState.createEmpty(),
     };
+
+    this.subtitleEditor = React.createRef();
+    this.richEditor = React.createRef();
   }
 
   onTitleChange = (titleState: EditorState) => this.setState({ titleState });
-  onLeadChange = (leadState: EditorState) => this.setState({ leadState });
+  onSubtitleChange = (leadState: EditorState) => this.setState({ leadState });
   onContentChange = (contentState: EditorState) =>
     this.setState({ contentState });
+
+  handleTitleReturn = () => {
+    this.subtitleEditor && this.subtitleEditor.focus();
+  };
+  handleSubtitleReturn = () => {
+    this.richEditor && this.richEditor.focus();
+  };
+
+  handleToolbarClick = () => {
+    console.log('yo');
+    this.richEditor && this.richEditor.focus();
+  };
 
   render() {
     return (
@@ -59,6 +77,7 @@ class Editor extends React.Component<Props, State> {
         <Toolbar
           editorState={this.state.contentState}
           onChange={this.onContentChange}
+          onClick={this.handleToolbarClick}
         />
 
         <Inner>
@@ -66,15 +85,18 @@ class Editor extends React.Component<Props, State> {
             <TitleEditor
               editorState={this.state.titleState}
               onChange={this.onTitleChange}
+              handleReturn={this.handleTitleReturn}
             />
             <SubtitleEditor
               editorState={this.state.leadState}
-              onChange={this.onLeadChange}
+              onChange={this.onSubtitleChange}
+              handleReturn={this.handleSubtitleReturn}
+              editorRef={node => (this.subtitleEditor = node)}
             />
             <RichEditor
               editorState={this.state.contentState}
               onChange={this.onContentChange}
-              stripPastedStyles={true}
+              editorRef={node => (this.richEditor = node)}
             />
           </Measure>
         </Inner>

@@ -11,6 +11,7 @@ import styled from 'styled-components';
 type Props = {
   editorState: EditorState,
   onChange: Function,
+  handleReturn: Function,
 };
 
 const blockRenderMap = Immutable.Map({
@@ -36,6 +37,12 @@ const EditorWrapper = styled.div`
 
 const TitleEditor = (props: Props) => {
   const { editorState, onChange } = props;
+  // let editor = null;
+
+  const handleReturn = e => {
+    props.handleReturn();
+    return 'handled';
+  };
 
   return (
     <EditorWrapper>
@@ -44,6 +51,8 @@ const TitleEditor = (props: Props) => {
         onChange={onChange}
         placeholder="Title"
         blockRenderMap={blockRenderMap}
+        handleReturn={handleReturn}
+        // ref={node => (editor = node)}
       />
     </EditorWrapper>
   );

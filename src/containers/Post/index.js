@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 const Header = styled.header`
   flex: 0 0 auto;
   display: flex;
-  height: 81px;
+  height: 4.5625rem;
   align-items: center;
   padding: 1rem 2rem;
   border-bottom: 1px solid ${colors.grays[2]};

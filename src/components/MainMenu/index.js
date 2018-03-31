@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
 import Icon from '../Icon';
-import ICONS from '../../constants/icons.js';
+import ICONS from '../../constants/icons';
 import { colors, space } from '../../utils/theme';
 
 const StyledMenu = styled.ul`
@@ -16,7 +16,7 @@ const Item = styled.li``;
 const ItemLink = styled(NavLink)`
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem 0.5rem 1.75rem;
+  padding: 0.5rem 1rem 0.5rem 1.5rem;
 
   font-size: 1.125rem;
   color: ${colors.black};

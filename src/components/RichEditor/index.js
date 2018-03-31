@@ -19,20 +19,13 @@ const EditorWrapper = styled.div`
     display: none;
   }
 
-  div {
+  div:not(:last-child) {
     margin-bottom: 1.5rem;
   }
 `;
 
 const RichEditor = (props: Props) => {
-  const { editorState, onChange } = props;
-  let editor = null;
-
-  // const focus = () => editor.focus();
-
-  const onBlur = e => {
-    console.log(e.target);
-  };
+  const { editorState, onChange, editorRef } = props;
 
   const handleKeyCommand = command => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -69,18 +62,14 @@ const RichEditor = (props: Props) => {
       : '';
 
   return (
-    <EditorWrapper
-      className={className}
-      onClick={() => editor && editor.focus()}
-    >
+    <EditorWrapper className={className}>
       <Editor
         editorState={editorState}
         handleKeyCommand={handleKeyCommand}
         onChange={onChange}
         keyBindingFn={mapKeyToEditorCommand}
-        ref={node => (editor = node)}
+        ref={editorRef}
         placeholder="Start writing here..."
-        onBlur={onBlur}
         onTab={mapKeyToEditorCommand}
       />
     </EditorWrapper>
