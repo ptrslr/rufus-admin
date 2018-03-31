@@ -10,8 +10,11 @@
     "normalize.css": "^8.0.0",
     "polished": "^1.9.2",
     "react": "^16.2.0",
+    "react-app-rewire-hot-loader": "^1.0.1",
+    "react-app-rewired": "^1.5.0",
     "react-dom": "^16.2.0",
     "react-draft-wysiwyg": "^1.12.11",
+    "react-hot-loader": "^4.0.0",
     "react-router-dom": "^4.2.2",
     "styled-components": "^3.2.1",
     "svgr": "^1.9.1"
@@ -25,13 +28,14 @@
     "react-scripts": "1.1.1"
   },
   "scripts": {
-    "start": "NODE_PATH=src react-scripts start",
-    "build": "NODE_PATH=src react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "start": "NODE_PATH=src react-app-rewired start",
+    "build": "NODE_PATH=src react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
     "flow": "flow",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
-    "icons": "svgr --no-semi --icon --replace-attr-value '#000=currentColor' -d src/components/Icon/Icons src/components/Icon/svg"
+    "icons":
+      "svgr --no-semi --icon --replace-attr-value '#000=currentColor' -d src/components/Icon/Icons src/components/Icon/svg"
   }
 }
