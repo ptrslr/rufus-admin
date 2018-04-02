@@ -20,7 +20,7 @@ const Name = styled.strong`
   ${ellipsis()};
 
   display: block;
-  font-size: 1.125rem;
+  /*font-size: 1.125rem;*/
   line-height: 1.1;
 `;
 const Title = styled.div`
@@ -36,11 +36,11 @@ const Title = styled.div`
 
 type Props = {
   name: string,
-  image: string,
+  image?: string,
   title?: string,
 };
 const AvatarBox = (props: Props) => {
-  const { name, title, image } = props;
+  const { name, title = null, image = null } = props;
 
   return (
     <Wrapper>

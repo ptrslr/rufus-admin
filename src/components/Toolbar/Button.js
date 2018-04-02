@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import { hideVisually } from 'polished';
 
 import { colors } from '../../utils/theme';
-import ICONS from '../../constants/icons';
+import icons from '../../constants/icons';
 import Icon from '../Icon';
 
 type Props = {
   active: boolean,
   label: string,
-  icon: $Keys<typeof ICONS>,
+  icon: $Keys<typeof icons>,
   style: string,
   onClick: Function,
 };
@@ -33,8 +33,8 @@ const StyledButton = styled.button`
 
   transition: background-color 150ms, border-color 150ms;
 
-  & + & {
-    border-left: none;
+  &:not(:last-child) {
+    margin-right: -1px;
   }
 
   &:hover,

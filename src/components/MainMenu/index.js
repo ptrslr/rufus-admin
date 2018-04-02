@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
 import Icon from '../Icon';
-import ICONS from '../../constants/icons';
+import icons from '../../constants/icons';
 import { colors, space } from '../../utils/theme';
 
 const StyledMenu = styled.ul`
@@ -18,7 +18,7 @@ const ItemLink = styled(NavLink)`
   align-items: center;
   padding: 0.5rem 1rem 0.5rem 1.5rem;
 
-  font-size: 1.125rem;
+  /*font-size: 1.125rem;*/
   color: ${colors.black};
   text-decoration: none;
   transition: color 150ms, background-color 150ms;
@@ -47,25 +47,25 @@ const Menu = () => (
   <StyledMenu>
     <Item>
       <ItemLink to="/posts">
-        <ItemIcon name={ICONS.posts} />
+        <ItemIcon name={icons.POSTS} />
         Posts
       </ItemLink>
     </Item>
     <Item>
       <ItemLink to="/pages">
-        <ItemIcon name={ICONS.page} />
+        <ItemIcon name={icons.PAGE} />
         Pages
       </ItemLink>
     </Item>
     <Item>
       <ItemLink to="/team">
-        <ItemIcon name={ICONS.people} />
+        <ItemIcon name={icons.PEOPLE} />
         Team
       </ItemLink>
     </Item>
     <Item>
       <ItemLink to="/settings">
-        <ItemIcon name={ICONS.cog} />
+        <ItemIcon name={icons.COG} />
         Settings
       </ItemLink>
     </Item>

@@ -12,12 +12,13 @@ import RichEditor from '../../components/RichEditor';
 
 // import { colors } from '../../utils/theme';
 
-type Props = {};
-
-type State = {
+type Props = {
   titleState: EditorState,
-  leadState: EditorState,
+  subtitleState: EditorState,
   contentState: EditorState,
+  onTitleChange: Function,
+  onSubtitleChange: Function,
+  onContentChange: Function,
 };
 
 const Wrapper = styled.div`
@@ -34,75 +35,54 @@ const Inner = styled.div`
   margin: 0 auto;
 `;
 const Measure = styled.div`
-  max-width: 35rem;
+  max-width: 40rem;
   margin: 0 auto;
 `;
 
-class Editor extends React.Component<Props, State> {
-  subtitleEditor: ?Editor;
-  richEditor: ?Editor;
+const Editor = (props: Props) => {
+  let subtitleEditor = null;
+  let richEditor = null;
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      titleState: EditorState.createEmpty(),
-      leadState: EditorState.createEmpty(),
-      contentState: EditorState.createEmpty(),
-    };
-
-    this.subtitleEditor = React.createRef();
-    this.richEditor = React.createRef();
-  }
-
-  onTitleChange = (titleState: EditorState) => this.setState({ titleState });
-  onSubtitleChange = (leadState: EditorState) => this.setState({ leadState });
-  onContentChange = (contentState: EditorState) =>
-    this.setState({ contentState });
-
-  handleTitleReturn = () => {
-    this.subtitleEditor && this.subtitleEditor.focus();
+  const handleTitleReturn = () => {
+    subtitleEditor && subtitleEditor.focus();
   };
-  handleSubtitleReturn = () => {
-    this.richEditor && this.richEditor.focus();
+  const handleSubtitleReturn = () => {
+    focusRichEditor();
   };
 
-  handleToolbarClick = () => {
-    console.log('yo');
-    this.richEditor && this.richEditor.focus();
+  const focusRichEditor = () => {
+    richEditor && richEditor.focus();
   };
 
-  render() {
-    return (
-      <Wrapper>
-        <Toolbar
-          editorState={this.state.contentState}
-          onChange={this.onContentChange}
-          onClick={this.handleToolbarClick}
-        />
+  return (
+    <Wrapper>
+      <Toolbar
+        editorState={props.contentState}
+        onChange={props.onContentChange}
+      />
 
-        <Inner>
-          <Measure>
-            <TitleEditor
-              editorState={this.state.titleState}
-              onChange={this.onTitleChange}
-              handleReturn={this.handleTitleReturn}
-            />
-            <SubtitleEditor
-              editorState={this.state.leadState}
-              onChange={this.onSubtitleChange}
-              handleReturn={this.handleSubtitleReturn}
-              editorRef={node => (this.subtitleEditor = node)}
-            />
-            <RichEditor
-              editorState={this.state.contentState}
-              onChange={this.onContentChange}
-              editorRef={node => (this.richEditor = node)}
-            />
-          </Measure>
-        </Inner>
-      </Wrapper>
-    );
-  }
-}
+      <Inner>
+        <Measure>
+          <TitleEditor
+            editorState={props.titleState}
+            onChange={props.onTitleChange}
+            handleReturn={handleTitleReturn}
+          />
+          <SubtitleEditor
+            editorState={props.subtitleState}
+            onChange={props.onSubtitleChange}
+            handleReturn={handleSubtitleReturn}
+            editorRef={node => (subtitleEditor = node)}
+          />
+          <RichEditor
+            editorState={props.contentState}
+            onChange={props.onContentChange}
+            editorRef={node => (richEditor = node)}
+          />
+        </Measure>
+      </Inner>
+    </Wrapper>
+  );
+};
 
 export default Editor;

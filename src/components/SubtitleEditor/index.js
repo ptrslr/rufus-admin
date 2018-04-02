@@ -10,16 +10,17 @@ import { colors } from '../../utils/theme';
 type Props = {
   editorState: EditorState,
   onChange: Function,
-  editorRef?: Editor,
+  handleReturn: Function,
+  editorRef?: Function,
 };
 
 const EditorWrapper = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: 3rem;
 
   .public-DraftEditorPlaceholder-root,
   .DraftEditor-editorContainer {
-    font-size: 1.3125rem;
-    line-height: 1.5;
+    font-size: 1.5rem;
+    line-height: 1.2;
   }
   .DraftEditor-editorContainer {
     color: ${colors.grays[7]};

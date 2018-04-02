@@ -15,11 +15,7 @@ const Wrapper = styled.div`
 
 const Account = () => (
   <Wrapper>
-    <AvatarBox
-      name="Sarah Schmidt"
-      title="Editor"
-      image="https://picsum.photos/200"
-    />
+    <AvatarBox name="Sarah Schmidt" title="Editor" image="" />
   </Wrapper>
 );
 

@@ -26,7 +26,7 @@ const EditorWrapper = styled.div`
   .public-DraftEditorPlaceholder-root,
   h1 {
     margin: 0;
-    font-size: 2.25rem;
+    font-size: 2.5rem;
     line-height: 1.2;
     font-weight: 700;
   }

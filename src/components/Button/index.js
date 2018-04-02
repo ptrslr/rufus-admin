@@ -6,7 +6,7 @@ import { darken, rgba } from 'polished';
 
 import { colors, space } from '../../utils/theme';
 import { formControl } from '../../utils/styles';
-import { ICONS } from '../../constants/icons';
+import { icons } from '../../constants/icons';
 import Icon from '../Icon';
 
 const StyledButton = styled.button`
@@ -66,13 +66,21 @@ type Props = {
   type?: string,
   value?: string,
   theme?: 'primary' | 'secondary',
-  iconLeft?: $Keys<typeof ICONS>,
-  iconRight?: $Keys<typeof ICONS>,
+  iconLeft?: $Keys<typeof icons>,
+  iconRight?: $Keys<typeof icons>,
   onClick?: Function,
 };
 
 const Button = (props: Props) => {
-  const { value, theme, iconLeft, iconRight, onClick, ...other } = props;
+  const {
+    value,
+    theme,
+    iconLeft,
+    iconRight,
+    type = 'button',
+    onClick,
+    ...other
+  } = props;
 
   const Button = props.to ? StyledButton.withComponent(Link) : StyledButton;
 
@@ -84,6 +92,7 @@ const Button = (props: Props) => {
       backgroundColor={backgroundColor}
       theme={theme}
       onClick={onClick}
+      type={type}
       {...other}
     >
       {iconLeft ? <IconLeft value={value} name={iconLeft} opticalAlign /> : ''}

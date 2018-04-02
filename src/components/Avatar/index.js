@@ -3,9 +3,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { grays } from '../../utils/theme';
 
+import placeholder from './avatar.svg';
+
 type Props = {
   size: 'xs' | 'sm' | 'md' | 'lg',
-  src: string,
+  src?: string,
   alt: string,
 };
 
@@ -17,7 +19,7 @@ const sizes = {
 
 const Image = styled.img`
   display: block;
-  border: 1px solid ${grays[4]};
+  border: 1px solid ${grays[2]};
   border-radius: 100%;
 
   width: ${props => (props.size ? sizes[props.size] : sizes[3])};
@@ -27,7 +29,7 @@ const Image = styled.img`
 const Avatar = (props: Props) => {
   const { size, src, alt } = props;
 
-  return <Image size={size} src={src} alt={alt} />;
+  return <Image size={size} src={src ? src : placeholder} alt={alt} />;
 };
 
 export default Avatar;

@@ -10,17 +10,45 @@ import styled from 'styled-components';
 type Props = {
   editorState: EditorState,
   onChange: Function,
+  editorRef: Function,
 };
 
 const EditorWrapper = styled.div`
+  font-size: 1.125rem;
   line-height: 1.5;
+  /*font-family: 'Noto Serif';*/
 
   &.is-hiddenPlaceholder .public-DraftEditorPlaceholder-root {
     display: none;
   }
 
   div:not(:last-child) {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.5em;
+  }
+
+  h2,
+  .h2,
+  h3,
+  .h3,
+  h4,
+  .h4 {
+    /*font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;*/
+
+    line-height: 1.25;
+  }
+
+  h2,
+  .h2 {
+    font-size: 2rem;
+  }
+  h3,
+  .h3 {
+    font-size: 1.5rem;
+  }
+  h4,
+  .h4 {
+    font-size: 1.25rem;
   }
 `;
 
