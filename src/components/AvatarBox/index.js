@@ -21,7 +21,7 @@ const Name = styled.strong`
 
   display: block;
   /*font-size: 1.125rem;*/
-  line-height: 1.1;
+  line-height: 1;
 `;
 const Title = styled.div`
   ${ellipsis()};
@@ -30,6 +30,7 @@ const Title = styled.div`
 
   color: ${colors.grays[8]};
   font-size: 0.75rem;
+  line-height: 1;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 `;

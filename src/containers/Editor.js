@@ -5,10 +5,10 @@ import { EditorState } from 'draft-js';
 // import 'draft-js/dist/Draft.css';
 import styled from 'styled-components';
 
-import Toolbar from '../../components/Toolbar';
-import TitleEditor from '../../components/TitleEditor';
-import SubtitleEditor from '../../components/SubtitleEditor';
-import RichEditor from '../../components/RichEditor';
+import Toolbar from '../components/Toolbar';
+import TitleEditor from '../components/TitleEditor';
+import SubtitleEditor from '../components/SubtitleEditor';
+import RichEditor from '../components/RichEditor';
 
 // import { colors } from '../../utils/theme';
 

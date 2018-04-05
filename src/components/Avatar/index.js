@@ -12,6 +12,7 @@ type Props = {
 };
 
 const sizes = {
+  xs: '1.5rem',
   sm: '2rem',
   md: '2.5rem',
   lg: '4rem',

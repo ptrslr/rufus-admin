@@ -2,9 +2,11 @@
 import * as React from 'react';
 
 import Sidebar from './containers/Navigation';
-import Post from './screens/Post';
+import Posts from './screens/Posts';
+import EditPost from './screens/EditPost';
+import NewPost from './screens/NewPost';
 
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import { colors } from './utils/theme';
 
@@ -32,7 +34,13 @@ class App extends React.Component<Props> {
             <Sidebar />
           </LayoutSidebar>
           <LayoutMain>
-            <Route path="/" exact component={Post} />
+            <Switch>
+              <Route exact path="/" component={Posts} />
+              <Route exact path="/posts" component={Posts} />
+
+              <Route exact path="/posts/new-post" component={NewPost} />
+              <Route exact path="/posts/:id" component={EditPost} />
+            </Switch>
           </LayoutMain>
         </Layout>
       </BrowserRouter>

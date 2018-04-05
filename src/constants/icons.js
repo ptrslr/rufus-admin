@@ -12,6 +12,7 @@ const icons = {
   CHEVRON_LEFT: 'ChevronLeft',
   CHEVRON_RIGHT: 'ChevronRight',
   CHEVRON_UP: 'ChevronUp',
+  CLOCK: 'Clock',
   CLOSE: 'Close',
   COG: 'Cog',
   EDIT: 'Edit',
@@ -33,5 +34,7 @@ const icons = {
   STRIKETHROUGH: 'Strikethrough',
   UL: 'Ul',
   UNDERLINE: 'Underline',
+  VISIBILITY: 'Visibility',
+  VISIBILITY_OFF: 'VisibilityOff',
 };
 export default icons;
