@@ -5,6 +5,7 @@ import Sidebar from './containers/Navigation';
 import Posts from './screens/Posts';
 import EditPost from './screens/EditPost';
 import NewPost from './screens/NewPost';
+import NoMatch from './screens/NoMatch';
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
@@ -40,6 +41,8 @@ class App extends React.Component<Props> {
 
               <Route exact path="/posts/new-post" component={NewPost} />
               <Route exact path="/posts/:id" component={EditPost} />
+
+              <Route component={NoMatch} />
             </Switch>
           </LayoutMain>
         </Layout>
