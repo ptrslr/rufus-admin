@@ -22,7 +22,7 @@ const StyledButton = styled.button`
   padding-right: 1em;
   border: 1px solid
     ${props =>
-      props.theme === 'primary' ? rgba('#000', 0.05) : colors.grays[4]};
+      props.theme === 'primary' ? rgba('#000', 0.05) : colors.grays[5]};
 
   color: ${props => (props.theme === 'primary' ? '#fff' : colors.black)};
   background: ${props => getBackgroundColor(props.theme)};

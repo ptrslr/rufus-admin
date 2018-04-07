@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   padding: ${space[2]} ${space[2]};
-  border-bottom: 1px solid ${grays[2]};
+  border-bottom: 1px solid ${grays[1]};
 `;
 
 const Account = () => (

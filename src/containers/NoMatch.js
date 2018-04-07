@@ -19,16 +19,16 @@ const Wrapper = styled.div`
   padding: 2rem;
 `;
 const Title = styled.h1`
-  margin: 0 0 1rem;
+  margin: 0 0 2rem;
 
   color: ${colors.grays[2]};
   font-size: 8rem;
   font-weight: 900;
-  line-height: 1;
+  line-height: 0.8;
 `;
 const Subtitle = styled.div`
-  margin: 0 0 2rem;
-  font-size: 1.5rem;
+  margin: 0 0 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
 `;
 

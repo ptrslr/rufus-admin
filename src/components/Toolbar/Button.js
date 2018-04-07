@@ -18,9 +18,9 @@ type Props = {
 const StyledButton = styled.button`
   padding: 0.75rem;
   border: none;
-  border-left: 1px solid ${colors.grays[2]};
-  border-right: 1px solid ${colors.grays[2]};
-  border-bottom: 1px solid ${colors.grays[2]};
+  border-left: 1px solid ${colors.grays[1]};
+  border-right: 1px solid ${colors.grays[1]};
+  border-bottom: 1px solid ${colors.grays[1]};
 
   white-space: nowrap;
   user-select: none;
@@ -46,7 +46,7 @@ const StyledButton = styled.button`
   }
 
   &:active {
-    background-color: ${colors.grays[2]};
+    background-color: ${colors.grays[1]};
   }
 `;
 const StyledIcon = styled(Icon)`

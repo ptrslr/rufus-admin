@@ -8,7 +8,7 @@ import icons from '../../constants/icons';
 import { colors, space } from '../../utils/theme';
 
 const StyledMenu = styled.ul`
-  padding: ${space[2]} 0;
+  padding: 1.5rem 0;
   margin: 0;
   list-style: none;
 `;
@@ -27,7 +27,7 @@ const ItemLink = styled(NavLink)`
   &:hover,
   &:focus,
   &.active {
-    background-color: ${colors.grays[2]};
+    background-color: ${colors.grays[1]};
   }
 `;
 const ItemIcon = styled(Icon)`
@@ -46,7 +46,7 @@ const ItemIcon = styled(Icon)`
 const Menu = () => (
   <StyledMenu>
     <Item>
-      <ItemLink to="/posts">
+      <ItemLink to="/posts/all">
         <ItemIcon name={icons.POSTS} />
         Posts
       </ItemLink>

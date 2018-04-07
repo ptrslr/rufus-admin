@@ -15,7 +15,7 @@ type Props = {
 const StyledToolbar = styled.div`
   width: 100%;
   background: white;
-  border-bottom: 1px solid ${colors.grays[2]};
+  border-bottom: 1px solid ${colors.grays[1]};
 `;
 const Inner = styled.div`
   display: flex;

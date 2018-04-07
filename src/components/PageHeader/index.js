@@ -2,20 +2,24 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Heading1 } from '../components/Typography';
-import { colors } from '../utils/theme';
+import Menu from './Menu';
+import { Heading1 } from '../../components/Typography';
+import { colors } from '../../utils/theme';
 
 type Props = {
   title: string,
+  menu?: Array<Object>,
   actions?: Array<React.Node>,
 };
+const headerHeight = '4.5625rem';
+
 const Wrapper = styled.header`
   flex: 0 0 auto;
   display: flex;
-  height: 4.5625rem;
+  height: ${headerHeight};
   align-items: center;
-  padding: 1rem 1rem 1rem 2rem;
-  border-bottom: 1px solid ${colors.grays[2]};
+  padding: 0 1rem 0 2rem;
+  border-bottom: 1px solid ${colors.grays[1]};
 `;
 const Actions = styled.div`
   padding-left: 1rem;
@@ -30,11 +34,14 @@ const Action = styled.div`
 `;
 
 const PageHeader = (props: Props) => {
-  const { title, actions } = props;
+  const { title, menu, actions } = props;
 
   return (
     <Wrapper>
       <Heading1>{title}</Heading1>
+
+      {menu && <Menu items={menu} />}
+
       {actions && (
         <Actions>
           {actions.map((item, index) => <Action key={index}>{item}</Action>)}

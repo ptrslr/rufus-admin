@@ -8,10 +8,11 @@ import {
 } from 'draft-js';
 import styled from 'styled-components';
 
-import firebase, { createPost } from '../api/firebase';
+import { createPost, fetchPost, fetchPostContent } from '../api/firebase';
 
 import Editor from './Editor';
 import PostSidebar from './PostSidebar';
+import NoMatch from './NoMatch';
 
 import PageHeader from '../components/PageHeader';
 import Loader from '../components/Loader';
@@ -42,9 +43,11 @@ const LayoutMain = styled.main`
 
 type Props = {
   id?: string,
+  history: Object,
 };
 type State = {
   isLoading: boolean,
+  noMatch?: boolean,
   titleState: EditorState,
   subtitleState: EditorState,
   contentState: EditorState,
@@ -67,44 +70,55 @@ class Post extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    const id = this.props.id;
+  async componentDidMount() {
+    const postId = this.props.id;
 
-    if (id) {
-      // fetch existing post
-      this.firebaseRef = firebase.database().ref(`/posts/${id}`);
+    if (postId) {
+      const post = await fetchPost(postId);
 
-      this.firebaseRef.once('value', snap => {
-        const post = snap.val();
+      if (post) {
+        const titleState = EditorState.createWithContent(
+          ContentState.createFromText(post.title)
+        );
+        const subtitleState = EditorState.createWithContent(
+          ContentState.createFromText(post.subtitle)
+        );
 
-        if (post) {
-          const titleState = EditorState.createWithContent(
-            ContentState.createFromText(post.title)
-          );
-          const subtitleState = EditorState.createWithContent(
-            ContentState.createFromText(post.subtitle)
-          );
+        const contentId = post.contentId;
+        const content = await fetchPostContent(contentId);
+
+        if (content) {
           const contentState = EditorState.createWithContent(
-            convertFromRaw(post.content)
+            convertFromRaw(content)
           );
 
           this.setState({
-            titleState,
-            subtitleState,
             contentState,
           });
         }
+
+        this.setState({
+          isLoading: false,
+          titleState,
+          subtitleState,
+        });
+      } else {
+        this.setState({
+          noMatch: true,
+        });
+      }
+    } else {
+      this.setState({
+        isLoading: false,
       });
     }
-
-    this.setState({
-      isLoading: false,
-    });
   }
 
   // componentWillUnmount() {
   //   // Un-register the listener on '/someData'.
-  //   this.firebaseRef && this.firebaseRef.off('value', this.firebaseCallback);
+  //   if (this.firebaseRef) {
+  //     this.firebaseRef.off('value', this.firebaseCallback);
+  //   }
   // }
 
   onTitleChange = (titleState: EditorState) => this.setState({ titleState });
@@ -139,6 +153,10 @@ class Post extends React.Component<Props, State> {
         disabled={this.state.isLoading}
       />,
     ];
+
+    if (this.state.noMatch) {
+      return <NoMatch history={this.props.history} />;
+    }
     return (
       <Wrapper>
         <PageHeader title="Edit Post" actions={actions} />

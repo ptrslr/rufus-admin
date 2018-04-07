@@ -8,7 +8,9 @@ import PageHeader from '../components/PageHeader';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
 
+import status from '../constants/status';
 import icons from '../constants/icons';
+
 import firebase from '../api/firebase';
 
 const Wrapper = styled.div`
@@ -25,7 +27,9 @@ const BodyInner = styled.div`
   height: 100%;
 `;
 
-type Props = {};
+type Props = {
+  category?: $Keys<typeof status>,
+};
 type State = {
   isLoading: boolean,
   posts?: Object,
@@ -57,10 +61,39 @@ class Posts extends React.Component<Props, State> {
     });
   }
 
+  componentWillUnmount() {
+    // Un-register the listener on '/someData'.
+    if (this.firebaseRef) {
+      this.firebaseRef.off('value', this.firebaseCallback);
+    }
+  }
+
   render() {
+    const menu = [
+      {
+        label: 'All',
+        to: '/posts/all',
+      },
+      {
+        label: 'Drafts',
+        to: '/posts/drafts',
+      },
+      {
+        label: 'Published',
+        to: '/posts/published',
+      },
+      {
+        label: 'Scheduled',
+        to: '/posts/scheduled',
+      },
+      {
+        label: 'Hidden',
+        to: '/posts/hidden',
+      },
+    ];
     const actions = [
       <Button
-        to="posts/new-post"
+        to="/posts/new-post"
         theme="primary"
         value="Create new"
         iconLeft={icons.PLUS}
@@ -69,12 +102,30 @@ class Posts extends React.Component<Props, State> {
 
     const posts = this.state.posts;
 
-    const keys = posts ? Object.keys(posts) : [];
+    let keys = posts ? Object.keys(posts) : [];
+
+    if (this.props.category) {
+      switch (this.props.category) {
+        case status.PUBLISHED:
+          keys = keys.filter(key => posts[key].status === status.PUBLISHED);
+          break;
+        case status.SCHEDULED:
+          keys = keys.filter(key => posts[key].status === status.SCHEDULED);
+          break;
+        case status.HIDDEN:
+          keys = keys.filter(key => posts[key].status === status.HIDDEN);
+          break;
+        default:
+          keys = keys.filter(key => posts[key].status === status.DRAFT);
+          break;
+      }
+    }
+
     const rowCount = posts ? keys.length : 0;
 
     return (
       <Wrapper>
-        <PageHeader title="Posts" actions={actions} />
+        <PageHeader title="Posts" menu={menu} actions={actions} />
         <Body>
           <BodyInner>
             <Loader isLoading={this.state.isLoading}>
@@ -108,7 +159,7 @@ class Posts extends React.Component<Props, State> {
                             theme="secondary"
                             iconLeft={icons.EDIT}
                             value="Edit"
-                            to={`posts/${id}`}
+                            to={`/posts/${id}`}
                           />
                         );
                       }}

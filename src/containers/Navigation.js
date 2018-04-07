@@ -15,8 +15,8 @@ const Wrapper = styled.nav`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background: ${colors.grays[1]};
-  border-right: 1px solid ${colors.grays[2]};
+  background: ${colors.grays[0]};
+  border-right: 1px solid ${colors.grays[1]};
 `;
 const Header = styled.div`
   flex: 0 0 auto;
