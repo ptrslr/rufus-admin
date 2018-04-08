@@ -87,7 +87,7 @@ class Posts extends React.Component<Props, State> {
       />,
     ];
 
-    const posts = this.state.posts;
+    const posts = this.state.posts ? this.state.posts : {};
 
     let keys = posts ? Object.keys(posts) : [];
 

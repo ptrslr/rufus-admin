@@ -13,11 +13,13 @@ const List = styled.div`
 
 type Props = {
   items: Object,
-  keys: Array,
+  keys: Array<string>,
   onDragEnd: Function,
+  onSave: Function,
+  onDelete: Function,
 };
 const CategoryList = (props: Props) => {
-  const { items, keys, onDragEnd } = props;
+  const { items, keys, onDragEnd, onSave, onDelete } = props;
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
@@ -25,12 +27,21 @@ const CategoryList = (props: Props) => {
           <List innerRef={provided.innerRef}>
             {keys.map((key, index) => {
               return (
-                <Draggable key={key} draggableId={key} index={index}>
+                <Draggable
+                  key={key}
+                  draggableId={key}
+                  index={index}
+                  isDragDisabled={true}
+                >
                   {(provided, snapshot) => (
                     <Item
+                      id={key}
+                      index={index}
                       provided={provided}
                       snapshot={snapshot}
                       value={items[key]}
+                      onSave={onSave}
+                      onDelete={onDelete}
                     />
                   )}
                 </Draggable>

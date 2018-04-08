@@ -48,18 +48,22 @@ const Body = styled.div`
 `;
 const Actions = styled.div`
   flex: 0 0 auto;
+  display: flex;
   padding-left: 1rem;
 `;
-const Action = styled.span`
+const Action = styled.div`
   & + & {
     margin-left: 0.5rem;
   }
 `;
 
 type Props = {
+  id: string,
+  index: number,
   provided: Object,
   snapshot: Object,
   value: string,
+  onSave: Function,
 };
 type State = {
   isEditing: boolean,
@@ -68,7 +72,9 @@ type State = {
 };
 
 class Item extends React.Component<Props, State> {
-  constructor(props) {
+  inputRef: ?Object;
+
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -80,22 +86,28 @@ class Item extends React.Component<Props, State> {
     this.inputRef = React.createRef();
   }
 
-  handleChange = e => {
+  handleChange = (e: SyntheticEvent<HTMLInputElement>) => {
     this.setState({
       inputValue: e.target.value,
     });
   };
 
-  handleEdit = e => {
+  handleDelete = (e: SyntheticEvent<HTMLButtonElement>) => {
+    this.props.onDelete(this.props.index);
+  };
+
+  handleEdit = (e: SyntheticEvent<HTMLButtonElement>) => {
     this.setState(
       {
         isEditing: true,
       },
-      this.inputRef.current.focus()
+      () => {
+        this.inputRef && this.inputRef.current.focus();
+      }
     );
   };
 
-  handleCancel = e => {
+  handleCancel = (e: SyntheticEvent<HTMLButtonElement>) => {
     const inputValue = this.state.value;
 
     this.setState({
@@ -103,13 +115,16 @@ class Item extends React.Component<Props, State> {
       inputValue,
     });
   };
-  handleSave = e => {
+  handleSave = (e: SyntheticEvent<HTMLButtonElement>) => {
     const value = this.state.inputValue;
 
-    this.setState({
-      isEditing: false,
-      value,
-    });
+    this.setState(
+      {
+        isEditing: false,
+        value,
+      },
+      this.props.onSave(this.props.id, value)
+    );
   };
 
   render() {
@@ -134,35 +149,46 @@ class Item extends React.Component<Props, State> {
               onChange={this.handleChange}
             />
           </Body>
-          <Actions>
-            <Action>
-              {this.state.isEditing ? (
+
+          {this.state.isEditing ? (
+            <Actions>
+              <Action>
                 <Button
+                  theme="secondary"
                   iconLeft={icons.CLOSE}
                   value="Cancel"
                   onClick={this.handleCancel}
                 />
-              ) : (
-                <Button iconLeft={icons.REMOVE} value="Delete" />
-              )}
-            </Action>
-            <Action>
-              {this.state.isEditing ? (
+              </Action>
+              <Action>
                 <Button
                   theme="primary"
                   iconLeft={icons.CHECK}
                   value="Save"
                   onClick={this.handleSave}
                 />
-              ) : (
+              </Action>
+            </Actions>
+          ) : (
+            <Actions>
+              <Action>
                 <Button
+                  theme="secondary"
+                  iconLeft={icons.REMOVE}
+                  value="Delete"
+                  onClick={this.handleDelete}
+                />
+              </Action>
+              <Action>
+                <Button
+                  theme="secondary"
                   iconLeft={icons.EDIT}
                   value="Edit"
                   onClick={this.handleEdit}
                 />
-              )}
-            </Action>
-          </Actions>
+              </Action>
+            </Actions>
+          )}
         </Wrapper>
         {provided.placeholder}
       </div>
