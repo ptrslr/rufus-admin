@@ -46,9 +46,15 @@ const ItemIcon = styled(Icon)`
 const Menu = () => (
   <StyledMenu>
     <Item>
-      <ItemLink to="/posts/all">
+      <ItemLink to="/posts">
         <ItemIcon name={icons.POSTS} />
         Posts
+      </ItemLink>
+    </Item>
+    <Item>
+      <ItemLink to="/categories">
+        <ItemIcon name={icons.CATEGORIES} />
+        Categories
       </ItemLink>
     </Item>
     <Item>

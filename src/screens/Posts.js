@@ -6,13 +6,13 @@ import status from '../constants/status';
 
 type Props = {
   history: Object,
-  category?: $Keys<typeof status>,
+  status?: $Keys<typeof status>,
 };
 
 const Posts = (props: Props) => {
-  const { history, category } = props;
+  const { history, status } = props;
 
-  return <PostsContainer history={history} category={category} />;
+  return <PostsContainer history={history} status={status} />;
 };
 
 export default Posts;

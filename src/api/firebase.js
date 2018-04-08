@@ -2,6 +2,8 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 
+import status from '../constants/status';
+
 const config = {
   apiKey: 'AIzaSyA0_eG1U3QHIKbr4UpmW8GLrH5YbF_La_E',
   authDomain: 'project-rufus.firebaseapp.com',
@@ -22,46 +24,52 @@ export const fetchPost = async (postId: string) => {
   return postData;
 };
 
-export const fetchPostContent = async (contentId: string) => {
-  const contentRef = rootRef.child(`/postContents/${contentId}`);
+export const fetchPostContent = async (postId: string) => {
+  const contentRef = rootRef.child(`/postContents/${postId}`);
   const contentData = (await contentRef.once('value')).val();
 
   return JSON.parse(contentData);
 };
 
-export const createPost = (
+type Post = {
   title: string,
   subtitle: string,
-  content: Object
-) => {
+  content: Object,
+  status: $Key<typeof status>,
+  category: string,
+  author: string,
+};
+export const createPost = (post: Post) => {
   const postsRef = rootRef.child('posts');
   const contentsRef = rootRef.child('postContents');
 
   const postId = postsRef.push().key;
-  const contentId = contentsRef.push().key;
+
+  const { title, subtitle, content, status, category, author } = post;
 
   const contentStr = JSON.stringify(content);
-
-  contentsRef.child(`${contentId}`).set(contentStr);
+  contentsRef.child(`${postId}`).set(contentStr);
 
   postsRef.child(`${postId}`).set({
     title,
     subtitle,
-    contentId,
+    status,
+    category,
+    author,
   });
 };
 
-export const updatePost = (
-  id: string,
-  title: string,
-  subtitle: string,
-  content: Object
-) => {
+export const updatePost = (postId: string, post: Post) => {
+  const { title, subtitle, content, status, category, author } = post;
+
   const contentStr = JSON.stringify(content);
 
-  rootRef.child(`posts/${id}`).update({
+  rootRef.child(`posts/${postId}`).update({
     title,
     subtitle,
-    contentStr,
+    status,
+    category,
+    author,
   });
+  rootRef.child(`postContents/${postId}`).update(contentStr);
 };

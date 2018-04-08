@@ -1,10 +1,11 @@
 // @flow
 import * as React from 'react';
-import styled from 'styled-components';
 import { AutoSizer, Table, Column } from 'react-virtualized';
 import 'react-virtualized/styles.css';
 
+import Page from '../components/Page';
 import PageHeader from '../components/PageHeader';
+import PageBody from '../components/PageBody';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
 
@@ -13,22 +14,8 @@ import icons from '../constants/icons';
 
 import firebase from '../api/firebase';
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-`;
-const Body = styled.div`
-  height: 100%;
-  padding: 2rem 1rem 0 2rem;
-`;
-const BodyInner = styled.div`
-  height: 100%;
-`;
-
 type Props = {
-  category?: $Keys<typeof status>,
+  status?: $Keys<typeof status>,
 };
 type State = {
   isLoading: boolean,
@@ -104,8 +91,8 @@ class Posts extends React.Component<Props, State> {
 
     let keys = posts ? Object.keys(posts) : [];
 
-    if (this.props.category) {
-      switch (this.props.category) {
+    if (this.props.status) {
+      switch (this.props.status) {
         case status.PUBLISHED:
           keys = keys.filter(key => posts[key].status === status.PUBLISHED);
           break;
@@ -124,53 +111,51 @@ class Posts extends React.Component<Props, State> {
     const rowCount = posts ? keys.length : 0;
 
     return (
-      <Wrapper>
+      <Page>
         <PageHeader title="Posts" menu={menu} actions={actions} />
-        <Body>
-          <BodyInner>
-            <Loader isLoading={this.state.isLoading}>
-              <AutoSizer>
-                {({ height, width }) => (
-                  <Table
-                    headerHeight={30}
-                    height={height}
-                    rowCount={rowCount}
-                    rowGetter={({ index }) => posts[keys[index]]}
-                    rowHeight={50}
-                    width={width}
-                  >
-                    <Column
-                      flexGrow={2}
-                      label="Title"
-                      dataKey="title"
-                      width={100}
-                    />
-                    <Column
-                      flexGrow={0}
-                      flexShrink={0}
-                      width={100}
-                      label="Actions"
-                      dataKey="title"
-                      cellRenderer={cellData => {
-                        const id = keys[cellData.rowIndex];
+        <PageBody>
+          <Loader isLoading={this.state.isLoading}>
+            <AutoSizer>
+              {({ height, width }) => (
+                <Table
+                  headerHeight={30}
+                  height={height}
+                  rowCount={rowCount}
+                  rowGetter={({ index }) => posts[keys[index]]}
+                  rowHeight={50}
+                  width={width}
+                >
+                  <Column
+                    flexGrow={2}
+                    label="Title"
+                    dataKey="title"
+                    width={100}
+                  />
+                  <Column
+                    flexGrow={0}
+                    flexShrink={0}
+                    width={100}
+                    label="Actions"
+                    dataKey="title"
+                    cellRenderer={cellData => {
+                      const id = keys[cellData.rowIndex];
 
-                        return (
-                          <Button
-                            theme="secondary"
-                            iconLeft={icons.EDIT}
-                            value="Edit"
-                            to={`/posts/${id}`}
-                          />
-                        );
-                      }}
-                    />
-                  </Table>
-                )}
-              </AutoSizer>
-            </Loader>
-          </BodyInner>
-        </Body>
-      </Wrapper>
+                      return (
+                        <Button
+                          theme="secondary"
+                          iconLeft={icons.EDIT}
+                          value="Edit"
+                          to={`/posts/${id}`}
+                        />
+                      );
+                    }}
+                  />
+                </Table>
+              )}
+            </AutoSizer>
+          </Loader>
+        </PageBody>
+      </Page>
     );
   }
 }

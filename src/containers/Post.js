@@ -14,18 +14,14 @@ import Editor from './Editor';
 import PostSidebar from './PostSidebar';
 import NoMatch from './NoMatch';
 
+import Page from '../components/Page';
 import PageHeader from '../components/PageHeader';
+
 import Loader from '../components/Loader';
 import Button from '../components/Button';
 import icons from '../constants/icons';
+import status from '../constants/status';
 // import { colors } from '../utils/theme';
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-`;
 
 const Layout = styled.div`
   display: flex;
@@ -51,6 +47,9 @@ type State = {
   titleState: EditorState,
   subtitleState: EditorState,
   contentState: EditorState,
+  status: $Key<typeof status>,
+  category: string,
+  author: Object,
 };
 
 class Post extends React.Component<Props, State> {
@@ -67,6 +66,7 @@ class Post extends React.Component<Props, State> {
       titleState: EditorState.createEmpty(),
       subtitleState: EditorState.createEmpty(),
       contentState: EditorState.createEmpty(),
+      status: status.DRAFT,
     };
   }
 
@@ -133,8 +133,11 @@ class Post extends React.Component<Props, State> {
       .getCurrentContent()
       .getPlainText();
     const content = convertToRaw(this.state.contentState.getCurrentContent());
+    const status = this.state.status;
+    const category = this.state.category;
+    const author = this.state.author;
 
-    createPost(title, subtitle, content);
+    createPost(title, subtitle, content, status, category, author);
   };
 
   render() {
@@ -158,7 +161,7 @@ class Post extends React.Component<Props, State> {
       return <NoMatch history={this.props.history} />;
     }
     return (
-      <Wrapper>
+      <Page>
         <PageHeader title="Edit Post" actions={actions} />
 
         <Layout>
@@ -175,11 +178,15 @@ class Post extends React.Component<Props, State> {
             </LayoutMain>
 
             <LayoutSidebar>
-              <PostSidebar />
+              <PostSidebar
+                status={this.state.status}
+                category={this.state.category}
+                author={this.state.author}
+              />
             </LayoutSidebar>
           </Loader>
         </Layout>
-      </Wrapper>
+      </Page>
     );
   }
 }

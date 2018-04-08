@@ -20,6 +20,7 @@ export const formControlLg = css`
 
 export const input = css`
   display: block;
+  width: 100%;
   border-color: ${colors.grays[5]};
 
   font-size: 1rem;
@@ -38,4 +39,10 @@ export const input = css`
   ${placeholder({
     color: colors.grays[4],
   })};
+
+  &[readonly] {
+    border-color: transparent;
+    pointer-events: none;
+    background: transparent;
+  }
 `;

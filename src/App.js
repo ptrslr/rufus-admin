@@ -8,6 +8,7 @@ import Posts from './screens/Posts';
 import EditPost from './screens/EditPost';
 import NewPost from './screens/NewPost';
 import NoMatch from './screens/NoMatch';
+import Categories from './screens/Categories';
 
 import status from './constants/status';
 import { colors } from './utils/theme';
@@ -44,26 +45,28 @@ class App extends React.Component<Props> {
               <Route
                 exact
                 path="/posts/drafts"
-                render={() => <Posts category={status.DRAFT} />}
+                render={() => <Posts status={status.DRAFT} />}
               />
               <Route
                 exact
                 path="/posts/published"
-                render={() => <Posts category={status.PUBLISHED} />}
+                render={() => <Posts status={status.PUBLISHED} />}
               />
               <Route
                 exact
                 path="/posts/scheduled"
-                render={() => <Posts category={status.SCHEDULED} />}
+                render={() => <Posts status={status.SCHEDULED} />}
               />
               <Route
                 exact
                 path="/posts/hidden"
-                render={() => <Posts category={status.HIDDEN} />}
+                render={() => <Posts status={status.HIDDEN} />}
               />
 
               <Route exact path="/posts/new-post" component={NewPost} />
               <Route exact path="/posts/:id" component={EditPost} />
+
+              <Route exact path="/categories" component={Categories} />
 
               <Route component={NoMatch} />
             </Switch>
