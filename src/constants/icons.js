@@ -33,6 +33,7 @@ const icons = {
   POLL: 'Poll',
   POSTS: 'Posts',
   REMOVE: 'Remove',
+  REORDER: 'Reorder',
   STRIKETHROUGH: 'Strikethrough',
   UL: 'Ul',
   UNDERLINE: 'Underline',

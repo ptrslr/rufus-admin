@@ -22,6 +22,8 @@ const Wrapper = styled.header`
   border-bottom: 1px solid ${colors.grays[1]};
 `;
 const Actions = styled.div`
+  display: flex;
+  align-items: center;
   padding-left: 1rem;
   margin-left: auto;
 `;

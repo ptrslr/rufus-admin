@@ -12,14 +12,28 @@ const List = styled.div`
 `;
 
 type Props = {
+  isSaving: boolean,
+  isCreating: boolean,
   items: Object,
   keys: Array<string>,
   onDragEnd: Function,
   onSave: Function,
   onDelete: Function,
+  onNewCancel: Function,
+  onNewSave: Function,
 };
 const CategoryList = (props: Props) => {
-  const { items, keys, onDragEnd, onSave, onDelete } = props;
+  const {
+    isSaving,
+    isCreating,
+    items,
+    keys,
+    onDragEnd,
+    onSave,
+    onDelete,
+    onNewCancel,
+    onNewSave,
+  } = props;
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
@@ -31,10 +45,11 @@ const CategoryList = (props: Props) => {
                   key={key}
                   draggableId={key}
                   index={index}
-                  isDragDisabled={true}
+                  isDragDisabled={isCreating}
                 >
                   {(provided, snapshot) => (
                     <Item
+                      isDisabled={isCreating}
                       id={key}
                       index={index}
                       provided={provided}
@@ -48,6 +63,28 @@ const CategoryList = (props: Props) => {
               );
             })}
             {provided.placeholder}
+
+            {isCreating && (
+              <Draggable
+                draggableId="new"
+                index={items ? items.length : 0}
+                isDragDisabled={isCreating}
+              >
+                {(provided, snapshot) => (
+                  <Item
+                    isDisabled={isSaving}
+                    isNew={true}
+                    provided={provided}
+                    snapshot={snapshot}
+                    value=""
+                    onSave={onSave}
+                    onDelete={onDelete}
+                    onNewCancel={onNewCancel}
+                    onNewSave={onNewSave}
+                  />
+                )}
+              </Draggable>
+            )}
           </List>
         )}
       </Droppable>

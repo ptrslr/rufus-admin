@@ -9,9 +9,10 @@ import icons from '../../constants/icons';
 
 import { colors } from '../../utils/theme';
 
-const Wrapper = styled.div`
+const Inner = styled.div`
   display: flex;
   padding: 1rem 1rem 1rem 2rem;
+  border-bottom: 1px solid ${colors.grays[1]};
 
   background-color: #fff;
   transition: background-color 150ms;
@@ -32,14 +33,18 @@ const IconWrapper = styled.div`
 
   font-size: 1.75rem;
   color: ${colors.grays[2]};
-  transition: color 150ms;
+  opacity: 1;
+  transition: color 150ms, opacity 150ms;
 
-  ${Wrapper}:hover &,
-  ${Wrapper}:focus & {
+  ${Inner}:hover &,
+  ${Inner}:focus & {
     color: ${colors.grays[5]};
   }
   .is-dragging & {
     color: ${colors.black};
+  }
+  .is-disabled & {
+    opacity: 0;
   }
 `;
 const Body = styled.div`
@@ -58,12 +63,16 @@ const Action = styled.div`
 `;
 
 type Props = {
-  id: string,
-  index: number,
+  isNew?: boolean,
+  isDisabled?: boolean,
+  id?: string,
+  index?: number,
   provided: Object,
   snapshot: Object,
   value: string,
   onSave: Function,
+  onNewCancel?: Function,
+  onNewSave?: Function,
 };
 type State = {
   isEditing: boolean,
@@ -78,13 +87,19 @@ class Item extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      isEditing: false,
+      isEditing: props.isNew ? true : false,
       value: props.value,
       inputValue: props.value,
     };
 
     this.inputRef = React.createRef();
   }
+
+  componentDidMount = () => {
+    if (this.props.isNew && this.inputRef) {
+      this.inputRef.current.focus();
+    }
+  };
 
   handleChange = (e: SyntheticEvent<HTMLInputElement>) => {
     this.setState({
@@ -108,38 +123,46 @@ class Item extends React.Component<Props, State> {
   };
 
   handleCancel = (e: SyntheticEvent<HTMLButtonElement>) => {
-    const inputValue = this.state.value;
+    if (this.props.isNew) {
+      this.props.onNewCancel();
+    } else {
+      const inputValue = this.state.value;
 
-    this.setState({
-      isEditing: false,
-      inputValue,
-    });
+      this.setState({
+        isEditing: false,
+        inputValue,
+      });
+    }
   };
   handleSave = (e: SyntheticEvent<HTMLButtonElement>) => {
-    const value = this.state.inputValue;
+    if (this.props.isNew) {
+      this.props.onNewSave(this.state.inputValue);
+    } else {
+      const value = this.state.inputValue;
 
-    this.setState(
-      {
-        isEditing: false,
-        value,
-      },
-      this.props.onSave(this.props.id, value)
-    );
+      this.setState(
+        {
+          isEditing: false,
+          value,
+        },
+        this.props.onSave(this.props.id, value)
+      );
+    }
   };
 
   render() {
-    const { provided, snapshot } = this.props;
+    const { isNew, isDisabled, provided, snapshot } = this.props;
 
     return (
-      <div>
-        <Wrapper
+      <div className={isDisabled ? 'is-disabled' : ''}>
+        <Inner
           innerRef={provided.innerRef}
           className={snapshot.isDragging ? 'is-dragging' : ''}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
           <IconWrapper>
-            <Icon name={icons.MOVE_VERTICAL} />
+            {isNew ? <Icon name={icons.PLUS} /> : <Icon name={icons.REORDER} />}
           </IconWrapper>
           <Body>
             <Input
@@ -147,9 +170,10 @@ class Item extends React.Component<Props, State> {
               value={this.state.inputValue}
               readOnly={!this.state.isEditing}
               onChange={this.handleChange}
+              placeholder="Category"
+              disabled={isDisabled}
             />
           </Body>
-
           {this.state.isEditing ? (
             <Actions>
               <Action>
@@ -158,6 +182,7 @@ class Item extends React.Component<Props, State> {
                   iconLeft={icons.CLOSE}
                   value="Cancel"
                   onClick={this.handleCancel}
+                  disabled={isDisabled}
                 />
               </Action>
               <Action>
@@ -166,6 +191,7 @@ class Item extends React.Component<Props, State> {
                   iconLeft={icons.CHECK}
                   value="Save"
                   onClick={this.handleSave}
+                  disabled={isDisabled}
                 />
               </Action>
             </Actions>
@@ -177,6 +203,7 @@ class Item extends React.Component<Props, State> {
                   iconLeft={icons.REMOVE}
                   value="Delete"
                   onClick={this.handleDelete}
+                  disabled={isDisabled}
                 />
               </Action>
               <Action>
@@ -185,11 +212,12 @@ class Item extends React.Component<Props, State> {
                   iconLeft={icons.EDIT}
                   value="Edit"
                   onClick={this.handleEdit}
+                  disabled={isDisabled}
                 />
               </Action>
             </Actions>
           )}
-        </Wrapper>
+        </Inner>
         {provided.placeholder}
       </div>
     );
