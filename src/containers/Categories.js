@@ -8,6 +8,8 @@ import InlineLoader from '../components/InlineLoader';
 import Loader from '../components/Loader';
 import CategoryList from '../components/CategoryList';
 import Button from '../components/Button';
+import ConfirmModal from '../components/ConfirmModal';
+
 import icons from '../constants/icons';
 import { colors } from '../utils/theme';
 
@@ -38,8 +40,10 @@ type State = {
   isLoading: boolean,
   isSaving: boolean,
   isCreating: boolean,
+  isModalOpen: boolean,
   items: Object,
   keys: Array<string>,
+  deleteIndex?: number,
 };
 class Categories extends React.Component<null, State> {
   constructor() {
@@ -49,6 +53,7 @@ class Categories extends React.Component<null, State> {
       isLoading: true,
       isSaving: false,
       isCreating: false,
+      isModalOpen: false,
       items: {},
       keys: [],
     };
@@ -66,6 +71,7 @@ class Categories extends React.Component<null, State> {
       isLoading: false,
       isSaving: false,
       isCreating: false,
+      isModalOpen: false,
       items,
       keys,
     });
@@ -104,26 +110,40 @@ class Categories extends React.Component<null, State> {
   };
   onDelete = (index: number) => {
     this.setState({
+      isModalOpen: true,
+      deleteIndex: index,
+    });
+  };
+  onDeleteConfirm = () => {
+    this.setState({
       isSaving: true,
     });
+    const index = this.state.deleteIndex;
 
-    const id = this.state.keys[index];
+    if (typeof index !== 'undefined') {
+      const id = this.state.keys[index];
 
-    let keys = Array.from(this.state.keys);
-    keys.splice(index, 1);
+      let keys = Array.from(this.state.keys);
+      keys.splice(index, 1);
 
-    let items = Object.assign(this.state.items);
-    delete items[index];
+      let items = Object.assign(this.state.items);
+      delete items[index];
 
-    const deletePromise = deleteCategory(id, keys);
+      const deletePromise = deleteCategory(id, keys);
 
-    deletePromise.then(() => {
+      deletePromise.then(() => {
+        this.setState({
+          isSaving: false,
+          items,
+          keys,
+        });
+        this.closeModal();
+      });
+    } else {
       this.setState({
         isSaving: false,
-        items,
-        keys,
       });
-    });
+    }
   };
 
   onNewCancel = () => {
@@ -148,6 +168,14 @@ class Categories extends React.Component<null, State> {
     });
   };
 
+  openModal = () => {
+    this.setState({ isModalOpen: true });
+  };
+
+  closeModal = () => {
+    this.setState({ isModalOpen: false });
+  };
+
   render() {
     const actions = [
       <InlineLoader size="1.25rem" isLoading={this.state.isSaving} />,
@@ -159,6 +187,13 @@ class Categories extends React.Component<null, State> {
         disabled={this.state.isCreating}
       />,
     ];
+
+    const deleteIndex = this.state.deleteIndex;
+
+    let deleteName;
+    if (typeof deleteIndex !== 'undefined') {
+      deleteName = this.state.items[this.state.keys[deleteIndex]];
+    }
 
     return (
       <Page>
@@ -179,6 +214,21 @@ class Categories extends React.Component<null, State> {
             />
           </Loader>
         </PageBody>
+
+        <ConfirmModal
+          isOpen={this.state.isModalOpen}
+          closeModal={this.closeModal}
+          title="Are you sure?"
+          subtitle={
+            <div>
+              You're about to delete category named{' '}
+              <strong>{deleteName ? deleteName : ''}</strong>
+            </div>
+          }
+          onConfirm={this.onDeleteConfirm}
+          onCancel={this.closeModal}
+          confirmValue="Delete"
+        />
       </Page>
     );
   }

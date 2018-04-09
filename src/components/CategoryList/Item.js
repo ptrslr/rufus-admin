@@ -17,11 +17,15 @@ const Inner = styled.div`
   background-color: #fff;
   transition: background-color 150ms;
 
-  &:hover,
-  &:focus {
-    background-color: ${colors.grays[0]};
-  }
-
+  ${props =>
+    !props.isDisabled
+      ? `
+    &:hover,
+    &:focus {
+      background-color: ${colors.grays[0]};
+    }
+  `
+      : ''}
   &.is-dragging {
     background-color: ${colors.grays[1]};
   }
@@ -158,6 +162,7 @@ class Item extends React.Component<Props, State> {
         <Inner
           innerRef={provided.innerRef}
           className={snapshot.isDragging ? 'is-dragging' : ''}
+          isDisabled={isDisabled}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
