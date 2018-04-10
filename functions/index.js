@@ -38,9 +38,11 @@ router.get('/', function(req, res) {
 });
 
 // more routes for our API will happen here
-const routes = require('./api/routes/postRoutes');
+const postRoutes = require('./api/routes/postRoutes');
+const categoryRoutes = require('./api/routes/categoryRoutes');
 
-routes(router);
+postRoutes(router);
+categoryRoutes(router);
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
