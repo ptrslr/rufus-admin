@@ -6,40 +6,39 @@ const categoriesRef = admin.database().ref('/categories');
 const categoryKeysRef = admin.database().ref('/categoryKeys');
 
 exports.getCategories = function(req, res) {
-  categoriesRef.once(
-    'value',
-    function(snap) {
-      res.json(snap.val());
-    },
-    function(err) {
+  categoriesRef
+    .once('value')
+    .then(function(snap) {
+      return res.json(snap.val());
+    })
+    .catch(function(err) {
       res.send(err);
-    }
-  );
+    });
 };
 
 exports.getCategoryKeys = function(req, res) {
-  categoryKeysRef.once(
-    'value',
-    function(snap) {
-      res.json(snap.val());
-    },
-    function(err) {
+  categoryKeysRef
+    .once('value')
+    .then(function(snap) {
+      return res.json(snap.val());
+    })
+    .catch(function(err) {
       res.send(err);
-    }
-  );
+    });
 };
 
 exports.updateCategoryKeys = function(req, res) {
   const keys = req.body.keys;
 
   if (keys) {
-    categoryKeysRef.set(keys, function(err) {
-      if (err) {
+    categoryKeysRef
+      .set(keys)
+      .then(function() {
+        return res.json({ message: 'Categories updated!' });
+      })
+      .catch(function(err) {
         res.send(err);
-      } else {
-        res.json({ message: 'Categories updated!' });
-      }
-    });
+      });
   } else {
     res.send(new Error('Keys are missing!'));
   }
@@ -48,9 +47,9 @@ exports.updateCategoryKeys = function(req, res) {
 exports.createCategory = function(req, res) {
   const categoryId = categoriesRef.push().key;
 
-  categoryKeysRef.once(
-    'value',
-    function(snap) {
+  categoryKeysRef
+    .once('value')
+    .then(function(snap) {
       const categoryKeys = snap.val();
 
       const newCategoryIndex = categoryKeys ? categoryKeys.length : 0;
@@ -59,75 +58,73 @@ exports.createCategory = function(req, res) {
       updates['/categories/' + categoryId] = req.body.name;
       updates['/categoryKeys/' + newCategoryIndex] = categoryId;
 
-      rootRef.update(updates, function(err) {
-        if (err) {
-          res.send(err);
-        } else {
-          res.json({ message: 'Category created!' });
-        }
-      });
-    },
-    function(err) {
+      return rootRef.update(updates);
+    })
+    .then(function() {
+      return res.json({ message: 'Category created!' });
+    })
+    .catch(function(err) {
       res.send(err);
-    }
-  );
+    });
 };
 
 exports.getCategory = function(req, res) {
   const categoryId = req.params.categoryId;
 
-  categoriesRef.child(categoryId).once(
-    'value',
-    function(snap) {
-      res.json(snap.val());
-    },
-    function(err) {
+  categoriesRef
+    .child(categoryId)
+    .once('value')
+    .then(function(snap) {
+      return res.json(snap.val());
+    })
+    .catch(function(err) {
       res.send(err);
-    }
-  );
+    });
 };
 
 exports.updateCategory = function(req, res) {
-  categoriesRef.child(req.params.categoryId).set(req.body.name, function(err) {
-    if (err) {
+  categoriesRef
+    .child(req.params.categoryId)
+    .set(req.body.name)
+    .then(function() {
+      return res.json({ message: 'Category updated!' });
+    })
+    .catch(function(err) {
       res.send(err);
-    } else {
-      res.json({ message: 'Category updated!' });
-    }
-  });
+    });
 };
 
 exports.deleteCategory = function(req, res) {
-  categoryKeysRef.once(
-    'value',
-    function(snap) {
+  categoryKeysRef
+    .once('value')
+    .then(function(snap) {
       const keys = snap.val();
-
       const categoryId = req.params.categoryId;
 
       if (categoryId) {
         const categoryIndex = keys.indexOf(categoryId);
 
-        let newKeys = Array.from(keys);
-        newKeys.splice(categoryIndex, 1);
+        // categoryId is present in keys array
+        if (categoryIndex >= 0) {
+          let newKeys = Array.from(keys);
+          newKeys.splice(categoryIndex, 1);
 
-        const updates = {};
-        updates['/categories/' + categoryId] = null;
-        updates['/categoryKeys'] = newKeys;
+          const updates = {};
+          updates['/categories/' + categoryId] = null;
+          updates['/categoryKeys'] = newKeys;
 
-        rootRef.update(updates, function(err) {
-          if (err) {
-            res.send(err);
-          } else {
-            res.json({ message: 'Category deleted' });
-          }
-        });
-      } else {
-        res.send(new Error('Missing categoryId'));
+          return rootRef.update(updates);
+        }
+
+        throw new Error('CategoryId does not exist');
       }
-    },
-    function(err) {
+
+      throw new Error('Missing categoryId');
+    })
+    .then(function() {
+      return res.json({ message: 'Category deleted' });
+    })
+    .catch(function(err) {
       res.send(err);
-    }
-  );
+    });
 };

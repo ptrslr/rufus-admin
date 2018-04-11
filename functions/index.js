@@ -27,10 +27,9 @@ app.use(bodyParser.json());
 const router = express.Router(); // get an instance of the express Router
 
 // middleware to use for all requests
-router.use(function(req, res, next) {
-  // do logging
-  console.log('Something is happening.');
-  next();
+router.use(function(err, req, res, next) {
+  res.status(500);
+  res.render('error', { error: err });
 });
 
 // test route to make sure everything is working (accessed at GET http://localhost:5000/api)

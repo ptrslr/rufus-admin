@@ -10,15 +10,14 @@ function isUndefined(object) {
 }
 
 exports.getPosts = function(req, res) {
-  postsRef.once(
-    'value',
-    function(snap) {
-      res.json(snap.val());
-    },
-    function(err) {
+  postsRef
+    .once('value')
+    .then(function(snap) {
+      return res.json(snap.val());
+    })
+    .catch(function(err) {
       res.send(err);
-    }
-  );
+    });
 };
 
 exports.createPost = function(req, res) {
@@ -50,28 +49,29 @@ exports.createPost = function(req, res) {
       publishTime,
     };
 
-    rootRef.update(updates, function(err) {
-      if (err) {
+    rootRef
+      .update(updates)
+      .then(function() {
+        return res.json({ message: 'Post created!' });
+      })
+      .catch(function(err) {
         res.send(err);
-      } else {
-        res.json({ message: 'Post created!' });
-      }
-    });
+      });
   } else {
     res.send(new Error('Missing content!'));
   }
 };
 
 exports.getPost = function(req, res) {
-  postsRef.child(req.params.postId).once(
-    'value',
-    function(snap) {
-      res.json(snap.val());
-    },
-    function(err) {
+  postsRef
+    .child(req.params.postId)
+    .once('value')
+    .then(function(snap) {
+      return res.json(snap.val());
+    })
+    .catch(function(err) {
       res.send(err);
-    }
-  );
+    });
 };
 
 exports.updatePost = function(req, res) {
@@ -91,13 +91,14 @@ exports.updatePost = function(req, res) {
     updates['/postContents/' + postId] = contentStr;
   }
 
-  rootRef.update(updates, function(err) {
-    if (err) {
+  rootRef
+    .update(updates)
+    .then(function() {
+      return res.json({ message: 'Post updated!' });
+    })
+    .catch(function(err) {
       res.send(err);
-    } else {
-      res.json({ message: 'Post updated!' });
-    }
-  });
+    });
 };
 
 exports.deletePost = function(req, res) {
@@ -107,27 +108,24 @@ exports.deletePost = function(req, res) {
   updates['/posts/' + postId] = null;
   updates['/postContents/' + postId] = null;
 
-  console.log(postId);
-
-  rootRef.update(updates, function(err) {
-    if (err) {
+  rootRef
+    .update(updates)
+    .then(function() {
+      return res.json({ message: 'Post deleted!' });
+    })
+    .catch(function(err) {
       res.send(err);
-    } else {
-      res.json({
-        message: 'Post deleted!',
-      });
-    }
-  });
+    });
 };
 
 exports.getPostContent = function(req, res) {
-  contentsRef.child(req.params.postId).once(
-    'value',
-    function(snap) {
-      res.json(JSON.parse(snap.val()));
-    },
-    function(err) {
+  contentsRef
+    .child(req.params.postId)
+    .once('value')
+    .then(function(snap) {
+      return res.json(JSON.parse(snap.val()));
+    })
+    .catch(function(err) {
       res.send(err);
-    }
-  );
+    });
 };
