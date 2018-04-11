@@ -1,9 +1,16 @@
 // @flow
 
-export const fetchCategories = async () => {
-  const categories = (await categoriesRef.once('value')).val();
+import firebase from 'firebase/app';
+import 'firebase/database';
 
-  return categories;
+const rootRef = firebase.database().ref();
+const categoriesRef = rootRef.child(`categories`);
+const categoryKeysRef = rootRef.child(`categoryKeys`);
+
+export const fetchCategories = async () => {
+  return fetch('api/categories').then(res => {
+    return res;
+  });
 };
 export const fetchCategoryKeys = async () => {
   const categoryKeys = (await categoryKeysRef.once('value')).val();

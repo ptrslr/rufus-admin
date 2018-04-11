@@ -19,7 +19,7 @@ import {
   fetchCategoryKeys,
   updateCategoryKeys,
   deleteCategory,
-} from '../api/firebase';
+} from '../api';
 
 // const categories = {
 //   kdmklasmdklasd: 'Ekonomika',
@@ -65,16 +65,17 @@ class Categories extends React.Component<null, State> {
 
   init = async () => {
     const items = await fetchCategories();
-    const keys = await fetchCategoryKeys();
+    console.log(items);
+    // const keys = await fetchCategoryKeys();
 
-    this.setState({
-      isLoading: false,
-      isSaving: false,
-      isCreating: false,
-      isModalOpen: false,
-      items,
-      keys,
-    });
+    // this.setState({
+    //   isLoading: false,
+    //   isSaving: false,
+    //   isCreating: false,
+    //   isModalOpen: false,
+    //   items,
+    //   keys,
+    // });
   };
 
   onDragEnd = async (result: Object) => {

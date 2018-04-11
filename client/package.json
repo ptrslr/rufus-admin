@@ -2,7 +2,7 @@
   "name": "rufus-client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000/",
+  "proxy": "http://localhost:5001/project-rufus/us-central1/app/",
   "dependencies": {
     "draft-js": "^0.10.5",
     "eslint": "^4.19.1",
