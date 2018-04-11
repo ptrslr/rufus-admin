@@ -1,5 +1,5 @@
 {
-  "name": "rufus",
+  "name": "rufus-client",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:5000/",
@@ -41,6 +41,7 @@
     "flow": "flow",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
-    "icons": "svgr --no-semi --icon --replace-attr-value '#000=currentColor' -d src/components/Icon/Icons src/components/Icon/svg"
+    "icons":
+      "svgr --no-semi --icon --replace-attr-value '#000=currentColor' -d src/components/Icon/Icons src/components/Icon/svg"
   }
 }

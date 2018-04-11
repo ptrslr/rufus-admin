@@ -1,6 +1,29 @@
 {
+  "name": "rufus",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "client": "cd client && yarn start",
+    "server": "cd functions && firebase serve --only functions,hosting",
+    "start":
+      "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "build": "cd client && yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ptrslr/rufus-admin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ptrslr/rufus-admin/issues"
+  },
+  "homepage": "https://github.com/ptrslr/rufus-admin#readme",
+  "description": "",
   "dependencies": {
     "babel-eslint": "^8.2.2",
+    "concurrently": "^3.5.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.10.0",
