@@ -25,8 +25,7 @@ const Inner = styled.div`
       background-color: ${colors.grays[0]};
     }
   `
-      : ''}
-  &.is-dragging {
+      : ''} &.is-dragging {
     background-color: ${colors.grays[1]};
   }
 `;
@@ -75,6 +74,7 @@ type Props = {
   snapshot: Object,
   value: string,
   onSave: Function,
+  onDelete: Function,
   onNewCancel?: Function,
   onNewSave?: Function,
 };
@@ -204,7 +204,7 @@ class Item extends React.Component<Props, State> {
             <Actions>
               <Action>
                 <Button
-                  theme="secondary"
+                  theme="link"
                   iconLeft={icons.REMOVE}
                   value="Delete"
                   onClick={this.handleDelete}

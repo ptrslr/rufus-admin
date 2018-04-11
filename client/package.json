@@ -13,6 +13,7 @@
     "immutable": "^3.8.2",
     "normalize.css": "^8.0.0",
     "polished": "^1.9.2",
+    "qs": "^6.5.1",
     "react": "^16.3.0",
     "react-app-rewire-hot-loader": "^1.0.1",
     "react-app-rewired": "^1.5.0",
@@ -41,7 +42,6 @@
     "flow": "flow",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
-    "icons":
-      "svgr --no-semi --icon --replace-attr-value '#000=currentColor' -d src/components/Icon/Icons src/components/Icon/svg"
+    "icons": "svgr --no-semi --icon --replace-attr-value '#000=currentColor' -d src/components/Icon/Icons src/components/Icon/svg"
   }
 }

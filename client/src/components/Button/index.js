@@ -9,13 +9,11 @@ import { formControl, formControlLg } from '../../utils/styles';
 import { icons } from '../../constants/icons';
 import Icon from '../Icon';
 
-const getBackgroundColor = (theme?: 'primary' | 'secondary') => {
+const getBackgroundColor = (theme?: 'primary' | 'secondary' | 'link') => {
   return theme === 'primary' ? colors.primary : colors.grays[0];
 };
 const StyledButton = styled.button`
   ${formControl};
-
-  ${props => (props.size === 'lg' ? formControlLg : '')};
 
   display: inline-block;
   padding-left: 1em;
@@ -54,12 +52,26 @@ const StyledButton = styled.button`
   }
 
   ${props =>
-    props.block
-      ? `
-    display: block;
-    width: 100%;
-  `
-      : ''};
+    props.size === 'lg' &&
+    `
+    ${formControlLg}
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  `};
+
+  ${props =>
+    props.block &&
+    `
+      display: block;
+      width: 100%;
+  `};
+
+  ${props =>
+    props.theme === 'link' &&
+    `
+    border-color: transparent;
+    background: transparent;
+  `};
 `;
 const StyledLink = StyledButton.withComponent(Link);
 
