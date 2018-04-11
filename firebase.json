@@ -6,7 +6,7 @@
     "public": "client/build",
     "headers": [
       {
-        "source": "client/service-worker.js",
+        "source": "/service-worker.js",
         "headers": [
           {
             "key": "Cache-Control",
