@@ -21,12 +21,10 @@ const Name = styled.strong`
 
   display: block;
   /*font-size: 1.125rem;*/
-  line-height: 1;
+  line-height: 1.2;
 `;
 const Title = styled.div`
   ${ellipsis()};
-
-  margin-top: 0.25rem;
 
   color: ${colors.grays[8]};
   font-size: 0.75rem;
@@ -36,9 +34,9 @@ const Title = styled.div`
 `;
 
 type Props = {
-  name: string,
-  image?: string,
-  title?: string,
+  name: ?string,
+  image?: ?string,
+  title?: ?string,
 };
 const AvatarBox = (props: Props) => {
   const { name, title = null, image = null } = props;

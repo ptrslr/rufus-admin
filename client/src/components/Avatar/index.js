@@ -7,7 +7,7 @@ import placeholder from './avatar.svg';
 
 type Props = {
   size: 'xs' | 'sm' | 'md' | 'lg',
-  src?: string,
+  src?: ?string,
   alt: string,
 };
 

@@ -1,5 +1,6 @@
 // @flow
 import firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/database';
 
 import status from '../constants/status';
@@ -13,7 +14,12 @@ const config = {
   messagingSenderId: '83992737225',
 };
 
-export default firebase.initializeApp(config);
+firebase.initializeApp(config);
+
+export const provider = new firebase.auth.GoogleAuthProvider();
+export const auth = firebase.auth();
+
+export default firebase;
 
 const rootRef = firebase.database().ref();
 const categoriesRef = rootRef.child(`categories`);
@@ -75,41 +81,4 @@ export const updatePost = (postId: string, post: Post) => {
     author,
   });
   rootRef.child(`postContents/${postId}`).update(contentStr);
-};
-
-/**
- * Categories
- */
-
-export const fetchCategories = async () => {
-  const categories = (await categoriesRef.once('value')).val();
-
-  return categories;
-};
-export const fetchCategoryKeys = async () => {
-  const categoryKeys = (await categoryKeysRef.once('value')).val();
-
-  return categoryKeys ? categoryKeys : [];
-};
-
-export const createCategory = async (name: string) => {
-  const categoryId = categoriesRef.push().key;
-
-  let categoryKeys = await fetchCategoryKeys();
-  categoryKeys.push(categoryId);
-
-  const updates = {};
-  updates[`/categories/${categoryId}`] = name;
-  updates[`/categoryKeys`] = categoryKeys;
-
-  return rootRef.update(updates);
-};
-
-export const deleteCategory = async (id: string, keys: Array<string>) => {
-  categoryKeysRef.set(keys);
-  return categoriesRef.child(id).remove();
-};
-
-export const updateCategoryKeys = (keys: Array<string>) => {
-  return rootRef.child(`categoryKeys`).update(keys);
 };

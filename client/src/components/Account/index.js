@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
+import firebaseui from 'firebaseui';
 
 import AvatarBox from '../AvatarBox';
+import Loader from '../Loader';
 import { space, grays } from '../../utils/theme';
 
 const Wrapper = styled.div`
@@ -13,10 +15,27 @@ const Wrapper = styled.div`
   border-bottom: 1px solid ${grays[1]};
 `;
 
-const Account = () => (
-  <Wrapper>
-    <AvatarBox name="Sarah Schmidt" title="Editor" image="" />
-  </Wrapper>
-);
+type Props = {
+  user: ?firebaseui.User,
+};
+const Account = (props: Props) => {
+  let name = null;
+  let role = null;
+  let image = null;
+
+  if (props.user != null) {
+    name = props.user.displayName ? props.user.displayName : props.user.email;
+    role = 'Admin';
+    image = props.user.photoURL;
+  }
+
+  return (
+    <Wrapper>
+      <Loader isLoading={!props.user} size="2.25rem">
+        <AvatarBox name={name} title={role} image={image} />
+      </Loader>
+    </Wrapper>
+  );
+};
 
 export default Account;

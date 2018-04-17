@@ -8,7 +8,9 @@ import Footer from '../components/Footer';
 
 import { colors } from '../utils/theme';
 
-type Props = {};
+type Props = {
+  user: ?Object,
+};
 
 const Wrapper = styled.nav`
   display: flex;
@@ -32,7 +34,7 @@ const Navigation = (props: Props) => {
   return (
     <Wrapper>
       <Header>
-        <Account />
+        <Account user={props.user} />
       </Header>
       <Body>
         <Menu />

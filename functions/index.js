@@ -11,6 +11,9 @@ const config = {
   projectId: 'project-rufus',
   storageBucket: 'project-rufus.appspot.com',
   messagingSenderId: '83992737225',
+  databaseAuthVariableOverride: {
+    uid: 'server',
+  },
 };
 
 admin.initializeApp(config);

@@ -1,29 +1,55 @@
 'use strict';
 const admin = require('firebase-admin');
+const axios = require('axios');
 
 const rootRef = admin.database().ref();
 const categoriesRef = admin.database().ref('/categories');
 const categoryKeysRef = admin.database().ref('/categoryKeys');
 
+const handleError = function(error, res) {
+  if (error.response) {
+    // The request was made and the server responded with a status code
+    // that falls out of the range of 2xx
+    console.log(error.response.data);
+    console.log(error.response.status);
+    console.log(error.response.headers);
+    return res.status(error.response.status).send(error.response.data);
+  } else if (error.request) {
+    // The request was made but no response was received
+    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    // http.ClientRequest in node.js
+    console.log(error.request);
+    return res.send(error.request);
+  } else {
+    // Something happened in setting up the request that triggered an Error
+    console.log('Error', error.message);
+    return res.status(500).send(error.message);
+  }
+};
+
 exports.getCategories = function(req, res) {
-  categoriesRef
-    .once('value')
-    .then(function(snap) {
-      return res.json(snap.val());
+  return axios
+    .get('https://project-rufus.firebaseio.com/categories.json', {
+      params: req.query,
+    })
+    .then(function(response) {
+      return res.json(response.data);
     })
     .catch(function(err) {
-      res.send(err);
+      handleError(err, res);
     });
 };
 
 exports.getCategoryKeys = function(req, res) {
-  categoryKeysRef
-    .once('value')
-    .then(function(snap) {
-      return res.json(snap.val());
+  return axios
+    .get('https://project-rufus.firebaseio.com/categoryKeys.json', {
+      params: req.query,
+    })
+    .then(function(response) {
+      return res.json(response.data);
     })
     .catch(function(err) {
-      res.send(err);
+      handleError(err, res);
     });
 };
 
@@ -31,13 +57,16 @@ exports.updateCategoryKeys = function(req, res) {
   const keys = req.body.keys;
 
   if (keys) {
-    categoryKeysRef
-      .set(keys)
-      .then(function() {
+    axios
+      .put('https://project-rufus.firebaseio.com/categoryKeys.json', {
+        keys,
+      })
+      .then(function(response) {
+        console.log(response);
         return res.json({ message: 'Categories updated!' });
       })
       .catch(function(err) {
-        res.send(err);
+        handleError(err, res);
       });
   } else {
     res.send(new Error('Keys are missing!'));

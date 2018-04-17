@@ -36,6 +36,9 @@ const reorder = (keys, startIndex, endIndex) => {
   return result;
 };
 
+type Props = {
+  history: Object,
+};
 type State = {
   isLoading: boolean,
   isSaving: boolean,
@@ -45,7 +48,7 @@ type State = {
   keys: Array<string>,
   deleteIndex?: number,
 };
-class Categories extends React.Component<null, State> {
+class Categories extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -129,7 +132,7 @@ class Categories extends React.Component<null, State> {
       let items = Object.assign(this.state.items);
       delete items[index];
 
-      const deletePromise = deleteCategory(id, keys);
+      const deletePromise = deleteCategory(id);
 
       deletePromise.then(() => {
         this.setState({

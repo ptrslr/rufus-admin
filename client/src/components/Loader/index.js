@@ -17,13 +17,15 @@ const Wrapper = styled.div`
 type Props = {
   isLoading: boolean,
   children: React.Node,
+  size?: string,
 };
 
 const Loader = (props: Props) => {
+  const size = props.size != null ? props.size : '3rem';
   if (props.isLoading) {
     return (
       <Wrapper>
-        <ClipLoader color={colors.primary} size="3rem" />
+        <ClipLoader color={colors.primary} size={size} />
       </Wrapper>
     );
   }

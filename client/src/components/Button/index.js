@@ -97,7 +97,7 @@ const IconRight = styled(Icon)`
 type Props = {
   type?: string,
   value?: string,
-  theme?: 'primary' | 'secondary',
+  theme?: 'primary' | 'secondary' | 'link',
   size?: 'sm' | 'lg',
   block?: boolean,
   iconLeft?: $Keys<typeof icons>,

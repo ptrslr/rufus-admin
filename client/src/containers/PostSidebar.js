@@ -68,7 +68,7 @@ const PostSidebar = () => {
       </Body>
 
       <Footer>
-        <Button block iconLeft={icons.REMOVE} value="Delete" />
+        <Button theme="link" block iconLeft={icons.REMOVE} value="Delete" />
       </Footer>
     </Wrapper>
   );

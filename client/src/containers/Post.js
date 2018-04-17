@@ -47,7 +47,7 @@ type State = {
   titleState: EditorState,
   subtitleState: EditorState,
   contentState: EditorState,
-  status: $Key<typeof status>,
+  status: $Keys<typeof status>,
   category: string,
   author: Object,
 };
@@ -143,7 +143,7 @@ class Post extends React.Component<Props, State> {
   render() {
     const actions = [
       <Button
-        theme="secondary"
+        theme="link"
         value="Back"
         iconLeft={icons.ARROW_LEFT}
         onClick={() => this.props.history.goBack()}

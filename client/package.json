@@ -4,9 +4,11 @@
   "private": true,
   "proxy": "http://localhost:5001/project-rufus/us-central1/app/",
   "dependencies": {
+    "axios": "^0.18.0",
     "draft-js": "^0.10.5",
     "eslint": "^4.19.1",
     "firebase": "^4.12.1",
+    "firebaseui": "^2.7.0",
     "flow": "^0.2.3",
     "flow-bin": "^0.69.0",
     "halogenium": "^2.2.3",

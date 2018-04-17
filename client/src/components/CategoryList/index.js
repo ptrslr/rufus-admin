@@ -34,6 +34,10 @@ const CategoryList = (props: Props) => {
     onNewCancel,
     onNewSave,
   } = props;
+
+  if (keys == null || items == null) {
+    return <div>Couldn't get categories</div>;
+  }
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
