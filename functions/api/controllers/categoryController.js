@@ -2,6 +2,10 @@
 const admin = require('firebase-admin');
 const axios = require('axios');
 
+const constants = require('../constants.js');
+
+const url = constants.url;
+
 const rootRef = admin.database().ref();
 const categoriesRef = admin.database().ref('/categories');
 const categoryKeysRef = admin.database().ref('/categoryKeys');
@@ -28,8 +32,9 @@ const handleError = function(error, res) {
 };
 
 exports.getCategories = function(req, res) {
+  console.log(req.query);
   return axios
-    .get('https://project-rufus.firebaseio.com/categories.json', {
+    .get(`${url}/categories.json`, {
       params: req.query,
     })
     .then(function(response) {
@@ -42,7 +47,7 @@ exports.getCategories = function(req, res) {
 
 exports.getCategoryKeys = function(req, res) {
   return axios
-    .get('https://project-rufus.firebaseio.com/categoryKeys.json', {
+    .get(`${url}/categoryKeys.json`, {
       params: req.query,
     })
     .then(function(response) {
@@ -56,84 +61,117 @@ exports.getCategoryKeys = function(req, res) {
 exports.updateCategoryKeys = function(req, res) {
   const keys = req.body.keys;
 
+  console.log(keys);
   if (keys) {
-    axios
-      .put('https://project-rufus.firebaseio.com/categoryKeys.json', {
-        keys,
+    return axios
+      .put(`${url}/categoryKeys.json`, keys, {
+        params: req.query,
       })
       .then(function(response) {
-        console.log(response);
         return res.json({ message: 'Categories updated!' });
       })
       .catch(function(err) {
         handleError(err, res);
       });
   } else {
-    res.send(new Error('Keys are missing!'));
+    return res.send(new Error('Keys are missing!'));
   }
 };
 
 exports.createCategory = function(req, res) {
   const categoryId = categoriesRef.push().key;
 
-  categoryKeysRef
-    .once('value')
-    .then(function(snap) {
-      const categoryKeys = snap.val();
-
+  return axios
+    .get(`${url}/categoryKeys.json`, {
+      params: {
+        auth: req.query.auth,
+      },
+    })
+    .then(function(response) {
+      return response.data;
+    })
+    .then(function(categoryKeys) {
+      // console.log('keys');
+      // console.log(categoryKeys);
       const newCategoryIndex = categoryKeys ? categoryKeys.length : 0;
 
       const updates = {};
       updates['/categories/' + categoryId] = req.body.name;
       updates['/categoryKeys/' + newCategoryIndex] = categoryId;
 
-      return rootRef.update(updates);
-    })
-    .then(function() {
-      return res.json({ message: 'Category created!' });
+      return axios
+        .patch(`${url}/.json?`, updates, { params: req.query })
+        .then(function(response) {
+          return res.json({ message: 'Category created!' });
+        })
+        .catch(function(err) {
+          handleError(err, res);
+        });
     })
     .catch(function(err) {
-      res.send(err);
+      handleError(err, res);
     });
 };
 
 exports.getCategory = function(req, res) {
   const categoryId = req.params.categoryId;
 
-  categoriesRef
-    .child(categoryId)
-    .once('value')
-    .then(function(snap) {
-      return res.json(snap.val());
+  return axios
+    .get(`${url}/categories/${categoryId}.json`, { params: req.query })
+    .then(function(response) {
+      return res.json(response.data);
     })
     .catch(function(err) {
-      res.send(err);
+      handleError(err, res);
     });
 };
 
 exports.updateCategory = function(req, res) {
-  categoriesRef
-    .child(req.params.categoryId)
-    .set(req.body.name)
-    .then(function() {
+  const categoryId = req.params.categoryId;
+
+  if (req.body.name === null || req.body.name === 'undefined') {
+    return res.status(400).send(new Error('Bad name!'));
+  }
+  const update = {};
+  update[categoryId] = req.body.name;
+
+  return axios
+    .patch(`${url}/categories.json`, update, {
+      params: req.query,
+    })
+    .then(function(response) {
       return res.json({ message: 'Category updated!' });
     })
     .catch(function(err) {
-      res.send(err);
+      handleError(err, res);
     });
+  // categoriesRef
+  //   .child(req.params.categoryId)
+  //   .set(req.body.name)
+  //   .then(function() {
+  //     return res.json({ message: 'Category updated!' });
+  //   })
+  //   .catch(function(err) {
+  //     res.send(err);
+  //   });
 };
 
 exports.deleteCategory = function(req, res) {
-  categoryKeysRef
-    .once('value')
-    .then(function(snap) {
-      const keys = snap.val();
+  return axios
+    .get(`${url}/categoryKeys.json`, {
+      params: {
+        auth: req.query.auth,
+      },
+    })
+    .then(function(response) {
+      return response.data;
+    })
+    .then(function(keys) {
       const categoryId = req.params.categoryId;
 
       if (categoryId) {
         const categoryIndex = keys.indexOf(categoryId);
 
-        // categoryId is present in keys array
         if (categoryIndex >= 0) {
           let newKeys = Array.from(keys);
           newKeys.splice(categoryIndex, 1);
@@ -142,18 +180,55 @@ exports.deleteCategory = function(req, res) {
           updates['/categories/' + categoryId] = null;
           updates['/categoryKeys'] = newKeys;
 
-          return rootRef.update(updates);
+          return axios
+            .patch(`${url}/.json?`, updates, { params: req.query })
+            .then(function(response) {
+              return res.json({ message: 'Category deleted!' });
+            })
+            .catch(function(err) {
+              handleError(err, res);
+            });
         }
 
-        throw new Error('CategoryId does not exist');
+        return res.status(400).send('CategoryId does not exist');
       }
 
-      throw new Error('Missing categoryId');
-    })
-    .then(function() {
-      return res.json({ message: 'Category deleted' });
+      return res.statuse(400).send('Missing categoryId');
     })
     .catch(function(err) {
-      res.send(err);
+      handleError(err, res);
     });
+  //
+  //   categoryKeysRef
+  //     .once('value')
+  //     .then(function(snap) {
+  //       const keys = snap.val();
+  //       const categoryId = req.params.categoryId;
+  //
+  //       if (categoryId) {
+  //         const categoryIndex = keys.indexOf(categoryId);
+  //
+  //         // categoryId is present in keys array
+  //         if (categoryIndex >= 0) {
+  //           let newKeys = Array.from(keys);
+  //           newKeys.splice(categoryIndex, 1);
+  //
+  //           const updates = {};
+  //           updates['/categories/' + categoryId] = null;
+  //           updates['/categoryKeys'] = newKeys;
+  //
+  //           return rootRef.update(updates);
+  //         }
+  //
+  //         throw new Error('CategoryId does not exist');
+  //       }
+  //
+  //       throw new Error('Missing categoryId');
+  //     })
+  //     .then(function() {
+  //       return res.json({ message: 'Category deleted' });
+  //     })
+  //     .catch(function(err) {
+  //       res.send(err);
+  //     });
 };

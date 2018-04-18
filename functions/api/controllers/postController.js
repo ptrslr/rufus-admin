@@ -77,7 +77,10 @@ exports.getPost = function(req, res) {
 exports.updatePost = function(req, res) {
   const postId = req.params.postId;
 
-  const { content = null, ...postUpdates } = req.body;
+  // const { content = null, ...postUpdates } = req.body;
+  let postUpdates = req.body;
+  const content = postUpdates.content ? postUpdates.content : null;
+  delete postUpdates.content;
 
   const updates = {};
 

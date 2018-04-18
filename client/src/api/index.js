@@ -31,6 +31,7 @@ const handleError = err => {
 
 const authenticate = async (params = {}) => {
   const idToken = await auth.currentUser.getIdToken();
+  console.log(idToken);
 
   params['auth'] = idToken;
 

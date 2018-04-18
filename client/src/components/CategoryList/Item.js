@@ -17,15 +17,7 @@ const Inner = styled.div`
   background-color: #fff;
   transition: background-color 150ms;
 
-  ${props =>
-    !props.isDisabled
-      ? `
-    &:hover,
-    &:focus {
-      background-color: ${colors.grays[0]};
-    }
-  `
-      : ''} &.is-dragging {
+  &.is-dragging {
     background-color: ${colors.grays[1]};
   }
 `;
