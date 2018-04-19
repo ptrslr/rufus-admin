@@ -1,6 +1,8 @@
 'use strict';
 const admin = require('firebase-admin');
 const axios = require('axios');
+const isEqual = require('lodash/isEqual');
+const cloneDeep = require('lodash/cloneDeep');
 
 const constants = require('../constants.js');
 
@@ -9,6 +11,13 @@ const url = constants.url;
 const rootRef = admin.database().ref();
 const categoriesRef = admin.database().ref('/categories');
 const categoryKeysRef = admin.database().ref('/categoryKeys');
+
+const haveEqualValues = function(array1, array2) {
+  const sortedArray1 = cloneDeep(array1).sort();
+  const sortedArray2 = cloneDeep(array2).sort();
+
+  return isEqual(sortedArray1, sortedArray2);
+};
 
 const handleError = function(error, res) {
   if (error.response) {
@@ -32,7 +41,7 @@ const handleError = function(error, res) {
 };
 
 exports.getCategories = function(req, res) {
-  console.log(req.query);
+  // console.log(req.query);
   return axios
     .get(`${url}/categories.json`, {
       params: req.query,
@@ -59,16 +68,33 @@ exports.getCategoryKeys = function(req, res) {
 };
 
 exports.updateCategoryKeys = function(req, res) {
-  const keys = req.body.keys;
+  const newKeys = req.body.keys;
 
-  console.log(keys);
-  if (keys) {
+  console.log(newKeys);
+  if (newKeys) {
     return axios
-      .put(`${url}/categoryKeys.json`, keys, {
-        params: req.query,
+      .get(`${url}/categoryKeys.json`, {
+        params: {
+          auth: req.query.auth,
+        },
       })
       .then(function(response) {
-        return res.json({ message: 'Categories updated!' });
+        const keys = response.data;
+
+        if (haveEqualValues(keys, newKeys)) {
+          console.log(newKeys);
+          return axios
+            .put(`${url}/categoryKeys.json`, newKeys, {
+              params: req.query,
+            })
+            .then(function(response) {
+              return res.json({ message: 'Categories updated!' });
+            })
+            .catch(function(err) {
+              handleError(err, res);
+            });
+        }
+        return res.status(400).send(new Error('Keys contain different values'));
       })
       .catch(function(err) {
         handleError(err, res);
@@ -198,37 +224,4 @@ exports.deleteCategory = function(req, res) {
     .catch(function(err) {
       handleError(err, res);
     });
-  //
-  //   categoryKeysRef
-  //     .once('value')
-  //     .then(function(snap) {
-  //       const keys = snap.val();
-  //       const categoryId = req.params.categoryId;
-  //
-  //       if (categoryId) {
-  //         const categoryIndex = keys.indexOf(categoryId);
-  //
-  //         // categoryId is present in keys array
-  //         if (categoryIndex >= 0) {
-  //           let newKeys = Array.from(keys);
-  //           newKeys.splice(categoryIndex, 1);
-  //
-  //           const updates = {};
-  //           updates['/categories/' + categoryId] = null;
-  //           updates['/categoryKeys'] = newKeys;
-  //
-  //           return rootRef.update(updates);
-  //         }
-  //
-  //         throw new Error('CategoryId does not exist');
-  //       }
-  //
-  //       throw new Error('Missing categoryId');
-  //     })
-  //     .then(function() {
-  //       return res.json({ message: 'Category deleted' });
-  //     })
-  //     .catch(function(err) {
-  //       res.send(err);
-  //     });
 };
