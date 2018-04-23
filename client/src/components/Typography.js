@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-const heading = css`
+export const heading = css`
   margin: 0;
   font-weight: 700;
   text-rendering: optimizeLegibility;

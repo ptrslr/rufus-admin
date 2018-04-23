@@ -1,0 +1,66 @@
+path / {
+  read() { auth != null && auth.token.role === 'admin' }
+  write() { auth != null && auth.token.role === 'admin' }
+}
+
+// categories
+path /categories {
+  read() { auth != null}
+  write() { auth != null && auth.token.role === 'editor'}
+}
+path /categories/{id} is Category;
+
+path /categoryKeys {
+  read() { auth != null }
+  write() { auth != null && auth.token.role === 'editor' }
+}
+
+// posts
+path /posts {
+  read() { auth != null }
+  write() { auth != null && auth.token.role === 'editor' }
+}
+path /posts/{id} is Post;
+
+
+path /postContents {
+  read() { auth != null }
+  write() { auth != null && auth.token.role === 'editor' }
+}
+path /postContents/{id} is PostContent;
+
+// team
+path /team {
+  read() { false }
+  write() { false }
+}
+path /team/{id} is TeamMember;
+
+// types
+type Status extends String {
+  validate() { this === 'published' || this === 'draft' || this === 'hidden'}
+}
+type Role extends String {
+  validate() { this === 'admin' || this === 'editor' || this === 'author'}
+}
+
+type Post {
+  title: String,
+  subtitle: String | Null,
+  author: String,
+  status: Status,
+  category: String,
+  publishTime: Number,
+}
+
+type PostContent {
+  content: Object
+}
+
+type Category {
+  name: String
+}
+
+type TeamMember {
+  role: Role
+}

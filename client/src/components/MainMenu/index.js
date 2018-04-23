@@ -70,9 +70,9 @@ const Menu = () => (
       </ItemLink>
     </Item>
     <Item>
-      <ItemLink to="/settings">
-        <ItemIcon name={icons.COG} />
-        Settings
+      <ItemLink to="/account">
+        <ItemIcon name={icons.PERSON} />
+        My Account
       </ItemLink>
     </Item>
   </StyledMenu>

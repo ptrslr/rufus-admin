@@ -3,13 +3,31 @@ import * as React from 'react';
 import firebase, { auth, provider } from '../api/firebase.js';
 import firebaseui from 'firebaseui';
 import 'firebaseui/dist/firebaseui.css';
+import styled from 'styled-components';
 
 import InlineLoader from '../components/InlineLoader';
 import Loader from '../components/Loader';
 import Button from '../components/Button';
+import { heading } from '../components/Typography';
 
 import icons from '../constants/icons';
 import { colors } from '../utils/theme';
+
+const Wrapper = styled.div`
+  padding: 3rem 1rem;
+`;
+const Header = styled.header`
+  margin: 0 0 2rem;
+  text-align: center;
+`;
+const Title = styled.h1`
+  ${heading};
+`;
+const Subtitle = styled.p``;
+
+const Form = styled.div`
+  text-align: center;
+`;
 
 type Props = {
   history: Object,
@@ -70,11 +88,17 @@ class Login extends React.Component<Props, State> {
 
   render() {
     return (
-      <div>
-        <h1>Login</h1>
-        <div id="firebaseui-auth-container" />
-        <div id="loader">Loading...</div>
-      </div>
+      <Wrapper>
+        <Header>
+          <Title>Login</Title>
+          <Subtitle>You need to be logged-in to continue</Subtitle>
+        </Header>
+
+        <Form>
+          <div id="firebaseui-auth-container" />
+          <div id="loader">Loading...</div>
+        </Form>
+      </Wrapper>
     );
   }
 }

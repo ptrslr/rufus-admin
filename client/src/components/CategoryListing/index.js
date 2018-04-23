@@ -3,12 +3,16 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import Item from './Item';
+import CategoryListingItem from '../../containers/CategoryListingItem';
 
 const List = styled.div`
   padding: 0;
   margin: 0;
   list-style: none;
+`;
+const Error = styled.div`
+  padding: 3rem;
+  text-align: center;
 `;
 
 type Props = {
@@ -22,7 +26,7 @@ type Props = {
   onNewCancel: Function,
   onNewSave: Function,
 };
-const CategoryList = (props: Props) => {
+const CategoryListing = (props: Props) => {
   const {
     isSaving,
     isCreating,
@@ -36,7 +40,7 @@ const CategoryList = (props: Props) => {
   } = props;
 
   if (keys == null || items == null) {
-    return <div>Couldn't get categories</div>;
+    return <Error>So empty&hellip;</Error>;
   }
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -52,7 +56,8 @@ const CategoryList = (props: Props) => {
                   isDragDisabled={isCreating}
                 >
                   {(provided, snapshot) => (
-                    <Item
+                    <CategoryListingItem
+                      isNew={false}
                       isDisabled={isCreating}
                       id={key}
                       index={index}
@@ -61,6 +66,8 @@ const CategoryList = (props: Props) => {
                       value={items[key]}
                       onSave={onSave}
                       onDelete={onDelete}
+                      onNewCancel={null}
+                      onNewSave={null}
                     />
                   )}
                 </Draggable>
@@ -75,9 +82,9 @@ const CategoryList = (props: Props) => {
                 isDragDisabled={isCreating}
               >
                 {(provided, snapshot) => (
-                  <Item
-                    isDisabled={isSaving}
+                  <CategoryListingItem
                     isNew={true}
+                    isDisabled={isSaving}
                     provided={provided}
                     snapshot={snapshot}
                     value=""
@@ -96,4 +103,4 @@ const CategoryList = (props: Props) => {
   );
 };
 
-export default CategoryList;
+export default CategoryListing;

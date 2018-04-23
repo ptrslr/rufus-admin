@@ -2,7 +2,6 @@
 
 import firebase from 'firebase/app';
 import 'firebase/database';
-import qs from 'qs';
 import axios from 'axios';
 import { auth } from './firebase.js';
 
@@ -31,7 +30,7 @@ const handleError = err => {
 
 const authenticate = async (params = {}) => {
   const idToken = await auth.currentUser.getIdToken();
-  console.log(idToken);
+  // console.log(idToken);
 
   params['auth'] = idToken;
 
@@ -64,73 +63,57 @@ export const fetchCategoryKeys = async () => {
 };
 
 export const createCategory = async (name: string) => {
-  const form = {
-    name,
-  };
+  try {
+    const params = await authenticate();
 
-  const init = {
-    method: 'POST',
-    body: qs.stringify(form),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-    },
-  };
-
-  return fetch('api/categories', init)
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      throw new Error(`Not ok ${res.status}`);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    return await axios
+      .post('api/categories', { name }, { params })
+      .then(res => {
+        return res.data;
+      });
+  } catch (err) {
+    handleError(err);
+  }
 };
 
-export const deleteCategory = (categoryId: string) => {
-  const init = {
-    method: 'DELETE',
-    body: qs.stringify({
-      categoryId,
-    }),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-    },
-  };
-  return fetch(`api/categories/${categoryId}`, init)
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      throw new Error(`Not ok ${res.status}`);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+export const updateCategory = async (categoryId: string, name: string) => {
+  try {
+    const params = await authenticate();
+
+    return await axios
+      .put(`api/categories/${categoryId}`, { name }, { params })
+      .then(res => {
+        return res.data;
+      });
+  } catch (err) {
+    handleError(err);
+  }
 };
 
-export const updateCategoryKeys = (keys: Array<string>) => {
-  const init = {
-    method: 'PUT',
-    body: qs.stringify({
-      keys,
-    }),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-    },
-  };
-  return fetch(`api/categories/keys`, init)
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      throw new Error(`Not ok ${res.status}`);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+export const deleteCategory = async (categoryId: string) => {
+  try {
+    const params = await authenticate();
+
+    return await axios
+      .delete(`api/categories/${categoryId}`, { params })
+      .then(res => {
+        return res.data;
+      });
+  } catch (err) {
+    handleError(err);
+  }
+};
+
+export const updateCategoryKeys = async (keys: Array<string>) => {
+  try {
+    const params = await authenticate();
+
+    return await axios
+      .put(`api/categories/keys`, { keys }, { params })
+      .then(res => {
+        return res.data;
+      });
+  } catch (err) {
+    handleError(err);
+  }
 };

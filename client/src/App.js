@@ -11,6 +11,7 @@ import Posts from './screens/Posts';
 import EditPost from './screens/EditPost';
 import NewPost from './screens/NewPost';
 import Categories from './screens/Categories';
+import Team from './screens/Team';
 import Login from './screens/Login';
 import NoMatch from './screens/NoMatch';
 
@@ -139,6 +140,7 @@ class App extends React.Component<Props, State> {
                           path="/categories"
                           component={Categories}
                         />
+                        <Route exact path="/team" component={Team} />
 
                         <Route component={NoMatch} />
                       </Switch>

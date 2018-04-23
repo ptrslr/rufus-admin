@@ -6,7 +6,7 @@ import PageHeader from '../components/PageHeader';
 import PageBody from '../components/PageBody';
 import InlineLoader from '../components/InlineLoader';
 import Loader from '../components/Loader';
-import CategoryList from '../components/CategoryList';
+import CategoryListing from '../components/CategoryListing';
 import Button from '../components/Button';
 import ConfirmModal from '../components/ConfirmModal';
 
@@ -19,6 +19,7 @@ import {
   fetchCategoryKeys,
   updateCategoryKeys,
   deleteCategory,
+  updateCategory,
 } from '../api';
 
 // const categories = {
@@ -106,10 +107,13 @@ class Categories extends React.Component<Props, State> {
   };
 
   onSave = (id: string, value: string) => {
-    let items = Object.assign(this.state.items);
-    items[id] = value;
+    this.setState({ isSaving: true });
 
-    this.setState({ items });
+    updateCategory(id, value).then(() => {
+      let items = Object.assign(this.state.items);
+      items[id] = value;
+      this.setState({ isSaving: false, items });
+    });
   };
   onDelete = (index: number) => {
     this.setState({
@@ -204,7 +208,7 @@ class Categories extends React.Component<Props, State> {
 
         <PageBody padding="2rem 0">
           <Loader isLoading={this.state.isLoading}>
-            <CategoryList
+            <CategoryListing
               isSaving={this.state.isSaving}
               isCreating={this.state.isCreating}
               onDragEnd={this.onDragEnd}

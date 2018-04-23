@@ -25,6 +25,12 @@ const StyledIcon = styled(Icon)`
 
   margin-top: -0.5em;
   pointer-events: none;
+  opacity: 1;
+  transition: opacity 250ms;
+
+  ${StyledSelect}[readonly] + & {
+    opacity: 0;
+  }
 `;
 type Props = {
   options: Array<{ value: string, label: string }>,

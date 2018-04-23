@@ -71,6 +71,11 @@ const StyledButton = styled.button`
     `
     border-color: transparent;
     background: transparent;
+
+    &:hover,
+    &:focus {
+      background: ${colors.grays[1]};
+    }
   `};
 `;
 const StyledLink = StyledButton.withComponent(Link);

@@ -8,7 +8,8 @@
     "server": "cd functions && firebase serve --only functions,hosting",
     "start":
       "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "build": "cd client && yarn build"
+    "build": "cd client && yarn build",
+    "rules": "firebase-bolt rules.bolt"
   },
   "repository": {
     "type": "git",
