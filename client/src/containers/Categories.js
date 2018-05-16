@@ -11,7 +11,6 @@ import Button from '../components/Button';
 import ConfirmModal from '../components/ConfirmModal';
 
 import icons from '../constants/icons';
-import { colors } from '../utils/theme';
 
 import {
   createCategory,
@@ -136,7 +135,7 @@ class Categories extends React.Component<Props, State> {
       let items = Object.assign(this.state.items);
       delete items[index];
 
-      const deletePromise = deleteCategory(id);
+      const deletePromise = deleteCategory(id, keys);
 
       deletePromise.then(() => {
         this.setState({
@@ -185,7 +184,7 @@ class Categories extends React.Component<Props, State> {
 
   render() {
     const actions = [
-      <InlineLoader size="1.25rem" isLoading={this.state.isSaving} />,
+      // <InlineLoader size="1.25rem" isLoading={this.state.isSaving} />,
       <Button
         theme="primary"
         value="Create new"

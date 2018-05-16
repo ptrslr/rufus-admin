@@ -33,7 +33,11 @@ export const input = css`
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px ${props => rgba(colors.grays[5], 0.5)};
+    box-shadow: 0 0 0 2px ${rgba(colors.grays[5], 0.5)};
+  }
+
+  &:invalid:not(:focus):not(:placeholder-shown) {
+    border-color: ${colors.red}
   }
 
   ${placeholder({

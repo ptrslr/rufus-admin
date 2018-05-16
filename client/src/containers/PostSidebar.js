@@ -6,6 +6,7 @@ import Status from '../components/Status';
 import Select from '../components/Select';
 import Button from '../components/Button';
 import AvatarBox from '../components/AvatarBox';
+import Label from '../components/Label';
 import icons from '../constants/icons';
 import { colors } from '../utils/theme';
 
@@ -25,17 +26,17 @@ const Body = styled.div`
 const Item = styled.div`
   padding: 0.75rem 0;
 `;
-const Label = styled.label.attrs({
-  htmlFor: props => props.for,
-})`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: ${colors.grays[8]};
-`;
+// const Label = styled.label.attrs({
+//   htmlFor: props => props.for,
+// })`
+//   display: block;
+//   margin-bottom: 0.5rem;
+//   font-size: 0.8125rem;
+//   font-weight: 700;
+//   text-transform: uppercase;
+//   letter-spacing: 0.05em;
+//   color: ${colors.grays[8]};
+// `;
 const Footer = styled.div`
   padding: 1rem;
 `;

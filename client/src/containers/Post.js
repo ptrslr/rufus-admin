@@ -8,7 +8,7 @@ import {
 } from 'draft-js';
 import styled from 'styled-components';
 
-import { createPost, fetchPost, fetchPostContent } from '../api/firebase';
+import { createPost, fetchPost, fetchPostContent } from '../api';
 
 import Editor from './Editor';
 import PostSidebar from './PostSidebar';

@@ -23,3 +23,7 @@ yarn-error.log*
 firebase-debug.log*
 cloud-functions-emulator.log*
 
+
+# firebase admin service account key
+/functions/project-rufus-firebase-adminsdk-bx2dx-28572f86b5.json
+

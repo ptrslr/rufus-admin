@@ -5,12 +5,13 @@ import TeamContainer from '../containers/Team';
 
 type Props = {
   history: Object,
+  disabled: boolean,
 };
 
 const Team = (props: Props) => {
-  const { history } = props;
+  const { history, disabled } = props;
 
-  return <TeamContainer history={history} />;
+  return <TeamContainer history={history} disabled={disabled} />;
 };
 
 export default Team;

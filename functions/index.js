@@ -4,19 +4,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const config = {
-  apiKey: 'AIzaSyA0_eG1U3QHIKbr4UpmW8GLrH5YbF_La_E',
-  authDomain: 'project-rufus.firebaseapp.com',
-  databaseURL: 'https://project-rufus.firebaseio.com',
-  projectId: 'project-rufus',
-  storageBucket: 'project-rufus.appspot.com',
-  messagingSenderId: '83992737225',
-  databaseAuthVariableOverride: {
-    uid: 'server',
-  },
-};
+const serviceAccount = require('./project-rufus-firebase-adminsdk-bx2dx-28572f86b5.json');
 
-admin.initializeApp(config);
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://project-rufus.firebaseio.com',
+});
 
 const app = express();
 
@@ -46,9 +39,11 @@ router.use(function(err, req, res, next) {
 // more routes for our API will happen here
 const postRoutes = require('./api/routes/postRoutes');
 const categoryRoutes = require('./api/routes/categoryRoutes');
+const teamRoutes = require('./api/routes/teamRoutes');
 
-postRoutes(router);
-categoryRoutes(router);
+// postRoutes(router);
+// categoryRoutes(router);
+teamRoutes(router);
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

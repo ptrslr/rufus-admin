@@ -8,7 +8,9 @@ import Input from '../components/Input';
 import Select from '../components/Select';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
+
 import icons from '../constants/icons';
+import role from '../constants/role';
 
 import { colors } from '../utils/theme';
 
@@ -25,71 +27,65 @@ const UserAvatar = styled.div`
   padding-right: 1rem;
 `;
 const UserEmail = styled.div`
-  flex: 1 1 50%;
+  flex: 1 1 33.333%;
+  padding-right: 1rem;
+`;
+const UserName = styled.div`
+  flex: 1 1 33.333%;
   padding-right: 1rem;
 `;
 const UserRole = styled.div`
-  flex: 1 1 50%;
+  flex: 1 1 33.333%;
 `;
 
 type Props = {
-  isNew: boolean,
   isDisabled: boolean,
-  id?: string,
+  uid: string,
+  index: number,
   avatar: string,
+  displayName: string,
   email: string,
-  value: string,
+  role: string,
   onSave: Function,
-  onDelete: Function,
-  onNewCancel: ?Function,
-  onNewSave: ?Function,
+  onDisable?: Function,
+  onEnable?: Function,
+  onDelete?: Function,
 };
 type State = {
   isEditing: boolean,
   value: string,
-  selectValue: string,
-  inputValue: string,
+  selectValue: $Keys<typeof role>,
 };
 
 class TeamListingItem extends React.Component<Props, State> {
-  selectRef: ?Object;
-  inputRef: ?Object;
+  selectRef: ?HTMLSelectElement;
 
   constructor(props: Props) {
     super(props);
 
     this.state = {
-      isEditing: props.isNew ? true : false,
-      value: props.value,
-      selectValue: props.value,
-      inputValue: '',
+      isEditing: false,
+      value: props.role,
+      selectValue: props.role,
     };
 
     this.selectRef = React.createRef();
-    this.inputRef = React.createRef();
   }
 
-  componentDidMount = () => {
-    if (this.props.isNew && this.selectRef) {
-      this.selectRef.current.focus();
-    }
-  };
-
-  handleInputChange = (e: SyntheticEvent<HTMLInputElement>) => {
-    this.setState({
-      inputValue: e.target.value,
-    });
-  };
-
   handleSelectChange = (e: SyntheticEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
     this.setState({
-      selectValue: e.target.value,
+      selectValue: e.currentTarget.value,
     });
   };
 
+  handleDisable = (e: SyntheticEvent<HTMLButtonElement>) => {
+    if (this.props.onDisable) this.props.onDisable(this.props.index);
+  };
+  handleEnable = (e: SyntheticEvent<HTMLButtonElement>) => {
+    if (this.props.onEnable) this.props.onEnable(this.props.index);
+  };
   handleDelete = (e: SyntheticEvent<HTMLButtonElement>) => {
-    this.props.onDelete(this.props.index);
+    if (this.props.onDelete) this.props.onDelete(this.props.index);
   };
 
   handleEdit = (e: SyntheticEvent<HTMLButtonElement>) => {
@@ -104,35 +100,25 @@ class TeamListingItem extends React.Component<Props, State> {
   };
 
   handleCancel = (e: SyntheticEvent<HTMLButtonElement>) => {
-    if (this.props.isNew) {
-      this.props.onNewCancel && this.props.onNewCancel();
-    } else {
-      const selectValue = this.state.value;
+    const selectValue = this.state.value;
 
-      this.setState({
-        isEditing: false,
-        selectValue,
-      });
-    }
+    this.setState({
+      isEditing: false,
+      selectValue,
+    });
   };
   handleSave = (e: SyntheticEvent<HTMLButtonElement>) => {
-    if (this.props.isNew) {
-      this.props.onNewSave && this.props.onNewSave(this.state.selectValue);
-    } else {
-      const value = this.state.selectValue;
+    const value = this.state.selectValue;
 
-      this.setState(
-        {
-          isEditing: false,
-          value,
-        },
-        this.props.onSave(this.props.id, value)
-      );
-    }
+    this.setState({
+      isEditing: false,
+      value,
+    });
+    this.props.onSave(this.props.index, value);
   };
 
   render() {
-    const { isNew, isDisabled } = this.props;
+    const { isDisabled } = this.props;
 
     const options = [
       {
@@ -150,26 +136,26 @@ class TeamListingItem extends React.Component<Props, State> {
     ];
 
     const components = [
-      this.props.isNew ? (
-        <UserIcon key="0">
-          <Icon name={icons.PLUS} />
-        </UserIcon>
-      ) : (
-        <UserAvatar key="0">
-          <Avatar alt={this.props.email} size="sm" />
-        </UserAvatar>
-      ),
-      <UserEmail key="1">
+      <UserAvatar key="0">
+        <Avatar alt={this.props.email} size="sm" />
+      </UserAvatar>,
+      <UserName key="2">
         <Input
-          innerRef={this.inputRef}
-          value={this.props.email}
-          readOnly={!this.props.isNew}
-          onChange={this.handleInputChange}
-          placeholder="Email"
+          value={this.props.displayName}
+          readOnly={true}
           disabled={isDisabled}
+          type="text"
+        />
+      </UserName>,
+      <UserEmail key="3">
+        <Input
+          value={this.props.email}
+          readOnly={true}
+          disabled={isDisabled}
+          type="email"
         />
       </UserEmail>,
-      <UserRole key="2">
+      <UserRole key="4">
         <Select
           innerRef={this.selectRef}
           value={this.state.selectValue}
@@ -183,13 +169,22 @@ class TeamListingItem extends React.Component<Props, State> {
 
     return (
       <ListingItem
-        isNew={this.props.isNew}
         isDisabled={this.props.isDisabled}
         isEditing={this.state.isEditing}
         components={components}
         onSave={this.handleSave}
-        onDelete={this.handleDelete}
-        onEdit={this.handleEdit}
+        onDisable={
+          this.props.onDisable && this.props.role !== role.ADMIN
+            ? this.handleDisable
+            : undefined
+        }
+        onEnable={this.props.onEnable ? this.handleEnable : undefined}
+        onDelete={this.props.onDelete ? this.handleDelete : undefined}
+        onEdit={
+          this.props.onDisable && this.props.role !== role.ADMIN
+            ? this.handleEdit
+            : undefined
+        }
         onCancel={this.handleCancel}
       />
     );

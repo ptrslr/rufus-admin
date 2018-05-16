@@ -12,7 +12,7 @@ import Loader from '../components/Loader';
 import status from '../constants/status';
 import icons from '../constants/icons';
 
-import firebase from '../api/firebase';
+import { fetchPosts } from '../api';
 
 type Props = {
   status?: $Keys<typeof status>,
@@ -35,25 +35,14 @@ class Posts extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    this.firebaseRef = firebase.database().ref('/posts/');
+  componentDidMount = async () => {
+    const posts = await fetchPosts();
 
-    this.firebaseRef.on('value', snap => {
-      const posts = snap.val();
-
-      this.setState({
-        isLoading: false,
-        posts,
-      });
+    this.setState({
+      isLoading: false,
+      posts,
     });
-  }
-
-  componentWillUnmount() {
-    // Un-register the listener on '/someData'.
-    if (this.firebaseRef) {
-      this.firebaseRef.off('value', this.firebaseCallback);
-    }
-  }
+  };
 
   render() {
     const menu = [

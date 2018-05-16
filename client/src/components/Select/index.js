@@ -8,6 +8,7 @@ import { formControl, input } from '../../utils/styles';
 
 const Wrapper = styled.div`
   position: relative;
+  width: 100%;
 `;
 const StyledSelect = styled.select`
   ${formControl};

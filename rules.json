@@ -4,25 +4,26 @@
     ".write": "auth != null && auth.token.role == 'admin'",
     "categories": {
       ".read": "auth != null",
-      ".write": "auth != null && auth.token.role == 'editor'",
-      "$id": {
+      ".write": "auth != null && auth.token.role == 'admin'",
+      "$categoryId": {
         ".validate": "newData.hasChildren(['name'])",
         "name": {
           ".validate": "newData.isString()"
         },
         "$other": {
           ".validate": "false"
-        }
+        },
+        ".write": "auth != null && auth.token.role == 'admin'"
       }
     },
     "categoryKeys": {
       ".read": "auth != null",
-      ".write": "auth != null && auth.token.role == 'editor'"
+      ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')"
     },
     "posts": {
       ".read": "auth != null",
-      ".write": "auth != null && auth.token.role == 'editor'",
-      "$id": {
+      ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",
+      "$postId": {
         ".validate": "newData.hasChildren(['title', 'author', 'status', 'category', 'publishTime'])",
         "title": {
           ".validate": "newData.isString()"
@@ -44,13 +45,14 @@
         },
         "$other": {
           ".validate": "false"
-        }
+        },
+        ".write": "auth != null && newData.parent().parent().child('posts/' + $postId + '/author').val() == auth.uid"
       }
     },
     "postContents": {
       ".read": "auth != null",
-      ".write": "auth != null && auth.token.role == 'editor'",
-      "$id": {
+      ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",
+      "$postId": {
         ".validate": "newData.hasChildren(['content'])",
         "content": {
           ".validate": "newData.hasChildren()"
@@ -61,14 +63,19 @@
       }
     },
     "team": {
-      "$id": {
-        ".validate": "newData.hasChildren(['role'])",
-        "role": {
-          ".validate": "newData.isString() && (newData.val() == 'admin' || newData.val() == 'editor' || newData.val() == 'author')"
+      ".read": "auth != null && auth.token.role != null",
+      "$userId": {
+        ".validate": "newData.hasChildren(['disabled'])",
+        "disabled": {
+          ".validate": "newData.isBoolean()"
         },
         "$other": {
           ".validate": "false"
-        }
+        },
+        ".write": "auth != null && auth.token.role == 'admin'",
+        ".indexOn": [
+          "disabled"
+        ]
       }
     }
   }

@@ -13,6 +13,7 @@ type Props = {
   icon: $Keys<typeof icons>,
   style: string,
   onClick: Function,
+  type?: string,
 };
 
 const StyledButton = styled.button`
@@ -57,7 +58,7 @@ const StyledLabel = styled.span`
 `;
 
 const Button = (props: Props) => {
-  const { active, label, icon, onClick, style } = props;
+  const { active, label, icon, onClick, style, type } = props;
 
   const onButtonClick = e => {
     e.preventDefault();
@@ -69,7 +70,7 @@ const Button = (props: Props) => {
       className={active ? 'is-active' : ''}
       onMouseDown={onButtonClick}
       active={active}
-      type="button"
+      type={type ? type : 'button'}
     >
       <StyledIcon name={icon} />
       <StyledLabel>{label}</StyledLabel>

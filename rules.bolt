@@ -1,42 +1,58 @@
+// ==========================================================================
+// Rules
+// ==========================================================================
+
+// root
 path / {
-  read() { auth != null && auth.token.role === 'admin' }
-  write() { auth != null && auth.token.role === 'admin' }
+  read() { isSigned() && isAdmin() }
+  write() { isSigned() && isAdmin() }
 }
 
 // categories
 path /categories {
-  read() { auth != null}
-  write() { auth != null && auth.token.role === 'editor'}
+  read() { isSigned() }
+  write() { isSigned() && isAdmin() }
 }
-path /categories/{id} is Category;
+path /categories/{categoryId} is Category {
+  write() { isSigned() && isAdmin()}
+}
 
+// categoryKeys
 path /categoryKeys {
-  read() { auth != null }
-  write() { auth != null && auth.token.role === 'editor' }
+  read() { isSigned() }
+  write() { isSigned() && (isAdmin() || isEditor()) }
 }
 
 // posts
 path /posts {
-  read() { auth != null }
-  write() { auth != null && auth.token.role === 'editor' }
+  read() { isSigned() }
+  write() { isSigned() && (isAdmin() || isEditor()) }
 }
-path /posts/{id} is Post;
+path /posts/{postId} is Post {
+  write() { isSigned() && isPostAuthor(postId) }
+}
 
 
+// postContents
 path /postContents {
-  read() { auth != null }
-  write() { auth != null && auth.token.role === 'editor' }
+  read() { isSigned() }
+  write() { isSigned() && (isAdmin() || isEditor()) }
 }
-path /postContents/{id} is PostContent;
+path /postContents/{postId} is PostContent;
 
 // team
 path /team {
-  read() { false }
-  write() { false }
+  read() { isSigned() && isTeamMember() }
 }
-path /team/{id} is TeamMember;
+path /team/{userId} is TeamMember {
+  index() {["disabled"] }
+  write() { isSigned() && isAdmin() }
+}
 
-// types
+
+// ==========================================================================
+// Types
+// ==========================================================================
 type Status extends String {
   validate() { this === 'published' || this === 'draft' || this === 'hidden'}
 }
@@ -62,5 +78,28 @@ type Category {
 }
 
 type TeamMember {
-  role: Role
+  disabled: Boolean
+}
+
+// ==========================================================================
+// Helper functions
+// ==========================================================================
+
+isSigned() {
+  auth != null
+}
+isAdmin() {
+  auth.token.role === 'admin'
+}
+isEditor() {
+  auth.token.role === 'editor'
+}
+isAuthor() {
+  auth.token.role === 'author'
+}
+isTeamMember() {
+  auth.token.role != null
+}
+isPostAuthor(postId) {
+  root.child('posts/' + postId + '/author').val() === auth.uid
 }

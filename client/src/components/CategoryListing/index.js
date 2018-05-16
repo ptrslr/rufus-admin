@@ -63,7 +63,7 @@ const CategoryListing = (props: Props) => {
                       index={index}
                       provided={provided}
                       snapshot={snapshot}
-                      value={items[key]}
+                      value={items[key].name}
                       onSave={onSave}
                       onDelete={onDelete}
                       onNewCancel={null}

@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react';
-import styled, { withComponent } from 'styled-components';
+import styled from 'styled-components';
 
 import Modal from '../components/Modal';
 import Button from '../components/Button';
 import { Heading1 } from '../components/Typography';
-import icons from '../constants/icons';
 
 const Title = Heading1.extend``.withComponent('h2');
 const Subtitle = styled.div`

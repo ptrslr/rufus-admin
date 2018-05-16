@@ -16,6 +16,7 @@ const icons = {
   CLOCK: 'Clock',
   CLOSE: 'Close',
   COG: 'Cog',
+  DISABLE: 'Disable',
   EDIT: 'Edit',
   GITHUB: 'Github',
   H1: 'H1',

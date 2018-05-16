@@ -6,7 +6,6 @@ import { formControl, input } from '../../utils/styles';
 
 type Props = {
   type?: string,
-  children?: React.Node,
 };
 
 const StyledInput = styled.input`

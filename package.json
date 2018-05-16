@@ -6,8 +6,7 @@
   "scripts": {
     "client": "cd client && yarn start",
     "server": "cd functions && firebase serve --only functions,hosting",
-    "start":
-      "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "build": "cd client && yarn build",
     "rules": "firebase-bolt rules.bolt"
   },
@@ -24,12 +23,19 @@
   "description": "",
   "dependencies": {
     "babel-eslint": "^8.2.2",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.15.1",
     "concurrently": "^3.5.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.10.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
+    "firebase-bolt": "^0.8.3",
     "flow": "^0.2.3"
+  },
+  "bin": {
+    "setup": "./functions/setup.js"
   }
 }

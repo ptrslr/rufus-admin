@@ -20,12 +20,14 @@ export const white = '#fff';
 export const black = grays[9];
 
 export const blue = '#07c';
+export const red = '#B71C1C';
 export const primary = black;
 
 export const colors = {
   white,
   black,
   blue,
+  red,
   primary,
   grays,
 };

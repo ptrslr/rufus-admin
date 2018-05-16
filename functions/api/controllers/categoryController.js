@@ -219,7 +219,7 @@ exports.deleteCategory = function(req, res) {
         return res.status(400).send('CategoryId does not exist');
       }
 
-      return res.statuse(400).send('Missing categoryId');
+      return res.status(400).send('Missing categoryId');
     })
     .catch(function(err) {
       handleError(err, res);

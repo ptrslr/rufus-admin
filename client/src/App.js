@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import { auth } from './api/firebase.js';
+import { auth } from './api';
 import firebaseui from 'firebaseui';
 
 import Loader from './components/Loader';
@@ -12,25 +12,21 @@ import EditPost from './screens/EditPost';
 import NewPost from './screens/NewPost';
 import Categories from './screens/Categories';
 import Team from './screens/Team';
+import NewTeamMember from './screens/NewTeamMember';
 import Login from './screens/Login';
 import NoMatch from './screens/NoMatch';
 
 import status from './constants/status';
 import { colors } from './utils/theme';
 
-const Wrapper = styled.div`
-  display: flex;
-  height: 100%;
-  color: ${colors.black};
-`;
 const Layout = styled.div`
   display: flex;
   height: 100%;
   color: ${colors.black};
 `;
 const LayoutSidebar = styled.div`
-  flex: 0 0 15rem;
-  width: 15rem;
+  flex: 0 0 18rem;
+  width: 18rem;
 `;
 const LayoutMain = styled.main`
   flex: 1 1 auto;
@@ -140,7 +136,29 @@ class App extends React.Component<Props, State> {
                           path="/categories"
                           component={Categories}
                         />
-                        <Route exact path="/team" component={Team} />
+
+                        <Redirect exact from="/team" to="/team/active" />
+
+                        <Route
+                          exact
+                          path="/team/active"
+                          render={history => (
+                            <Team history={history} disabled={false} />
+                          )}
+                        />
+                        <Route
+                          exact
+                          path="/team/disabled"
+                          render={history => (
+                            <Team history={history} disabled={true} />
+                          )}
+                        />
+
+                        <Route
+                          exact
+                          path="/team/new-member"
+                          component={NewTeamMember}
+                        />
 
                         <Route component={NoMatch} />
                       </Switch>

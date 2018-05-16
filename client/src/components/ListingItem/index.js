@@ -61,35 +61,22 @@ const Action = styled.div`
 `;
 
 type Props = {
-  isNew: boolean,
+  isNew?: boolean,
   isDisabled: boolean,
-  isEditing: boolean,
+  isEditing?: boolean,
   provided?: Object,
   snapshot?: Object,
   components: Array<React.Node>,
   onSave: Function,
-  onDelete: Function,
-  onEdit: Function,
-  onCancel: Function,
+  onDelete?: Function,
+  onDisable?: Function,
+  onEnable?: Function,
+  onEdit?: Function,
+  onCancel?: Function,
 };
 
 const Item = (props: Props) => {
   const { isNew, isDisabled, provided, snapshot } = props;
-
-  const handleDelete = (e: SyntheticEvent<HTMLButtonElement>) => {
-    props.onDelete();
-  };
-
-  const handleEdit = (e: SyntheticEvent<HTMLButtonElement>) => {
-    props.onEdit();
-  };
-
-  const handleCancel = (e: SyntheticEvent<HTMLButtonElement>) => {
-    props.onCancel();
-  };
-  const handleSave = (e: SyntheticEvent<HTMLButtonElement>) => {
-    props.onSave();
-  };
 
   const draggableProps = provided ? provided.draggableProps : null;
   const dragHandleProps = provided ? provided.dragHandleProps : null;
@@ -116,7 +103,7 @@ const Item = (props: Props) => {
                 theme="secondary"
                 iconLeft={icons.CLOSE}
                 value="Cancel"
-                onClick={handleCancel}
+                onClick={props.onCancel}
                 disabled={isDisabled}
               />
             </Action>
@@ -125,31 +112,57 @@ const Item = (props: Props) => {
                 theme="primary"
                 iconLeft={icons.CHECK}
                 value="Save"
-                onClick={handleSave}
+                onClick={props.onSave}
                 disabled={isDisabled}
               />
             </Action>
           </Actions>
         ) : (
           <Actions>
-            <Action>
-              <Button
-                theme="link"
-                iconLeft={icons.REMOVE}
-                value="Delete"
-                onClick={handleDelete}
-                disabled={isDisabled}
-              />
-            </Action>
-            <Action>
-              <Button
-                theme="secondary"
-                iconLeft={icons.EDIT}
-                value="Edit"
-                onClick={handleEdit}
-                disabled={isDisabled}
-              />
-            </Action>
+            {props.onDelete && (
+              <Action>
+                <Button
+                  theme="link"
+                  iconLeft={icons.REMOVE}
+                  value="Delete"
+                  onClick={props.onDelete}
+                  disabled={isDisabled}
+                />
+              </Action>
+            )}
+            {props.onDisable && (
+              <Action>
+                <Button
+                  theme="link"
+                  iconLeft={icons.DISABLE}
+                  value="Disable"
+                  onClick={props.onDisable}
+                  disabled={isDisabled}
+                />
+              </Action>
+            )}
+            {props.onEnable && (
+              <Action>
+                <Button
+                  theme="secondary"
+                  iconLeft={icons.CHECK}
+                  value="Enable"
+                  onClick={props.onEnable}
+                  disabled={isDisabled}
+                />
+              </Action>
+            )}
+            {props.onEdit && (
+              <Action>
+                <Button
+                  theme="secondary"
+                  iconLeft={icons.EDIT}
+                  value="Edit"
+                  onClick={props.onEdit}
+                  disabled={isDisabled}
+                />
+              </Action>
+            )}
           </Actions>
         )}
       </Inner>

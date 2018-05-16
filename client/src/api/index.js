@@ -1,13 +1,42 @@
 // @flow
 
 import firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/database';
 import axios from 'axios';
-import { auth } from './firebase.js';
+
+import status from '../constants/status';
+import role from '../constants/role';
+
+const config = {
+  apiKey: 'AIzaSyA0_eG1U3QHIKbr4UpmW8GLrH5YbF_La_E',
+  authDomain: 'project-rufus.firebaseapp.com',
+  databaseURL: 'https://project-rufus.firebaseio.com',
+  projectId: 'project-rufus',
+  storageBucket: 'project-rufus.appspot.com',
+  messagingSenderId: '83992737225',
+};
+
+firebase.initializeApp(config);
+
+export const provider = new firebase.auth.GoogleAuthProvider();
+export const auth = firebase.auth();
+export default firebase;
 
 const rootRef = firebase.database().ref();
-const categoriesRef = rootRef.child(`categories`);
-const categoryKeysRef = rootRef.child(`categoryKeys`);
+const postsRef = rootRef.child('posts');
+const postContentsRef = rootRef.child('postContents');
+const categoriesRef = rootRef.child('categories');
+const categoryKeysRef = rootRef.child('categoryKeys');
+const teamRef = rootRef.child('team');
+
+const authenticate = async (params = {}) => {
+  const idToken = await auth.currentUser.getIdToken();
+
+  params['auth'] = idToken;
+
+  return params;
+};
 
 const handleError = err => {
   if (err.response) {
@@ -28,46 +57,179 @@ const handleError = err => {
   console.log(err.config);
 };
 
-const authenticate = async (params = {}) => {
-  const idToken = await auth.currentUser.getIdToken();
-  // console.log(idToken);
+/*
+  POSTS
+ */
+export const fetchPosts = async () => {
+  const posts = (await postsRef.once('value')).val();
 
-  params['auth'] = idToken;
+  return posts;
+};
+export const fetchPost = async (postId: string) => {
+  const postRef = rootRef.child(`/posts/${postId}`);
+  const postData = (await postRef.once('value')).val();
 
-  return params;
+  return postData;
 };
 
+export const fetchPostContent = async (postId: string) => {
+  const contentRef = rootRef.child(`/postContents/${postId}`);
+  const contentData = (await contentRef.once('value')).val();
+
+  return JSON.parse(contentData);
+};
+
+type Post = {
+  title: string,
+  subtitle: string,
+  content: Object,
+  status: $Keys<typeof status>,
+  category: string,
+  author: string,
+};
+
+export const createPost = (post: Post): void => {
+  const postsRef = rootRef.child('posts');
+  const contentsRef = rootRef.child('postContents');
+
+  const postId = postsRef.push().key;
+
+  const { title, subtitle, content, status, category, author } = post;
+  const contentStr = JSON.stringify(content);
+
+  const updates = {};
+  updates[`posts/${postId}`] = {
+    title,
+    subtitle,
+    status,
+    category,
+    author,
+  };
+  updates[`postContents/${postId}`] = contentStr;
+
+  return rootRef.update(updates);
+};
+
+export const updatePost = (postId: string, post: Post) => {
+  const { title, subtitle, content, status, category, author } = post;
+  const contentStr = JSON.stringify(content);
+
+  const updates = {};
+  updates[`posts/${postId}`] = {
+    title,
+    subtitle,
+    status,
+    category,
+    author,
+  };
+  updates[`postContents/${postId}`] = contentStr;
+
+  return rootRef.update(updates);
+};
+
+/*
+  CATEGORIES
+ */
+
 export const fetchCategories = async () => {
+  const categories = (await categoriesRef.once('value')).val();
+
+  return categories;
+};
+
+export const fetchCategoryKeys = async () => {
+  const categoryKeys = (await categoryKeysRef.once('value')).val();
+
+  return categoryKeys ? categoryKeys : [];
+};
+
+export const updateCategoryKeys = (keys: Array<string>) => {
+  return rootRef.child(`categoryKeys`).update(keys);
+};
+
+export const createCategory = async (name: string) => {
+  const categoryId = categoriesRef.push().key;
+
+  let categoryKeys = await fetchCategoryKeys();
+  categoryKeys.push(categoryId);
+
+  const updates = {};
+  updates[`/categories/${categoryId}`] = { name };
+  updates[`/categoryKeys`] = categoryKeys;
+
+  return rootRef.update(updates);
+};
+
+export const fetchCategory = async (categoryId: string) => {
+  const category = (await categoriesRef.child(categoryId).once('value')).val();
+
+  return category;
+};
+
+export const updateCategory = (categoryId: string, name: string) => {
+  return categoriesRef
+    .child(categoryId)
+    .child('name')
+    .set(name);
+};
+
+export const deleteCategory = async (id: string, keys: Array<string>) => {
+  const updates = {};
+  updates['categoryKeys'] = keys;
+  updates[`categories/${id}`] = null;
+
+  return rootRef.update(updates);
+};
+
+/*
+  TEAM
+ */
+export const fetchTeam = async () => {
   try {
     const params = await authenticate();
 
-    return await axios.get('api/categories', { params }).then(res => {
+    return await axios.get(`/api/team`, { params }).then(res => {
       return res.data;
     });
   } catch (err) {
     handleError(err);
   }
 };
-export const fetchCategoryKeys = async () => {
+
+export const fetchActiveTeam = async () => {
   try {
     const params = await authenticate();
 
-    return await axios.get('api/categories/keys', { params }).then(res => {
-      const categoryKeys = res.data;
+    return await axios.get(`/api/team/active`, { params }).then(res => {
+      return res.data;
+    });
+  } catch (err) {
+    handleError(err);
+  }
+};
+export const fetchDisabledTeam = async () => {
+  try {
+    const params = await authenticate();
 
-      return categoryKeys ? categoryKeys : [];
+    return await axios.get(`/api/team/disabled`, { params }).then(res => {
+      return res.data;
     });
   } catch (err) {
     handleError(err);
   }
 };
 
-export const createCategory = async (name: string) => {
+export const createTeamMember = async (
+  email: string,
+  password: string,
+  displayName: string,
+  role: $Keys<typeof role>
+) => {
   try {
     const params = await authenticate();
 
     return await axios
-      .post('api/categories', { name }, { params })
+      .post('/api/team', { email, password, displayName, role }, { params })
       .then(res => {
         return res.data;
       });
@@ -76,43 +238,53 @@ export const createCategory = async (name: string) => {
   }
 };
 
-export const updateCategory = async (categoryId: string, name: string) => {
+export const disableTeamMember = async (uid: string) => {
   try {
     const params = await authenticate();
 
-    return await axios
-      .put(`api/categories/${categoryId}`, { name }, { params })
-      .then(res => {
-        return res.data;
-      });
+    const authPromise = axios.put(
+      `/api/team/${uid}`,
+      { disabled: true },
+      { params }
+    );
+
+    const databasePromise = teamRef.child(uid).update({
+      disabled: true,
+    });
+
+    return Promise.all([authPromise, databasePromise]);
   } catch (err) {
     handleError(err);
   }
 };
 
-export const deleteCategory = async (categoryId: string) => {
+export const enableTeamMember = async (uid: string) => {
   try {
     const params = await authenticate();
 
-    return await axios
-      .delete(`api/categories/${categoryId}`, { params })
-      .then(res => {
-        return res.data;
-      });
+    const authPromise = axios.put(
+      `/api/team/${uid}`,
+      { disabled: false },
+      { params }
+    );
+
+    const databasePromise = teamRef.child(uid).update({
+      disabled: false,
+    });
+
+    return Promise.all([authPromise, databasePromise]);
   } catch (err) {
     handleError(err);
   }
 };
 
-export const updateCategoryKeys = async (keys: Array<string>) => {
+export const updateTeamMember = async (uid: string, updates: Object) => {
   try {
     const params = await authenticate();
 
-    return await axios
-      .put(`api/categories/keys`, { keys }, { params })
-      .then(res => {
-        return res.data;
-      });
+    console.log(updates);
+
+    return axios.put(`/api/team/${uid}`, updates, { params });
   } catch (err) {
     handleError(err);
   }

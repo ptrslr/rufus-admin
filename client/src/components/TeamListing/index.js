@@ -19,9 +19,9 @@ type Props = {
   isCreating: boolean,
   items: Object,
   onSave: Function,
-  onDelete: Function,
-  onNewCancel: Function,
-  onNewSave: Function,
+  onDisable?: Function,
+  onEnable?: Function,
+  onDelete?: Function,
 };
 const TeamListing = (props: Props) => {
   const {
@@ -29,47 +29,33 @@ const TeamListing = (props: Props) => {
     isCreating,
     items,
     onSave,
+    onDisable,
+    onEnable,
     onDelete,
-    onNewCancel,
-    onNewSave,
   } = props;
 
-  if (items == null) {
+  if (items == null || items.length === 0) {
     return <Error>So empty&hellip;</Error>;
   }
-  const keys = Object.keys(items);
 
   return (
     <List>
-      {keys.map((key, index) => (
+      {items.map((item, index) => (
         <TeamListingItem
           key={index}
-          isNew={false}
           isDisabled={isCreating}
-          id={key}
+          uid={item.uid}
+          index={index}
           avatar="https://picsum.photos/200"
-          email={items[key].email}
-          value={items[key].role}
+          displayName={item.displayName}
+          email={item.email}
+          role={item.customClaims.role}
           onSave={onSave}
+          onDisable={onDisable}
+          onEnable={onEnable}
           onDelete={onDelete}
-          onNewCancel={null}
-          onNewSave={null}
         />
       ))}
-
-      {isCreating && (
-        <TeamListingItem
-          isNew={true}
-          isDisabled={isSaving}
-          avatar=""
-          email=""
-          value=""
-          onSave={onSave}
-          onDelete={onDelete}
-          onNewCancel={onNewCancel}
-          onNewSave={onNewSave}
-        />
-      )}
     </List>
   );
 };

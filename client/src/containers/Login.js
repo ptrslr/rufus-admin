@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import firebase, { auth, provider } from '../api/firebase.js';
+import firebase, { auth, provider } from '../api';
 import firebaseui from 'firebaseui';
 import 'firebaseui/dist/firebaseui.css';
 import styled from 'styled-components';
@@ -58,7 +58,7 @@ class Login extends React.Component<Props, State> {
 
         this.props.onLogin(authResult);
 
-        return false;
+        return true;
       },
       uiShown: () => {
         // The widget is rendered.
