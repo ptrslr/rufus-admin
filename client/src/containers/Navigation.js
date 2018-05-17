@@ -6,10 +6,12 @@ import Account from '../components//Account';
 import Menu from '../components/MainMenu';
 import Footer from '../components/Footer';
 
+import role from '../constants/role.js';
 import { colors } from '../utils/theme';
 
 type Props = {
   user: ?Object,
+  userRole: ?$Keys<typeof role>,
 };
 
 const Wrapper = styled.nav`
@@ -34,7 +36,7 @@ const Navigation = (props: Props) => {
   return (
     <Wrapper>
       <Header>
-        <Account user={props.user} />
+        <Account user={props.user} userRole={props.userRole} />
       </Header>
       <Body>
         <Menu />

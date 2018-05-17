@@ -6,10 +6,6 @@ import Button from '../components/Button';
 import icons from '../constants/icons';
 import { colors } from '../utils/theme';
 
-type Props = {
-  history: Object,
-};
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -32,9 +28,11 @@ const Subtitle = styled.div`
   font-weight: 700;
 `;
 
-const NoMatch = (props: Props) => {
-  const { history } = props;
+type Props = {
+  history: Object,
+};
 
+const NoMatch = (props: Props) => {
   return (
     <Wrapper>
       <Title>404</Title>
@@ -45,7 +43,7 @@ const NoMatch = (props: Props) => {
         theme="primary"
         iconLeft={icons.ARROW_LEFT}
         value="Go back"
-        onClick={() => history.goBack()}
+        onClick={() => props.history.goBack()}
       />
     </Wrapper>
   );

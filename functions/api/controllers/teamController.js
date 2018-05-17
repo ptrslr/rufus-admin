@@ -236,18 +236,9 @@ exports.getTeamMember = function(req, res) {
     return res.status(401).send('Missing auth token');
   }
 
-  return admin
-    .auth()
-    .verifyIdToken(idToken)
-    .then(function(claims) {
-      if (claims.role !== 'admin') {
-        return res.status(401).send('Not admin');
-      }
+  const userId = req.params.userId;
 
-      const userId = req.params.userId;
-
-      return getUser(userId);
-    })
+  return getUser(userId)
     .then(function(user) {
       return res.json(user);
     })

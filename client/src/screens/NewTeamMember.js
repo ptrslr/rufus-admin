@@ -3,14 +3,10 @@ import * as React from 'react';
 
 import NewTeamMemberContainer from '../containers/NewTeamMember';
 
-type Props = {
-  history: Object,
-};
+type Props = {};
 
 const NewTeamMember = (props: Props) => {
-  const { history } = props;
-
-  return <NewTeamMemberContainer history={history} />;
+  return <NewTeamMemberContainer {...props} />;
 };
 
 export default NewTeamMember;

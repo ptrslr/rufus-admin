@@ -3,14 +3,10 @@ import * as React from 'react';
 
 import CategoriesContainer from '../containers/Categories';
 
-type Props = {
-  history: Object,
-};
+type Props = {};
 
 const Categories = (props: Props) => {
-  const { history } = props;
-
-  return <CategoriesContainer history={history} />;
+  return <CategoriesContainer {...props} />;
 };
 
 export default Categories;

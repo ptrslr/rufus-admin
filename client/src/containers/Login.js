@@ -30,7 +30,6 @@ const Form = styled.div`
 `;
 
 type Props = {
-  history: Object,
   onLogin: Function,
 };
 type State = {};

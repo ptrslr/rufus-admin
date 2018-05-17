@@ -17,6 +17,7 @@ import Login from './screens/Login';
 import NoMatch from './screens/NoMatch';
 
 import status from './constants/status';
+import role from './constants/role';
 import { colors } from './utils/theme';
 
 const Layout = styled.div`
@@ -36,6 +37,7 @@ type Props = {};
 type State = {
   isLoading: boolean,
   user: ?Object,
+  userRole: ?$Keys<typeof role>,
 };
 
 class App extends React.Component<Props, State> {
@@ -45,12 +47,16 @@ class App extends React.Component<Props, State> {
     this.state = {
       isLoading: true,
       user: null,
+      userRole: null,
     };
   }
 
   componentDidMount = () => {
     auth.onAuthStateChanged(user => {
       if (user) {
+        auth.currentUser.getIdTokenResult().then(idToken => {
+          this.setState({ userRole: idToken.claims.role });
+        });
         this.setState({ user });
       }
       this.setState({ isLoading: false });
@@ -70,9 +76,7 @@ class App extends React.Component<Props, State> {
             <Route
               exact
               path="/login"
-              render={history => (
-                <Login history={history} onLogin={this.onLogin} />
-              )}
+              render={props => <Login onLogin={this.onLogin} {...props} />}
             />
 
             {this.state.user ? (
@@ -81,7 +85,10 @@ class App extends React.Component<Props, State> {
                 render={() => (
                   <Layout>
                     <LayoutSidebar>
-                      <Sidebar user={this.state.user} />
+                      <Sidebar
+                        user={this.state.user}
+                        userRole={this.state.userRole}
+                      />
                     </LayoutSidebar>
                     <LayoutMain>
                       <Switch>
@@ -92,42 +99,42 @@ class App extends React.Component<Props, State> {
                         <Route
                           exact
                           path="/posts/drafts"
-                          render={history => (
-                            <Posts history={history} status={status.DRAFT} />
+                          render={props => (
+                            <Posts status={status.DRAFT} {...props} />
                           )}
                         />
                         <Route
                           exact
                           path="/posts/published"
-                          render={history => (
-                            <Posts
-                              history={history}
-                              status={status.PUBLISHED}
-                            />
+                          render={props => (
+                            <Posts status={status.PUBLISHED} {...props} />
                           )}
                         />
                         <Route
                           exact
                           path="/posts/scheduled"
-                          render={history => (
-                            <Posts
-                              history={history}
-                              status={status.SCHEDULED}
-                            />
+                          render={props => (
+                            <Posts status={status.SCHEDULED} {...props} />
                           )}
                         />
                         <Route
                           exact
                           path="/posts/hidden"
-                          render={history => (
-                            <Posts history={history} status={status.HIDDEN} />
+                          render={props => (
+                            <Posts status={status.HIDDEN} {...props} />
                           )}
                         />
 
                         <Route
                           exact
                           path="/posts/new-post"
-                          component={NewPost}
+                          render={props => (
+                            <NewPost
+                              user={this.state.user}
+                              userRole={this.state.userRole}
+                              {...props}
+                            />
+                          )}
                         />
                         <Route exact path="/posts/:id" component={EditPost} />
 
@@ -142,16 +149,12 @@ class App extends React.Component<Props, State> {
                         <Route
                           exact
                           path="/team/active"
-                          render={history => (
-                            <Team history={history} disabled={false} />
-                          )}
+                          render={props => <Team disabled={false} {...props} />}
                         />
                         <Route
                           exact
                           path="/team/disabled"
-                          render={history => (
-                            <Team history={history} disabled={true} />
-                          )}
+                          render={props => <Team disabled={true} {...props} />}
                         />
 
                         <Route

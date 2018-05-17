@@ -5,12 +5,9 @@ import PostContainer from '../containers/Post';
 
 type Props = {
   match: Object,
-  history: Object,
 };
 const EditPost = (props: Props) => {
-  const { match, history } = props;
-
-  return <PostContainer id={match.params.id} history={history} />;
+  return <PostContainer id={props.match.params.id} {...props} />;
 };
 
 export default EditPost;

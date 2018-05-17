@@ -29,13 +29,17 @@ const StyledIcon = styled(Icon)`
   opacity: 1;
   transition: opacity 250ms;
 
-  ${StyledSelect}[readonly] + & {
+  ${StyledSelect} [readonly="true"] + & {
     opacity: 0;
   }
 `;
+
+export type SelectOptions = Array<{ value: string, label: string }>;
+
 type Props = {
-  options: Array<{ value: string, label: string }>,
+  options: SelectOptions,
 };
+
 const Select = (props: Props) => {
   const { options, ...other } = props;
 

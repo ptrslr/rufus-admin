@@ -4,9 +4,13 @@ import styled from 'styled-components';
 
 import Status from '../components/Status';
 import Select from '../components/Select';
+import type { SelectOptions } from '../components/Select';
 import Button from '../components/Button';
 import AvatarBox from '../components/AvatarBox';
 import Label from '../components/Label';
+
+import status from '../constants/status';
+import role from '../constants/role';
 import icons from '../constants/icons';
 import { colors } from '../utils/theme';
 
@@ -26,6 +30,21 @@ const Body = styled.div`
 const Item = styled.div`
   padding: 0.75rem 0;
 `;
+
+const categories = [
+  {
+    value: '-LCdxLWfAHS7_gras_d1',
+    label: 'Ekonomika',
+  },
+  {
+    value: '-LCdxXdree1sm5IlKQ9i',
+    label: 'Šport',
+  },
+  {
+    value: '-LCeTprDl1Z1UNP1dJMC',
+    label: 'Politika',
+  },
+];
 // const Label = styled.label.attrs({
 //   htmlFor: props => props.for,
 // })`
@@ -41,18 +60,16 @@ const Footer = styled.div`
   padding: 1rem;
 `;
 
-const categories = [
-  {
-    value: '0',
-    label: 'Ekonomika',
-  },
-  {
-    value: '1',
-    label: 'Šport',
-  },
-];
-
-const PostSidebar = () => {
+type Props = {
+  status: $Keys<typeof status>,
+  category: ?string,
+  categoryOptions: SelectOptions,
+  authorName: ?string,
+  authorRole: ?$Keys<typeof role>,
+  authorImage: ?string,
+  onCategoryChange: Function,
+};
+const PostSidebar = (props: Props) => {
   return (
     <Wrapper>
       <Status status="draft" />
@@ -64,7 +81,11 @@ const PostSidebar = () => {
         </Item>
         <Item>
           <Label>Author:</Label>
-          <AvatarBox name="Sarah Schmidt" title="Editor" image="" />
+          <AvatarBox
+            name={props.authorName}
+            title={props.authorRole}
+            image={props.authorImage}
+          />
         </Item>
       </Body>
 

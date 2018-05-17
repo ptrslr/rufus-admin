@@ -21,7 +21,6 @@ import icons from '../constants/icons';
 import { colors } from '../utils/theme';
 
 type Props = {
-  history: Object,
   disabled: boolean,
 };
 type State = {

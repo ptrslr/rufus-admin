@@ -9,6 +9,7 @@ import icons from '../../constants/icons';
 
 import { colors } from '../../utils/theme';
 
+const Wrapper = styled.form``;
 const Inner = styled.div`
   display: flex;
   padding: 1rem 1rem 1rem 2rem;
@@ -82,7 +83,10 @@ const Item = (props: Props) => {
   const dragHandleProps = provided ? provided.dragHandleProps : null;
 
   return (
-    <div className={isDisabled ? 'is-disabled' : ''}>
+    <Wrapper
+      className={isDisabled ? 'is-disabled' : ''}
+      onSubmit={props.onSave}
+    >
       <Inner
         innerRef={provided ? provided.innerRef : null}
         className={snapshot && snapshot.isDragging ? 'is-dragging' : ''}
@@ -114,6 +118,7 @@ const Item = (props: Props) => {
                 value="Save"
                 onClick={props.onSave}
                 disabled={isDisabled}
+                type="submit"
               />
             </Action>
           </Actions>
@@ -167,7 +172,7 @@ const Item = (props: Props) => {
         )}
       </Inner>
       {provided && provided.placeholder}
-    </div>
+    </Wrapper>
   );
 };
 

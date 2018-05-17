@@ -2,14 +2,14 @@
 import * as React from 'react';
 
 import PostContainer from '../containers/Post';
+import role from '../constants/role';
 
 type Props = {
-  history: Object,
+  user: ?Object,
+  userRole: ?$Keys<typeof role>,
 };
 const NewPost = (props: Props) => {
-  const { history } = props;
-
-  return <PostContainer history={history} />;
+  return <PostContainer {...props} />;
 };
 
 export default NewPost;

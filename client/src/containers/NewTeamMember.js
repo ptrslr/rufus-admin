@@ -22,9 +22,7 @@ import { colors } from '../utils/theme';
 
 import { createTeamMember } from '../api';
 
-type Props = {
-  history: Object,
-};
+type Props = {};
 type State = {
   isLoading: boolean,
   email: string,
@@ -33,6 +31,8 @@ type State = {
   repeatPassword: string,
   role: $Keys<typeof role>,
 };
+type FormComponent = SyntheticEvent<HTMLInputElement> &
+  SyntheticEvent<HTMLSelectElement>;
 
 class NewTeamMember extends React.Component<Props, State> {
   ui: Object;
@@ -74,9 +74,7 @@ class NewTeamMember extends React.Component<Props, State> {
     this.props.history.push('/team');
   };
 
-  handleChange = (
-    e: SyntheticEvent<HTMLInputElement> & SyntheticEvent<HTMLSelectElement>
-  ) => {
+  handleChange = (e: FormComponent) => {
     this.setState({
       [e.currentTarget.name]: e.currentTarget.value,
     });

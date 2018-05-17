@@ -36,9 +36,7 @@ const reorder = (keys, startIndex, endIndex) => {
   return result;
 };
 
-type Props = {
-  history: Object,
-};
+type Props = {};
 type State = {
   isLoading: boolean,
   isSaving: boolean,
@@ -46,7 +44,8 @@ type State = {
   isModalOpen: boolean,
   items: Object,
   keys: Array<string>,
-  deleteIndex?: number,
+  deleteIndex?: ?number,
+  deleteName?: ?string,
 };
 class Categories extends React.Component<Props, State> {
   constructor() {
@@ -115,9 +114,12 @@ class Categories extends React.Component<Props, State> {
     });
   };
   onDelete = (index: number) => {
+    const deleteName = this.state.items[this.state.keys[index]].name;
+
     this.setState({
       isModalOpen: true,
       deleteIndex: index,
+      deleteName,
     });
   };
   onDeleteConfirm = () => {
@@ -126,7 +128,7 @@ class Categories extends React.Component<Props, State> {
     });
     const index = this.state.deleteIndex;
 
-    if (typeof index !== 'undefined') {
+    if (index != null) {
       const id = this.state.keys[index];
 
       let keys = Array.from(this.state.keys);
@@ -184,7 +186,7 @@ class Categories extends React.Component<Props, State> {
 
   render() {
     const actions = [
-      // <InlineLoader size="1.25rem" isLoading={this.state.isSaving} />,
+      <InlineLoader size="1.25rem" isLoading={this.state.isSaving} />,
       <Button
         theme="primary"
         value="Create new"
@@ -194,12 +196,7 @@ class Categories extends React.Component<Props, State> {
       />,
     ];
 
-    const deleteIndex = this.state.deleteIndex;
-
-    let deleteName;
-    if (typeof deleteIndex !== 'undefined') {
-      deleteName = this.state.items[this.state.keys[deleteIndex]];
-    }
+    const deleteName = this.state.deleteName;
 
     return (
       <Page>

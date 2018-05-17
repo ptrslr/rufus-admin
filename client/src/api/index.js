@@ -84,8 +84,8 @@ type Post = {
   subtitle: string,
   content: Object,
   status: $Keys<typeof status>,
-  category: string,
-  author: string,
+  category: ?string,
+  authorUid: ?string,
 };
 
 export const createPost = (post: Post): void => {
@@ -94,7 +94,7 @@ export const createPost = (post: Post): void => {
 
   const postId = postsRef.push().key;
 
-  const { title, subtitle, content, status, category, author } = post;
+  const { title, subtitle, content, status, category, authorUid } = post;
   const contentStr = JSON.stringify(content);
 
   const updates = {};
@@ -103,7 +103,7 @@ export const createPost = (post: Post): void => {
     subtitle,
     status,
     category,
-    author,
+    authorUid,
   };
   updates[`postContents/${postId}`] = contentStr;
 
@@ -111,7 +111,7 @@ export const createPost = (post: Post): void => {
 };
 
 export const updatePost = (postId: string, post: Post) => {
-  const { title, subtitle, content, status, category, author } = post;
+  const { title, subtitle, content, status, category, authorUid } = post;
   const contentStr = JSON.stringify(content);
 
   const updates = {};
@@ -120,7 +120,7 @@ export const updatePost = (postId: string, post: Post) => {
     subtitle,
     status,
     category,
-    author,
+    authorUid,
   };
   updates[`postContents/${postId}`] = contentStr;
 
@@ -233,6 +233,16 @@ export const createTeamMember = async (
       .then(res => {
         return res.data;
       });
+  } catch (err) {
+    handleError(err);
+  }
+};
+
+export const fetchTeamMember = async (uid: string) => {
+  try {
+    const params = await authenticate();
+
+    return axios.get(`/api/team/${uid}`, { params });
   } catch (err) {
     handleError(err);
   }

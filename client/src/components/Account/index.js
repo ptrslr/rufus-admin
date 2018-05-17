@@ -5,6 +5,8 @@ import firebaseui from 'firebaseui';
 
 import AvatarBox from '../AvatarBox';
 import Loader from '../Loader';
+
+import role from '../../constants/role';
 import { space, grays } from '../../utils/theme';
 
 const Wrapper = styled.div`
@@ -17,6 +19,7 @@ const Wrapper = styled.div`
 
 type Props = {
   user: ?firebaseui.User,
+  userRole: ?$Keys<typeof role>,
 };
 const Account = (props: Props) => {
   let name = null;
@@ -25,7 +28,7 @@ const Account = (props: Props) => {
 
   if (props.user != null) {
     name = props.user.displayName ? props.user.displayName : props.user.email;
-    role = 'Admin';
+    role = props.userRole;
     image = props.user.photoURL;
   }
 

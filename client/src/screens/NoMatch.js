@@ -8,9 +8,7 @@ type Props = {
 };
 
 const NoMatch = (props: Props) => {
-  const { history } = props;
-
-  return <NoMatchContainer history={history} />;
+  return <NoMatchContainer {...props} />;
 };
 
 export default NoMatch;

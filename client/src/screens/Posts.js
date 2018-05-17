@@ -10,9 +10,7 @@ type Props = {
 };
 
 const Posts = (props: Props) => {
-  const { history, status } = props;
-
-  return <PostsContainer history={history} status={status} />;
+  return <PostsContainer {...props} />;
 };
 
 export default Posts;

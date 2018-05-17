@@ -8,7 +8,14 @@ import {
 } from 'draft-js';
 import styled from 'styled-components';
 
-import { createPost, fetchPost, fetchPostContent } from '../api';
+import {
+  auth,
+  createPost,
+  fetchPost,
+  fetchPostContent,
+  fetchCategories,
+  fetchTeamMember,
+} from '../api';
 
 import Editor from './Editor';
 import PostSidebar from './PostSidebar';
@@ -19,8 +26,11 @@ import PageHeader from '../components/PageHeader';
 
 import Loader from '../components/Loader';
 import Button from '../components/Button';
+import type { SelectOptions } from '../components/Select';
+
 import icons from '../constants/icons';
 import status from '../constants/status';
+import role from '../constants/role';
 // import { colors } from '../utils/theme';
 
 const Layout = styled.div`
@@ -39,6 +49,8 @@ const LayoutMain = styled.main`
 
 type Props = {
   id?: string,
+  user?: ?Object,
+  userRole?: ?$Keys<typeof role>,
   history: Object,
 };
 type State = {
@@ -48,8 +60,10 @@ type State = {
   subtitleState: EditorState,
   contentState: EditorState,
   status: $Keys<typeof status>,
-  category: string,
-  author: Object,
+  categoryOptions: ?SelectOptions,
+  category: ?string,
+  author: ?Object,
+  authorRole: ?$Keys<typeof role>,
 };
 
 class Post extends React.Component<Props, State> {
@@ -67,11 +81,33 @@ class Post extends React.Component<Props, State> {
       subtitleState: EditorState.createEmpty(),
       contentState: EditorState.createEmpty(),
       status: status.DRAFT,
+      categoryOptions: null,
+      category: null,
+      author: null,
+      authorRole: null,
     };
   }
 
   async componentDidMount() {
     const postId = this.props.id;
+
+    fetchCategories().then(categories => {
+      const categoryOptions = [];
+
+      const keys = Object.keys(categories);
+      keys.map(key => {
+        categoryOptions.push({
+          value: key,
+          label: categories[key],
+        });
+      });
+
+      if (categoryOptions.length) {
+        this.setState({
+          categoryOptions: categoryOptions,
+        });
+      }
+    });
 
     if (postId) {
       const post = await fetchPost(postId);
@@ -102,6 +138,12 @@ class Post extends React.Component<Props, State> {
           titleState,
           subtitleState,
         });
+
+        fetchTeamMember(post.author).then(user => {
+          this.setState({
+            author: user,
+          });
+        });
       } else {
         this.setState({
           noMatch: true,
@@ -110,22 +152,31 @@ class Post extends React.Component<Props, State> {
     } else {
       this.setState({
         isLoading: false,
+        author: this.props.user,
+        authorRole: this.props.userRole,
       });
     }
   }
 
-  // componentWillUnmount() {
-  //   // Un-register the listener on '/someData'.
-  //   if (this.firebaseRef) {
-  //     this.firebaseRef.off('value', this.firebaseCallback);
-  //   }
-  // }
+  componentDidUpdate = (prevProps: Props) => {
+    if (this.props.userRole !== prevProps.userRole) {
+      this.setState({
+        authorRole: this.props.userRole,
+      });
+    }
+  };
 
   onTitleChange = (titleState: EditorState) => this.setState({ titleState });
   onSubtitleChange = (subtitleState: EditorState) =>
     this.setState({ subtitleState });
   onContentChange = (contentState: EditorState) =>
     this.setState({ contentState });
+
+  onCategoryChange = (e: SyntheticEvent<HTMLSelectElement>) => {
+    this.setState({
+      category: e.currentTarget.value,
+    });
+  };
 
   savePost = () => {
     const title = this.state.titleState.getCurrentContent().getPlainText();
@@ -135,9 +186,9 @@ class Post extends React.Component<Props, State> {
     const content = convertToRaw(this.state.contentState.getCurrentContent());
     const status = this.state.status;
     const category = this.state.category;
-    const author = this.state.author;
+    const authorUid = this.state.author.uid;
 
-    createPost(title, subtitle, content, status, category, author);
+    createPost({ title, subtitle, content, status, category, authorUid });
   };
 
   render() {
@@ -160,6 +211,21 @@ class Post extends React.Component<Props, State> {
     if (this.state.noMatch) {
       return <NoMatch history={this.props.history} />;
     }
+
+    let authorName = null;
+    let authorRole = null;
+    let authorImage = null;
+
+    if (this.state.author) {
+      authorName = this.state.author.displayName
+        ? this.state.author.displayName
+        : this.state.author.email;
+      authorImage = this.state.author.photoURL;
+    }
+    if (this.state.authorRole) {
+      authorRole = this.state.authorRole;
+    }
+
     return (
       <Page>
         <PageHeader title="Edit Post" actions={actions} />
@@ -181,7 +247,10 @@ class Post extends React.Component<Props, State> {
               <PostSidebar
                 status={this.state.status}
                 category={this.state.category}
-                author={this.state.author}
+                authorName={authorName}
+                authorRole={authorRole}
+                authorImage={authorImage}
+                onCategoryChange={this.onCategoryChange}
               />
             </LayoutSidebar>
           </Loader>

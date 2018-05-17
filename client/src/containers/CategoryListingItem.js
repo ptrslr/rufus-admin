@@ -50,7 +50,7 @@ class CategoryListingItem extends React.Component<Props, State> {
 
   handleChange = (e: SyntheticEvent<HTMLInputElement>) => {
     this.setState({
-      inputValue: e.target.value,
+      inputValue: e.currentTarget.value,
     });
   };
 
@@ -82,6 +82,11 @@ class CategoryListingItem extends React.Component<Props, State> {
     }
   };
   handleSave = (e: SyntheticEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const activeEl = document.activeElement;
+    if (activeEl) activeEl.blur();
+
     if (this.props.isNew) {
       this.props.onNewSave && this.props.onNewSave(this.state.inputValue);
     } else {
