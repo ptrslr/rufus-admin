@@ -24,7 +24,7 @@
       ".read": "auth != null",
       ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",
       "$postId": {
-        ".validate": "newData.hasChildren(['title', 'author', 'status', 'category', 'publishTime'])",
+        ".validate": "newData.hasChildren(['title', 'author', 'status', 'category'])",
         "title": {
           ".validate": "newData.isString()"
         },
@@ -53,13 +53,7 @@
       ".read": "auth != null",
       ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",
       "$postId": {
-        ".validate": "newData.hasChildren(['content'])",
-        "content": {
-          ".validate": "newData.hasChildren()"
-        },
-        "$other": {
-          ".validate": "false"
-        }
+        ".validate": "newData.isString()"
       }
     },
     "team": {

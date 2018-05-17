@@ -7,6 +7,7 @@ import axios from 'axios';
 
 import status from '../constants/status';
 import role from '../constants/role';
+import type { Post } from '../utils/types';
 
 const config = {
   apiKey: 'AIzaSyA0_eG1U3QHIKbr4UpmW8GLrH5YbF_La_E',
@@ -79,52 +80,54 @@ export const fetchPostContent = async (postId: string) => {
   return JSON.parse(contentData);
 };
 
-type Post = {
-  title: string,
-  subtitle: string,
-  content: Object,
-  status: $Keys<typeof status>,
-  category: ?string,
-  authorUid: ?string,
-};
-
 export const createPost = (post: Post): void => {
-  const postsRef = rootRef.child('posts');
-  const contentsRef = rootRef.child('postContents');
+  try {
+    const postsRef = rootRef.child('posts');
+    const contentsRef = rootRef.child('postContents');
 
-  const postId = postsRef.push().key;
+    const postId = postsRef.push().key;
 
-  const { title, subtitle, content, status, category, authorUid } = post;
-  const contentStr = JSON.stringify(content);
+    const {
+      title,
+      subtitle,
+      content,
+      author,
+      status,
+      category,
+      publishTime = null,
+    } = post;
+    const contentStr = JSON.stringify(content);
 
-  const updates = {};
-  updates[`posts/${postId}`] = {
-    title,
-    subtitle,
-    status,
-    category,
-    authorUid,
-  };
-  updates[`postContents/${postId}`] = contentStr;
+    const updates = {};
+    updates[`posts/${postId}`] = {
+      title,
+      subtitle,
+      author,
+      status,
+      category,
+      publishTime,
+    };
+    updates[`postContents/${postId}`] = contentStr;
 
-  return rootRef.update(updates);
+    return rootRef.update(updates);
+  } catch (err) {
+    handleError(err);
+  }
 };
 
 export const updatePost = (postId: string, post: Post) => {
-  const { title, subtitle, content, status, category, authorUid } = post;
-  const contentStr = JSON.stringify(content);
+  try {
+    const { content, ...postUpdates } = post;
+    const contentStr = JSON.stringify(content);
 
-  const updates = {};
-  updates[`posts/${postId}`] = {
-    title,
-    subtitle,
-    status,
-    category,
-    authorUid,
-  };
-  updates[`postContents/${postId}`] = contentStr;
+    const updates = {};
+    updates[`posts/${postId}`] = postUpdates;
+    updates[`postContents/${postId}`] = contentStr;
 
-  return rootRef.update(updates);
+    return rootRef.update(updates);
+  } catch (err) {
+    handleError(err);
+  }
 };
 
 /*
@@ -242,7 +245,9 @@ export const fetchTeamMember = async (uid: string) => {
   try {
     const params = await authenticate();
 
-    return axios.get(`/api/team/${uid}`, { params });
+    return axios.get(`/api/team/${uid}`, { params }).then(res => {
+      return res.data;
+    });
   } catch (err) {
     handleError(err);
   }

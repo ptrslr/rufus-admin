@@ -63,7 +63,7 @@ const Footer = styled.div`
 type Props = {
   status: $Keys<typeof status>,
   category: ?string,
-  categoryOptions: SelectOptions,
+  categoryOptions: ?SelectOptions,
   authorName: ?string,
   authorRole: ?$Keys<typeof role>,
   authorImage: ?string,
@@ -77,7 +77,12 @@ const PostSidebar = (props: Props) => {
       <Body>
         <Item>
           <Label for="category">Category:</Label>
-          <Select id="category" options={categories} />
+          <Select
+            id="category"
+            options={props.categoryOptions}
+            value={props.category}
+            onChange={props.onCategoryChange}
+          />
         </Item>
         <Item>
           <Label>Author:</Label>

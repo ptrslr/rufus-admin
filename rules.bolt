@@ -38,7 +38,7 @@ path /postContents {
   read() { isSigned() }
   write() { isSigned() && (isAdmin() || isEditor()) }
 }
-path /postContents/{postId} is PostContent;
+path /postContents/{postId} is String;
 
 // team
 path /team {
@@ -66,12 +66,12 @@ type Post {
   author: String,
   status: Status,
   category: String,
-  publishTime: Number,
+  publishTime: Number | Null,
 }
 
-type PostContent {
-  content: Object
-}
+// type PostContent {
+//   content: Object
+// }
 
 type Category {
   name: String

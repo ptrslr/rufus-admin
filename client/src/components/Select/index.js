@@ -37,20 +37,24 @@ const StyledIcon = styled(Icon)`
 export type SelectOptions = Array<{ value: string, label: string }>;
 
 type Props = {
-  options: SelectOptions,
+  options: ?SelectOptions,
 };
 
 const Select = (props: Props) => {
-  const { options, ...other } = props;
+  const { options = [], ...other } = props;
 
   return (
     <Wrapper>
       <StyledSelect {...other}>
-        {options.map(option => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))};
+        <option key="0" value="">
+          &mdash; no category &mdash;
+        </option>
+        {options &&
+          options.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))};
       </StyledSelect>
 
       <StyledIcon name={icons.CHEVRON_DOWN} />
