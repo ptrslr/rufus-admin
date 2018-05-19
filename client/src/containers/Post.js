@@ -307,8 +307,16 @@ class Post extends React.Component<Props, State> {
   };
 
   onPublish = () => {
+    const postStatus = this.state.status;
+    let datetimeValue = this.state.datetimeValue;
+
+    if (postStatus === status.DRAFT || postStatus === status.HIDDEN) {
+      datetimeValue = Date.now();
+    }
+
     this.setState({
       isPublishModalOpen: true,
+      datetimeValue,
     });
   };
 

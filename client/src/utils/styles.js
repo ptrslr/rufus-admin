@@ -51,6 +51,7 @@ export const input = css`
   }
 
   &:disabled {
-    opacity: .5;
+    opacity: .4;
+    cursor: not-allowed;
   }
 `;

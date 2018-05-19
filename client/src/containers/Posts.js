@@ -16,6 +16,7 @@ import { fetchPosts } from '../api';
 
 type Props = {
   status?: $Keys<typeof status>,
+  scheduled?: boolean,
 };
 type State = {
   isLoading: boolean,
@@ -80,13 +81,27 @@ class Posts extends React.Component<Props, State> {
 
     let keys = posts ? Object.keys(posts) : [];
 
+    const now = Date.now();
+
     if (this.props.status) {
       switch (this.props.status) {
         case status.PUBLISHED:
-          keys = keys.filter(key => posts[key].status === status.PUBLISHED);
-          break;
-        case status.SCHEDULED:
-          keys = keys.filter(key => posts[key].status === status.SCHEDULED);
+          if (this.props.scheduled) {
+            // scheduled
+            keys = keys.filter(
+              key =>
+                posts[key].status === status.PUBLISHED &&
+                posts[key].publishTime > now
+            );
+          } else {
+            // published
+            keys = keys.filter(
+              key =>
+                posts[key].status === status.PUBLISHED &&
+                posts[key].publishTime <= now
+            );
+          }
+
           break;
         case status.HIDDEN:
           keys = keys.filter(key => posts[key].status === status.HIDDEN);

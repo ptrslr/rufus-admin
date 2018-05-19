@@ -114,7 +114,11 @@ class App extends React.Component<Props, State> {
                           exact
                           path="/posts/scheduled"
                           render={props => (
-                            <Posts status={status.SCHEDULED} {...props} />
+                            <Posts
+                              status={status.PUBLISHED}
+                              scheduled={true}
+                              {...props}
+                            />
                           )}
                         />
                         <Route
