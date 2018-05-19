@@ -24,15 +24,7 @@ type Props = {
   onDelete?: Function,
 };
 const TeamListing = (props: Props) => {
-  const {
-    isSaving,
-    isCreating,
-    items,
-    onSave,
-    onDisable,
-    onEnable,
-    onDelete,
-  } = props;
+  const { isCreating, items, onSave, onDisable, onEnable, onDelete } = props;
 
   if (items == null || items.length === 0) {
     return <Error>So empty&hellip;</Error>;

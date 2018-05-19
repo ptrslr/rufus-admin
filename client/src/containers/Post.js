@@ -54,7 +54,7 @@ const LayoutMain = styled.main`
 `;
 type Props = {
   id?: string,
-  user?: ?Object,
+  user: Object,
   userRole?: ?$Keys<typeof role>,
   history: Object,
 };
@@ -72,7 +72,7 @@ type State = {
   status: $Keys<typeof status>,
   categoryOptions: ?SelectOptions,
   category: ?string,
-  author: ?Object,
+  author: Object,
   authorRole: ?$Keys<typeof role>,
   publishType: string,
   publishTime: ?number,
@@ -100,7 +100,7 @@ class Post extends React.Component<Props, State> {
       status: status.DRAFT,
       categoryOptions: null,
       category: '',
-      author: null,
+      author: props.user,
       authorRole: null,
       publishType: 'publish',
       publishTime: null,
@@ -163,7 +163,7 @@ class Post extends React.Component<Props, State> {
             noMatch: true,
           });
 
-          throw 'Post not found';
+          throw new Error('Post not found');
         }
       })
       .then(data => {
@@ -198,14 +198,12 @@ class Post extends React.Component<Props, State> {
 
   initCategories = () => {
     fetchCategories().then(categories => {
-      const categoryOptions = [];
-
       const keys = Object.keys(categories);
-      keys.map(key => {
-        categoryOptions.push({
+      const categoryOptions = keys.map(key => {
+        return {
           value: key,
           label: categories[key].name,
-        });
+        };
       });
 
       if (categoryOptions.length) {
@@ -228,7 +226,7 @@ class Post extends React.Component<Props, State> {
     });
   };
 
-  mapStateToPost = () => {
+  mapStateToPost = (): PostType => {
     const title = this.state.titleState.getCurrentContent().getPlainText();
     const subtitle = this.state.subtitleState
       .getCurrentContent()
@@ -256,7 +254,7 @@ class Post extends React.Component<Props, State> {
     });
 
     const postId = this.state.postId;
-    const post = this.mapStateToPost();
+    const post: PostType = this.mapStateToPost();
 
     if (postId) {
       await updatePost(postId, post);
@@ -329,7 +327,7 @@ class Post extends React.Component<Props, State> {
     const publishTime = Date.now();
     const newStatus = status.PUBLISHED;
 
-    const post = this.mapStateToPost();
+    const post: PostType = this.mapStateToPost();
     post.publishTime = publishTime;
     post.status = newStatus;
 
@@ -340,6 +338,21 @@ class Post extends React.Component<Props, State> {
             isLoading: false,
             status: newStatus,
             publishTime,
+          });
+        })
+        .catch(err => {
+          this.setState({
+            isLoading: false,
+          });
+        });
+    } else {
+      createPost(post)
+        .then(postId => {
+          this.setState({
+            isLoading: false,
+            status: newStatus,
+            publishTime,
+            postId,
           });
         })
         .catch(err => {
@@ -363,7 +376,7 @@ class Post extends React.Component<Props, State> {
     const publishTime = this.state.datetimeValue;
     const newStatus = status.PUBLISHED;
 
-    const post = this.mapStateToPost();
+    const post: PostType = this.mapStateToPost();
     post.publishTime = publishTime;
     post.status = newStatus;
 
@@ -409,7 +422,7 @@ class Post extends React.Component<Props, State> {
     const newStatus = status.HIDDEN;
     const publishTime = null;
 
-    const post = this.mapStateToPost();
+    const post: PostType = this.mapStateToPost();
     post.status = newStatus;
     post.publishTime = publishTime;
 
@@ -511,7 +524,6 @@ class Post extends React.Component<Props, State> {
                   authorRole={authorRole}
                   authorImage={authorImage}
                   publishTime={this.state.publishTime}
-                  onCategoryChange={this.onCategoryChange}
                   onDelete={this.onDelete}
                   onPublish={this.onPublish}
                   onHide={this.onHide}

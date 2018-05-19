@@ -1,24 +1,14 @@
 // @flow
 import * as React from 'react';
 
-import firebase, { auth, provider } from '../api';
-import firebaseui from 'firebaseui';
-import 'firebaseui/dist/firebaseui.css';
-
-import styled from 'styled-components';
-
-import TeamListing from '../components/TeamListing';
 import NewTeamMemberForm from '../components/NewTeamMemberForm';
 import Page from '../components/Page';
 import PageHeader from '../components/PageHeader';
 import PageBody from '../components/PageBody';
-import InlineLoader from '../components/InlineLoader';
-import Loader from '../components/Loader';
 import Button from '../components/Button';
 
 import icons from '../constants/icons';
 import role from '../constants/role';
-import { colors } from '../utils/theme';
 
 import { createTeamMember } from '../api';
 

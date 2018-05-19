@@ -13,9 +13,9 @@ import { formControl, input } from '../utils/styles';
 import { colors } from '../utils/theme';
 
 const Title = Heading1.extend``.withComponent('h2');
-const Subtitle = styled.div`
-  margin-top: 1rem;
-`;
+// const Subtitle = styled.div`
+//   margin-top: 1rem;
+// `;
 
 const Header = styled.header`
   padding: 0 0 2.5rem;

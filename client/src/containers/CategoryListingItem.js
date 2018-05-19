@@ -1,12 +1,8 @@
 // @flow
 import * as React from 'react';
-import styled from 'styled-components';
 
 import ListingItem from '../components/ListingItem';
 import Input from '../components/Input';
-import Button from '../components/Button';
-import Icon from '../components/Icon';
-import icons from '../constants/icons';
 
 type Props = {
   isNew: boolean,
@@ -103,8 +99,6 @@ class CategoryListingItem extends React.Component<Props, State> {
   };
 
   render() {
-    const { isNew, isDisabled, provided, snapshot } = this.props;
-
     const components = [
       <Input
         key="0"
@@ -113,7 +107,7 @@ class CategoryListingItem extends React.Component<Props, State> {
         readOnly={!this.state.isEditing}
         onChange={this.handleChange}
         placeholder="Category"
-        disabled={isDisabled}
+        disabled={this.props.isDisabled}
       />,
     ];
 
@@ -122,8 +116,8 @@ class CategoryListingItem extends React.Component<Props, State> {
         isNew={this.props.isNew}
         isDisabled={this.props.isDisabled}
         isEditing={this.state.isEditing}
-        provided={provided}
-        snapshot={snapshot}
+        provided={this.props.provided}
+        snapshot={this.props.snapshot}
         components={components}
         onSave={this.handleSave}
         onDelete={this.handleDelete}

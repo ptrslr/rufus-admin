@@ -6,22 +6,17 @@ import ListingItem from '../components/ListingItem';
 import Avatar from '../components/Avatar';
 import Input from '../components/Input';
 import Select from '../components/Select';
-import Button from '../components/Button';
-import Icon from '../components/Icon';
 
-import icons from '../constants/icons';
 import role from '../constants/role';
 
-import { colors } from '../utils/theme';
-
-const UserIcon = styled.div`
-  flex: 0 0 auto;
-  width: 3.25rem;
-  padding-right: 1.25rem;
-  font-size: 1.75rem;
-  color: ${colors.grays[2]};
-  text-align: center;
-`;
+// const UserIcon = styled.div`
+//   flex: 0 0 auto;
+//   width: 3.25rem;
+//   padding-right: 1.25rem;
+//   font-size: 1.75rem;
+//   color: ${colors.grays[2]};
+//   text-align: center;
+// `;
 const UserAvatar = styled.div`
   flex: 0 0 auto;
   padding-right: 1rem;

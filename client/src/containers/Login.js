@@ -1,17 +1,11 @@
 // @flow
 import * as React from 'react';
-import firebase, { firebaseAuth, provider } from '../api';
+import firebase, { firebaseAuth } from '../api';
 import firebaseui from 'firebaseui';
 import 'firebaseui/dist/firebaseui.css';
 import styled from 'styled-components';
 
-import InlineLoader from '../components/InlineLoader';
-import Loader from '../components/Loader';
-import Button from '../components/Button';
 import { heading } from '../components/Typography';
-
-import icons from '../constants/icons';
-import { colors } from '../utils/theme';
 
 const Wrapper = styled.div`
   padding: 3rem 1rem;

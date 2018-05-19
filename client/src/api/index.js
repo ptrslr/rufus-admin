@@ -5,9 +5,8 @@ import 'firebase/auth';
 import 'firebase/database';
 import axios from 'axios';
 
-import status from '../constants/status';
 import role from '../constants/role';
-import type { Post, PostUpdates } from '../utils/types';
+import type { Post } from '../utils/types';
 
 const config = {
   apiKey: 'AIzaSyA0_eG1U3QHIKbr4UpmW8GLrH5YbF_La_E',
@@ -26,7 +25,7 @@ export default firebase;
 
 const rootRef = firebase.database().ref();
 const postsRef = rootRef.child('posts');
-const postContentsRef = rootRef.child('postContents');
+// const postContentsRef = rootRef.child('postContents');
 const categoriesRef = rootRef.child('categories');
 const categoryKeysRef = rootRef.child('categoryKeys');
 const teamRef = rootRef.child('team');
@@ -81,43 +80,39 @@ export const fetchPostContent = async (postId: string) => {
 };
 
 export const createPost = (post: Post): void => {
-  try {
-    const postsRef = rootRef.child('posts');
-    const contentsRef = rootRef.child('postContents');
+  const postsRef = rootRef.child('posts');
+  // const contentsRef = rootRef.child('postContents');
 
-    const postId = postsRef.push().key;
+  const postId = postsRef.push().key;
 
-    const {
-      title,
-      subtitle,
-      content,
-      author,
-      status,
-      category,
-      publishTime = null,
-    } = post;
-    const contentStr = JSON.stringify(content);
+  const {
+    title,
+    subtitle,
+    content,
+    author,
+    status,
+    category,
+    publishTime = null,
+  } = post;
+  const contentStr = JSON.stringify(content);
 
-    const updates = {};
-    updates[`posts/${postId}`] = {
-      title,
-      subtitle,
-      author,
-      status,
-      category,
-      publishTime,
-    };
-    updates[`postContents/${postId}`] = contentStr;
+  const updates = {};
+  updates[`posts/${postId}`] = {
+    title,
+    subtitle,
+    author,
+    status,
+    category,
+    publishTime,
+  };
+  updates[`postContents/${postId}`] = contentStr;
 
-    return rootRef.update(updates).then(() => {
-      return postId;
-    });
-  } catch (err) {
-    handleError(err);
-  }
+  return rootRef.update(updates).then(() => {
+    return postId;
+  });
 };
 
-export const updatePost = (postId: string, post: PostUpdates) => {
+export const updatePost = (postId: string, post: Post) => {
   const { content, ...postUpdates } = post;
 
   const updates = {};

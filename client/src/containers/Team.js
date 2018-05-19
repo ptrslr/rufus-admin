@@ -18,7 +18,6 @@ import {
   updateTeamMember,
 } from '../api';
 import icons from '../constants/icons';
-import { colors } from '../utils/theme';
 
 type Props = {
   disabled: boolean,
