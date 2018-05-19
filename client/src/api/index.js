@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import status from '../constants/status';
 import role from '../constants/role';
-import type { Post } from '../utils/types';
+import type { Post, PostUpdates } from '../utils/types';
 
 const config = {
   apiKey: 'AIzaSyA0_eG1U3QHIKbr4UpmW8GLrH5YbF_La_E',
@@ -21,7 +21,7 @@ const config = {
 firebase.initializeApp(config);
 
 export const provider = new firebase.auth.GoogleAuthProvider();
-export const auth = firebase.auth();
+export const firebaseAuth = firebase.auth();
 export default firebase;
 
 const rootRef = firebase.database().ref();
@@ -32,7 +32,7 @@ const categoryKeysRef = rootRef.child('categoryKeys');
 const teamRef = rootRef.child('team');
 
 const authenticate = async (params = {}) => {
-  const idToken = await auth.currentUser.getIdToken();
+  const idToken = await firebaseAuth.currentUser.getIdToken();
 
   params['auth'] = idToken;
 
@@ -109,25 +109,34 @@ export const createPost = (post: Post): void => {
     };
     updates[`postContents/${postId}`] = contentStr;
 
-    return rootRef.update(updates);
+    return rootRef.update(updates).then(() => {
+      return postId;
+    });
   } catch (err) {
     handleError(err);
   }
 };
 
-export const updatePost = (postId: string, post: Post) => {
-  try {
-    const { content, ...postUpdates } = post;
+export const updatePost = (postId: string, post: PostUpdates) => {
+  const { content, ...postUpdates } = post;
+
+  const updates = {};
+  updates[`posts/${postId}`] = postUpdates;
+
+  if (content) {
     const contentStr = JSON.stringify(content);
-
-    const updates = {};
-    updates[`posts/${postId}`] = postUpdates;
     updates[`postContents/${postId}`] = contentStr;
-
-    return rootRef.update(updates);
-  } catch (err) {
-    handleError(err);
   }
+
+  return rootRef.update(updates);
+};
+
+export const deletePost = (postId: string) => {
+  const updates = {};
+  updates[`posts/${postId}`] = null;
+  updates[`postContents/${postId}`] = null;
+
+  return rootRef.update(updates);
 };
 
 /*

@@ -31,31 +31,6 @@ const Item = styled.div`
   padding: 0.75rem 0;
 `;
 
-const categories = [
-  {
-    value: '-LCdxLWfAHS7_gras_d1',
-    label: 'Ekonomika',
-  },
-  {
-    value: '-LCdxXdree1sm5IlKQ9i',
-    label: 'Šport',
-  },
-  {
-    value: '-LCeTprDl1Z1UNP1dJMC',
-    label: 'Politika',
-  },
-];
-// const Label = styled.label.attrs({
-//   htmlFor: props => props.for,
-// })`
-//   display: block;
-//   margin-bottom: 0.5rem;
-//   font-size: 0.8125rem;
-//   font-weight: 700;
-//   text-transform: uppercase;
-//   letter-spacing: 0.05em;
-//   color: ${colors.grays[8]};
-// `;
 const Footer = styled.div`
   padding: 1rem;
 `;
@@ -68,11 +43,19 @@ type Props = {
   authorRole: ?$Keys<typeof role>,
   authorImage: ?string,
   onCategoryChange: Function,
+  onDelete: Function,
+  onPublish: Function,
+  onHide: Function,
 };
 const PostSidebar = (props: Props) => {
   return (
     <Wrapper>
-      <Status status="draft" />
+      <Status
+        status={props.status}
+        publishTime={props.publishTime}
+        onPublish={props.onPublish}
+        onHide={props.onHide}
+      />
 
       <Body>
         <Item>
@@ -95,7 +78,13 @@ const PostSidebar = (props: Props) => {
       </Body>
 
       <Footer>
-        <Button theme="link" block iconLeft={icons.REMOVE} value="Delete" />
+        <Button
+          theme="link"
+          block
+          iconLeft={icons.REMOVE}
+          value="Delete"
+          onClick={props.onDelete}
+        />
       </Footer>
     </Wrapper>
   );

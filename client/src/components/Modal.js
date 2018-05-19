@@ -27,6 +27,7 @@ const StyledModal = styled(ReactModalAdapter).attrs({
 })`
   .Overlay {
     position: fixed;
+    z-index: 100;
     top: 0;
     left: 0;
     right: 0;
@@ -38,6 +39,7 @@ const StyledModal = styled(ReactModalAdapter).attrs({
 
     background-color: rgba(0, 0, 0, 0.8);
 
+    will-change: opacity;
     opacity: 0;
     transition: opacity ${transitionDuration}ms;
 

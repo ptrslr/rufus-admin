@@ -11,3 +11,13 @@ export type Post = {
   author: string,
   publishTime?: ?number,
 };
+
+export type PostUpdates = {
+  title?: string,
+  subtitle?: ?string,
+  content?: Object,
+  status?: $Keys<typeof status>,
+  category?: ?string,
+  author?: string,
+  publishTime?: ?number,
+};

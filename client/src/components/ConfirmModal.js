@@ -9,6 +9,13 @@ import { Heading1 } from '../components/Typography';
 const Title = Heading1.extend``.withComponent('h2');
 const Subtitle = styled.div`
   margin-top: 1rem;
+
+  p:first-child {
+    margin-top: 0;
+  }
+  p:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 const Header = styled.header`
@@ -55,20 +62,10 @@ const ConfirmModal = (props: Props) => {
 
       <Actions>
         <Action>
-          <Button
-            theme="primary"
-            size="lg"
-            onClick={onConfirm}
-            value={confirmValue}
-          />
+          <Button theme="secondary" onClick={onCancel} value={cancelValue} />
         </Action>
         <Action>
-          <Button
-            theme="secondary"
-            size="lg"
-            onClick={onCancel}
-            value={cancelValue}
-          />
+          <Button theme="primary" onClick={onConfirm} value={confirmValue} />
         </Action>
       </Actions>
     </Modal>

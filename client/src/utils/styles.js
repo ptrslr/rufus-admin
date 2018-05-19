@@ -49,4 +49,8 @@ export const input = css`
     pointer-events: none;
     background: transparent;
   }
+
+  &:disabled {
+    opacity: .5;
+  }
 `;

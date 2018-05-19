@@ -2,6 +2,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { ellipsis } from 'polished';
+import moment from 'moment';
 
 import Button from '../Button';
 import Icon from '../Icon';
@@ -15,10 +16,15 @@ const Wrapper = styled.div`
   background-color: ${props => props.backgroundColor};
   color: ${props => props.color};
 `;
+const StyledButton = styled(Button)`
+  & + & {
+    margin-top: 0.5rem;
+  }
+`;
 const Info = styled.div`
   display: flex;
   align-items: center;
-  padding: 0 0.5rem;
+  /*padding: 0 0.5rem;*/
   margin-bottom: 1rem;
 `;
 const StyledIcon = styled(Icon)`
@@ -26,7 +32,7 @@ const StyledIcon = styled(Icon)`
   font-size: 1.5rem;
 `;
 const Label = styled.div`
-  ${ellipsis()};
+  /*${ellipsis()};*/
 
   flex: 1 1 auto;
   font-weight: 700;
@@ -34,6 +40,9 @@ const Label = styled.div`
 
 type Props = {
   status: $Keys<typeof statusType>,
+  publishTime: ?number,
+  onPublish: Function,
+  onHide: Function,
 };
 const Status = (props: Props) => {
   let icon = '';
@@ -41,32 +50,46 @@ const Status = (props: Props) => {
   let color = colors.black;
   let backgroundColor = '#ffffff';
 
-  switch (props.status) {
-    case statusType.PUBLISHED:
-      icon = icons.VISIBILITY;
-      label = 'Published';
+  const isPublished =
+    props.status === statusType.PUBLISHED &&
+    props.publishTime &&
+    props.publishTime <= Date.now();
 
-      color = '#008638';
-      backgroundColor = '#e3f9ec';
-      break;
-    case statusType.HIDDEN:
-      icon = icons.VISIBILITY_OFF;
-      label = 'Hidden';
+  const isScheduled =
+    props.status === statusType.PUBLISHED &&
+    props.publishTime &&
+    props.publishTime > Date.now();
 
-      color = '#86000b';
-      backgroundColor = '#faeaeb';
-      break;
-    case statusType.SCHEDULED:
-      icon = icons.CLOCK;
-      label = 'Scheduled';
-      backgroundColor = '#FFFDE7';
-      break;
-    default:
-      icon = icons.EDIT;
-      label = 'Draft';
+  const isHidden = props.status === statusType.HIDDEN;
 
-      color = '#004d84';
-      backgroundColor = '#e4f0f9';
+  const isDraft = props.status === statusType.DRAFT;
+
+  if (isPublished) {
+    icon = icons.VISIBILITY;
+    label = 'Published';
+
+    color = '#008638';
+    backgroundColor = '#e3f9ec';
+  } else if (isScheduled && props.publishTime) {
+    icon = icons.CLOCK;
+    label = (
+      <span>
+        Scheduled for<br /> {moment(props.publishTime).format('lll')}
+      </span>
+    );
+    backgroundColor = '#FFFDE7';
+  } else if (isHidden) {
+    icon = icons.VISIBILITY_OFF;
+    label = 'Hidden';
+
+    color = '#86000b';
+    backgroundColor = '#faeaeb';
+  } else {
+    icon = icons.EDIT;
+    label = 'Draft';
+
+    color = '#004d84';
+    backgroundColor = '#e4f0f9';
   }
   return (
     <Wrapper color={color} backgroundColor={backgroundColor}>
@@ -74,7 +97,33 @@ const Status = (props: Props) => {
         {icon && <StyledIcon name={icon} />}
         <Label>{label}</Label>
       </Info>
-      <Button theme="primary" size="lg" block={true} value="Publish" />
+
+      <div>
+        {isPublished && (
+          <StyledButton
+            theme="primary"
+            block={true}
+            value="Hide"
+            onClick={props.onHide}
+          />
+        )}
+        {isScheduled && (
+          <StyledButton
+            theme="secondary"
+            block={true}
+            value="Hide"
+            onClick={props.onHide}
+          />
+        )}
+        {(isScheduled || isHidden || isDraft) && (
+          <StyledButton
+            theme="primary"
+            block={true}
+            value="Publish"
+            onClick={props.onPublish}
+          />
+        )}
+      </div>
     </Wrapper>
   );
 };

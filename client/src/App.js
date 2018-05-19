@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import { auth } from './api';
+import { firebaseAuth } from './api';
 import firebaseui from 'firebaseui';
 
 import Loader from './components/Loader';
@@ -52,9 +52,9 @@ class App extends React.Component<Props, State> {
   }
 
   componentDidMount = () => {
-    auth.onAuthStateChanged(user => {
+    firebaseAuth.onAuthStateChanged(user => {
       if (user) {
-        auth.currentUser.getIdTokenResult().then(idToken => {
+        firebaseAuth.currentUser.getIdTokenResult().then(idToken => {
           this.setState({ userRole: idToken.claims.role });
         });
         this.setState({ user });

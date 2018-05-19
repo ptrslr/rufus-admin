@@ -7,13 +7,14 @@ import {
   ContentState,
 } from 'draft-js';
 import styled from 'styled-components';
+import moment from 'moment';
 
 import {
-  auth,
   createPost,
   updatePost,
   fetchPost,
   fetchPostContent,
+  deletePost,
   fetchCategories,
   fetchTeamMember,
 } from '../api';
@@ -28,6 +29,8 @@ import InlineLoader from '../components/InlineLoader';
 import Loader from '../components/Loader';
 import Button from '../components/Button';
 import type { SelectOptions } from '../components/Select';
+import ConfirmModal from '../components/ConfirmModal';
+import PublishModal from '../components/PublishModal';
 
 import icons from '../constants/icons';
 import status from '../constants/status';
@@ -41,15 +44,14 @@ const Layout = styled.div`
   height: 100%;
 `;
 const LayoutSidebar = styled.div`
-  flex: 0 0 15rem;
-  width: 15rem;
+  flex: 0 0 16rem;
+  width: 16rem;
 `;
 const LayoutMain = styled.main`
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
 `;
-
 type Props = {
   id?: string,
   user?: ?Object,
@@ -59,7 +61,11 @@ type Props = {
 type State = {
   isLoading: boolean,
   isSaving: boolean,
+  isDeleteModalOpen: boolean,
+  isPublishModalOpen: boolean,
+  isHideModalOpen: boolean,
   noMatch?: boolean,
+  postId: ?string,
   titleState: EditorState,
   subtitleState: EditorState,
   contentState: EditorState,
@@ -68,6 +74,9 @@ type State = {
   category: ?string,
   author: ?Object,
   authorRole: ?$Keys<typeof role>,
+  publishType: string,
+  publishTime: ?number,
+  datetimeValue: number,
 };
 
 class Post extends React.Component<Props, State> {
@@ -81,7 +90,10 @@ class Post extends React.Component<Props, State> {
     this.state = {
       isLoading: true,
       isSaving: false,
-      post: null,
+      isDeleteModalOpen: false,
+      isPublishModalOpen: false,
+      isHideModalOpen: false,
+      postId: this.props.id,
       titleState: EditorState.createEmpty(),
       subtitleState: EditorState.createEmpty(),
       contentState: EditorState.createEmpty(),
@@ -90,11 +102,14 @@ class Post extends React.Component<Props, State> {
       category: '',
       author: null,
       authorRole: null,
+      publishType: 'publish',
+      publishTime: null,
+      datetimeValue: Date.now(),
     };
   }
 
-  async componentDidMount() {
-    const postId = this.props.id;
+  componentDidMount = () => {
+    const postId = this.state.postId;
 
     this.initCategories();
 
@@ -109,7 +124,7 @@ class Post extends React.Component<Props, State> {
         authorRole: this.props.userRole,
       });
     }
-  }
+  };
 
   componentDidUpdate = (prevProps: Props) => {
     if (this.props.userRole !== prevProps.userRole) {
@@ -134,6 +149,9 @@ class Post extends React.Component<Props, State> {
             titleState,
             subtitleState,
             category: post.category,
+            status: post.status,
+            publishTime: post.publishTime,
+            datetimeValue: post.publishTime,
           });
 
           return Promise.all([
@@ -210,11 +228,7 @@ class Post extends React.Component<Props, State> {
     });
   };
 
-  savePost = async () => {
-    this.setState({
-      isSaving: true,
-    });
-
+  mapStateToPost = () => {
     const title = this.state.titleState.getCurrentContent().getPlainText();
     const subtitle = this.state.subtitleState
       .getCurrentContent()
@@ -223,29 +237,206 @@ class Post extends React.Component<Props, State> {
     const status = this.state.status;
     const category = this.state.category;
     const author = this.state.author.uid;
-    // const publishTime = Date.now();
+    const publishTime = this.state.publishTime;
 
-    const post = {
+    return {
       title,
       subtitle,
       content,
       status,
       category,
       author,
-      // publishTime,
+      publishTime,
     };
+  };
 
-    const postId = this.props.id;
+  savePost = async () => {
+    this.setState({
+      isSaving: true,
+    });
+
+    const postId = this.state.postId;
+    const post = this.mapStateToPost();
 
     if (postId) {
       await updatePost(postId, post);
     } else {
-      await createPost(post);
+      const newPostId = await createPost(post);
+
+      this.setState({
+        postId: newPostId,
+      });
     }
 
     this.setState({
       isSaving: false,
     });
+  };
+
+  closeModal = () => {
+    this.setState({
+      isDeleteModalOpen: false,
+      isPublishModalOpen: false,
+      isHideModalOpen: false,
+    });
+  };
+
+  onDelete = () => {
+    this.setState({
+      isDeleteModalOpen: true,
+    });
+  };
+
+  onDeleteConfirm = () => {
+    this.setState({
+      isLoading: true,
+    });
+    const postId = this.state.postId;
+
+    if (postId) {
+      deletePost(postId)
+        .then(() => {
+          this.props.history.push('/posts');
+        })
+        .catch(err => {
+          this.setState({
+            isLoading: false,
+          });
+        });
+    }
+  };
+
+  onPublish = () => {
+    this.setState({
+      isPublishModalOpen: true,
+    });
+  };
+
+  onPublishConfirm = () => {
+    this.setState({
+      isLoading: true,
+    });
+
+    const postId = this.state.postId;
+    const publishTime = Date.now();
+    const newStatus = status.PUBLISHED;
+
+    const post = this.mapStateToPost();
+    post.publishTime = publishTime;
+    post.status = newStatus;
+
+    if (postId) {
+      updatePost(postId, post)
+        .then(() => {
+          this.setState({
+            isLoading: false,
+            status: newStatus,
+            publishTime,
+          });
+        })
+        .catch(err => {
+          this.setState({
+            isLoading: false,
+          });
+        });
+    }
+
+    this.setState({
+      isPublishModalOpen: false,
+    });
+  };
+
+  onSchedule = () => {
+    this.setState({
+      isLoading: true,
+    });
+
+    const postId = this.state.postId;
+    const publishTime = this.state.datetimeValue;
+    const newStatus = status.PUBLISHED;
+
+    const post = this.mapStateToPost();
+    post.publishTime = publishTime;
+    post.status = newStatus;
+
+    if (postId) {
+      updatePost(postId, post)
+        .then(() => {
+          this.setState({
+            isLoading: false,
+            status: newStatus,
+            publishTime,
+          });
+        })
+        .catch(err => {
+          this.setState({
+            isLoading: false,
+          });
+        });
+    }
+
+    this.setState({
+      isPublishModalOpen: false,
+    });
+  };
+
+  onPublishTypeChange = (e: SyntheticEvent<HTMLInputElement>) => {
+    this.setState({
+      publishType: e.currentTarget.value,
+    });
+  };
+
+  onHide = () => {
+    this.setState({
+      isHideModalOpen: true,
+    });
+  };
+
+  onHideConfirm = () => {
+    this.setState({
+      isLoading: true,
+    });
+
+    const postId = this.state.postId;
+    const newStatus = status.HIDDEN;
+    const publishTime = null;
+
+    const post = this.mapStateToPost();
+    post.status = newStatus;
+    post.publishTime = publishTime;
+
+    if (postId) {
+      updatePost(postId, post)
+        .then(() => {
+          this.setState({
+            isLoading: false,
+            status: newStatus,
+            publishTime,
+          });
+        })
+        .catch(err => {
+          this.setState({
+            isLoading: false,
+          });
+        });
+    }
+
+    this.setState({
+      isHideModalOpen: false,
+    });
+  };
+
+  onDatetimeChange = (time: Object) => {
+    if (moment.isMoment(time)) {
+      this.setState({
+        datetimeValue: time.valueOf(),
+      });
+    }
+  };
+
+  isDatetimeValid = (current: Object) => {
+    const yesterday = moment().subtract(1, 'day');
+    return current.isAfter(yesterday);
   };
 
   render() {
@@ -311,12 +502,60 @@ class Post extends React.Component<Props, State> {
                   authorName={authorName}
                   authorRole={authorRole}
                   authorImage={authorImage}
+                  publishTime={this.state.publishTime}
                   onCategoryChange={this.onCategoryChange}
+                  onDelete={this.onDelete}
+                  onPublish={this.onPublish}
+                  onHide={this.onHide}
                 />
               </Loader>
             </LayoutSidebar>
           </Loader>
         </Layout>
+
+        <ConfirmModal
+          isOpen={this.state.isDeleteModalOpen}
+          closeModal={this.closeModal}
+          title="Are you sure?"
+          subtitle={
+            <p>
+              You're about to delete this post. This action{' '}
+              <strong>cannot</strong> be undone.
+            </p>
+          }
+          onConfirm={this.onDeleteConfirm}
+          onCancel={this.closeModal}
+          confirmValue="Delete"
+        />
+
+        <ConfirmModal
+          isOpen={this.state.isHideModalOpen}
+          closeModal={this.closeModal}
+          title="Are you sure?"
+          subtitle={
+            <p>
+              You're about to hide this post. Your users won't be able to read
+              this post.<br />
+              You can publish it later, if you change your mind.
+            </p>
+          }
+          onConfirm={this.onHideConfirm}
+          onCancel={this.closeModal}
+          confirmValue="Hide"
+        />
+
+        <PublishModal
+          isOpen={this.state.isPublishModalOpen}
+          publishType={this.state.publishType}
+          datetimeValue={this.state.datetimeValue}
+          onDatetimeChange={this.onDatetimeChange}
+          isDatetimeValid={this.isDatetimeValid}
+          closeModal={this.closeModal}
+          onPublish={this.onPublishConfirm}
+          onSchedule={this.onSchedule}
+          onCancel={this.closeModal}
+          onRadioChange={this.onPublishTypeChange}
+        />
       </Page>
     );
   }

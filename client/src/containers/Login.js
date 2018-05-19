@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import firebase, { auth, provider } from '../api';
+import firebase, { firebaseAuth, provider } from '../api';
 import firebaseui from 'firebaseui';
 import 'firebaseui/dist/firebaseui.css';
 import styled from 'styled-components';
@@ -42,7 +42,11 @@ class Login extends React.Component<Props, State> {
 
     this.state = {};
 
-    this.ui = new firebaseui.auth.AuthUI(firebase.auth());
+    this.ui = firebaseui.auth.AuthUI.getInstance();
+
+    if (!this.ui) {
+      this.ui = new firebaseui.auth.AuthUI(firebaseAuth);
+    }
   }
 
   uiConfig = {
@@ -70,8 +74,8 @@ class Login extends React.Component<Props, State> {
     signInSuccessUrl: '/',
     signInOptions: [
       // Leave the lines as is for the providers you want to offer your users.
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+      // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
       // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
       // firebase.auth.GithubAuthProvider.PROVIDER_ID,
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
@@ -81,8 +85,11 @@ class Login extends React.Component<Props, State> {
     tosUrl: '<your-tos-url>',
   };
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
+    // if (this.ui.isPendingRedirect()) {
     this.ui.start('#firebaseui-auth-container', this.uiConfig);
+    // }
+    // this.ui.start('#firebaseui-auth-container', this.uiConfig);
   };
 
   render() {
