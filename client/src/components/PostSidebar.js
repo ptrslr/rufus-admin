@@ -12,7 +12,7 @@ import Label from './Label';
 import status from '../constants/status';
 import role from '../constants/role';
 import icons from '../constants/icons';
-import { colors } from '../utils/theme';
+import { colors } from '../constants/theme.js';
 
 const Wrapper = styled.div`
   display: flex;

@@ -5,7 +5,7 @@ import { Editor, EditorState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import styled from 'styled-components';
 
-import { colors } from '../../utils/theme';
+import { colors } from '../../constants/theme.js';
 
 type Props = {
   editorState: EditorState,

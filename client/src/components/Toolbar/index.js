@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import Button from './Button.js';
 import icons from '../../constants/icons';
-import { colors } from '../../utils/theme';
+import { colors } from '../../constants/theme.js';
 
 type Props = {
   editorState: EditorState,

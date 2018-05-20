@@ -1,6 +1,6 @@
 import { css } from 'styled-components';
 import { placeholder, rgba } from 'polished';
-import { colors } from './theme';
+import { colors } from '../constants/theme';
 
 export const formControl = css`
   padding: 0.375em 0.725em;
@@ -37,7 +37,7 @@ export const input = css`
   }
 
   &:invalid:not(:focus):not(:placeholder-shown) {
-    border-color: ${colors.red}
+    border-color: ${colors.red};
   }
 
   ${placeholder({
@@ -51,7 +51,7 @@ export const input = css`
   }
 
   &:disabled {
-    opacity: .4;
+    opacity: 0.4;
     cursor: not-allowed;
   }
 `;

@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 
 import Icon from '../Icon';
 import icons from '../../constants/icons';
-import { colors, space } from '../../utils/theme';
+import { colors, space } from '../../constants/theme.js';
 
 const StyledMenu = styled.ul`
   padding: 1.5rem 0;

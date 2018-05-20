@@ -7,7 +7,7 @@ import AvatarBox from '../AvatarBox';
 import Loader from '../Loader';
 
 import role from '../../constants/role';
-import { space, grays } from '../../utils/theme';
+import { space, grays } from '../../constants/theme.js';
 
 const Wrapper = styled.div`
   flex: 0 0 auto;

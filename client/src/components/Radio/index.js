@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { hideVisually } from 'polished';
 
-import { colors } from '../../utils/theme.js';
+import { colors } from '../../constants/theme.js';
 
 const Wrapper = styled.div`
   display: inline-block;

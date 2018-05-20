@@ -18,7 +18,7 @@ import Loader from '../components/Loader';
 
 import status from '../constants/status';
 import role from '../constants/role';
-import { colors } from '../utils/theme';
+import { colors } from '../constants/theme.js';
 
 const Layout = styled.div`
   display: flex;

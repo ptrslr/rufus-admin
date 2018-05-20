@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Menu from './Menu';
 import { Heading1 } from '../../components/Typography';
-import { colors } from '../../utils/theme';
+import { colors } from '../../constants/theme.js';
 
 type Props = {
   title: string,

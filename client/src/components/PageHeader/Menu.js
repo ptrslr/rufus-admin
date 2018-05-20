@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Switch, NavLink } from 'react-router-dom';
 
-import { colors } from '../../utils/theme';
+import { colors } from '../../constants/theme.js';
 
 const StyledMenu = styled.ul`
   display: flex;

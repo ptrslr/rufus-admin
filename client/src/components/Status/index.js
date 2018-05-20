@@ -8,7 +8,7 @@ import Button from '../Button';
 import Icon from '../Icon';
 import icons from '../../constants/icons';
 import statusType from '../../constants/status';
-import { colors } from '../../utils/theme';
+import { colors } from '../../constants/theme.js';
 
 const Wrapper = styled.div`
   padding: 1.5rem 1rem;

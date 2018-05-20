@@ -6,7 +6,7 @@ import Button from '../Button';
 import Icon from '../Icon';
 import icons from '../../constants/icons';
 
-import { colors } from '../../utils/theme';
+import { colors } from '../../constants/theme.js';
 
 const Wrapper = styled.form``;
 const Inner = styled.div`

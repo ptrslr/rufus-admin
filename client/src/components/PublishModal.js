@@ -10,7 +10,7 @@ import Radio from '../components/Radio';
 import { Heading1 } from '../components/Typography';
 
 import { formControl, input } from '../utils/styles';
-import { colors } from '../utils/theme';
+import { colors } from '../constants/theme.js';
 
 const Title = Heading1.extend``.withComponent('h2');
 // const Subtitle = styled.div`

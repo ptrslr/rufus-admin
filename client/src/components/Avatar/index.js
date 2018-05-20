@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
-import { grays } from '../../utils/theme';
+import { grays } from '../../constants/theme.js';
 
 import placeholder from './avatar.svg';
 

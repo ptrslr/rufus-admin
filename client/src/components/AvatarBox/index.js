@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ellipsis } from 'polished';
 
 import Avatar from '../Avatar';
-import { colors } from '../../utils/theme';
+import { colors } from '../../constants/theme.js';
 
 const Wrapper = styled.div`
   display: flex;

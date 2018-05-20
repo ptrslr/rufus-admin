@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ClipLoader } from 'halogenium';
 import styled from 'styled-components';
 
-import { colors } from '../utils/theme';
+import { colors } from '../constants/theme.js';
 
 const Wrapper = styled.div`
   padding: 0 0.725em;

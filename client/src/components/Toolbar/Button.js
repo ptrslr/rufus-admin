@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { hideVisually } from 'polished';
 
-import { colors } from '../../utils/theme';
+import { colors } from '../../constants/theme.js';
 import icons from '../../constants/icons';
 import Icon from '../Icon';
 

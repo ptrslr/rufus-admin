@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Button from './Button';
 import icons from '../constants/icons';
-import { colors } from '../utils/theme';
+import { colors } from '../constants/theme.js';
 
 const Wrapper = styled.div`
   display: flex;

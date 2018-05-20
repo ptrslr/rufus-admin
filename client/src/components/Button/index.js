@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { darken, rgba } from 'polished';
 
-import { colors, space } from '../../utils/theme';
+import { colors, space } from '../../constants/theme.js';
 import { formControl, formControlLg } from '../../utils/styles';
 import { icons } from '../../constants/icons';
 import Icon from '../Icon';

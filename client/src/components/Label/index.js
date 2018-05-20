@@ -2,7 +2,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { colors } from '../../utils/theme';
+import { colors } from '../../constants/theme.js';
 
 type Props = {
   for?: string,

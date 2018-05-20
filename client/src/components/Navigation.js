@@ -7,7 +7,7 @@ import Menu from './MainMenu';
 import Footer from './Footer';
 
 import role from '../constants/role.js';
-import { colors } from '../utils/theme';
+import { colors } from '../constants/theme.js';
 
 type Props = {
   user: ?Object,
