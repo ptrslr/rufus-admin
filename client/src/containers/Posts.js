@@ -46,28 +46,6 @@ class Posts extends React.Component<Props, State> {
   };
 
   render() {
-    const menu = [
-      {
-        label: 'All',
-        to: '/posts/all',
-      },
-      {
-        label: 'Drafts',
-        to: '/posts/drafts',
-      },
-      {
-        label: 'Published',
-        to: '/posts/published',
-      },
-      {
-        label: 'Scheduled',
-        to: '/posts/scheduled',
-      },
-      {
-        label: 'Hidden',
-        to: '/posts/hidden',
-      },
-    ];
     const actions = [
       <Button
         to="/posts/new-post"
@@ -77,40 +55,73 @@ class Posts extends React.Component<Props, State> {
       />,
     ];
 
+    const now = Date.now();
+
     const posts = this.state.posts ? this.state.posts : {};
 
-    let keys = posts ? Object.keys(posts) : [];
+    const postKeys = posts ? Object.keys(posts) : [];
+    let keys = postKeys;
 
-    const now = Date.now();
+    const scheduledKeys = postKeys.filter(
+      key =>
+        posts[key].status === status.PUBLISHED && posts[key].publishTime > now
+    );
+    const publishedKeys = postKeys.filter(
+      key =>
+        posts[key].status === status.PUBLISHED && posts[key].publishTime <= now
+    );
+    const hiddenKeys = postKeys.filter(
+      key => posts[key].status === status.HIDDEN
+    );
+    const draftKeys = postKeys.filter(
+      key => posts[key].status === status.DRAFT
+    );
 
     if (this.props.status) {
       switch (this.props.status) {
         case status.PUBLISHED:
           if (this.props.scheduled) {
-            // scheduled
-            keys = keys.filter(
-              key =>
-                posts[key].status === status.PUBLISHED &&
-                posts[key].publishTime > now
-            );
+            keys = scheduledKeys;
           } else {
-            // published
-            keys = keys.filter(
-              key =>
-                posts[key].status === status.PUBLISHED &&
-                posts[key].publishTime <= now
-            );
+            keys = publishedKeys;
           }
-
           break;
         case status.HIDDEN:
-          keys = keys.filter(key => posts[key].status === status.HIDDEN);
+          keys = hiddenKeys;
           break;
         default:
-          keys = keys.filter(key => posts[key].status === status.DRAFT);
+          keys = draftKeys;
           break;
       }
     }
+
+    const menu = [
+      {
+        label: 'All',
+        to: '/posts/all',
+        count: postKeys.length,
+      },
+      {
+        label: 'Drafts',
+        to: '/posts/drafts',
+        count: draftKeys.length,
+      },
+      {
+        label: 'Published',
+        to: '/posts/published',
+        count: publishedKeys.length,
+      },
+      {
+        label: 'Scheduled',
+        to: '/posts/scheduled',
+        count: scheduledKeys.length,
+      },
+      {
+        label: 'Hidden',
+        to: '/posts/hidden',
+        count: hiddenKeys.length,
+      },
+    ];
 
     const rowCount = posts ? keys.length : 0;
 

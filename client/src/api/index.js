@@ -301,8 +301,6 @@ export const updateTeamMember = async (uid: string, updates: Object) => {
   try {
     const params = await authenticate();
 
-    console.log(updates);
-
     return axios.put(`/api/team/${uid}`, updates, { params });
   } catch (err) {
     handleError(err);

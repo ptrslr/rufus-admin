@@ -2,23 +2,23 @@
 import * as React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import { firebaseAuth } from './api';
+import { firebaseAuth } from './../api';
 import firebaseui from 'firebaseui';
 
-import Loader from './components/Loader';
-import Sidebar from './containers/Navigation';
-import Posts from './screens/Posts';
-import EditPost from './screens/EditPost';
-import NewPost from './screens/NewPost';
-import Categories from './screens/Categories';
-import Team from './screens/Team';
-import NewTeamMember from './screens/NewTeamMember';
-import Login from './screens/Login';
-import NoMatch from './screens/NoMatch';
+import Posts from './Posts';
+import Post from './Post';
+import Categories from './Categories';
+import Team from './Team';
+import NewTeamMember from './NewTeamMember';
+import Login from './Login';
 
-import status from './constants/status';
-import role from './constants/role';
-import { colors } from './utils/theme';
+import Sidebar from '../components/Navigation';
+import NoMatch from '../components/NoMatch';
+import Loader from '../components/Loader';
+
+import status from '../constants/status';
+import role from '../constants/role';
+import { colors } from '../utils/theme';
 
 const Layout = styled.div`
   display: flex;
@@ -26,8 +26,8 @@ const Layout = styled.div`
   color: ${colors.black};
 `;
 const LayoutSidebar = styled.div`
-  flex: 0 0 18rem;
-  width: 18rem;
+  flex: 0 0 16rem;
+  width: 16rem;
 `;
 const LayoutMain = styled.main`
   flex: 1 1 auto;
@@ -133,14 +133,14 @@ class App extends React.Component<Props, State> {
                           exact
                           path="/posts/new-post"
                           render={props => (
-                            <NewPost
+                            <Post
                               user={this.state.user}
                               userRole={this.state.userRole}
                               {...props}
                             />
                           )}
                         />
-                        <Route exact path="/posts/:id" component={EditPost} />
+                        <Route exact path="/posts/:id" component={Post} />
 
                         <Route
                           exact

@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 `;
 
 type Props = {
-  children: React.node,
+  children: React.Node,
 };
 const Page = (props: Props) => {
   return <Wrapper>{props.children}</Wrapper>;

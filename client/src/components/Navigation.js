@@ -2,9 +2,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Account from '../components//Account';
-import Menu from '../components/MainMenu';
-import Footer from '../components/Footer';
+import Account from './Account';
+import Menu from './MainMenu';
+import Footer from './Footer';
 
 import role from '../constants/role.js';
 import { colors } from '../utils/theme';

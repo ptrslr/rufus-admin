@@ -20,9 +20,9 @@ import {
 } from '../api';
 
 import Editor from './Editor';
-import PostSidebar from './PostSidebar';
-import NoMatch from './NoMatch';
 
+import PostSidebar from '../components/PostSidebar';
+import NoMatch from '../components/NoMatch';
 import Page from '../components/Page';
 import PageHeader from '../components/PageHeader';
 import InlineLoader from '../components/InlineLoader';
@@ -53,10 +53,10 @@ const LayoutMain = styled.main`
   flex-direction: column;
 `;
 type Props = {
-  id?: string,
   user: Object,
   userRole?: ?$Keys<typeof role>,
   history: Object,
+  match: Object,
 };
 type State = {
   isLoading: boolean,
@@ -93,7 +93,7 @@ class Post extends React.Component<Props, State> {
       isDeleteModalOpen: false,
       isPublishModalOpen: false,
       isHideModalOpen: false,
-      postId: this.props.id,
+      postId: this.props.match.params.id,
       titleState: EditorState.createEmpty(),
       subtitleState: EditorState.createEmpty(),
       contentState: EditorState.createEmpty(),

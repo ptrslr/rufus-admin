@@ -2,12 +2,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Status from '../components/Status';
-import Select from '../components/Select';
-import type { SelectOptions } from '../components/Select';
-import Button from '../components/Button';
-import AvatarBox from '../components/AvatarBox';
-import Label from '../components/Label';
+import Status from './Status';
+import Select from './Select';
+import type { SelectOptions } from './Select';
+import Button from './Button';
+import AvatarBox from './AvatarBox';
+import Label from './Label';
 
 import status from '../constants/status';
 import role from '../constants/role';

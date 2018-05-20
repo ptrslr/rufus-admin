@@ -55,10 +55,14 @@ const StyledLink = styled(NavLink)`
     }
   }
 `;
+const Count = styled.span`
+  margin-left: .25rem;
+`;
 
 type ItemType = {
   label: string,
   to: string,
+  count?: number,
 };
 type Props = {
   items: Array<ItemType>,
@@ -72,6 +76,7 @@ const Menu = (props: Props) => {
           <StyledItem key={index}>
             <StyledLink exact to={item.to}>
               {item.label}
+              {item.count != null && <Count>({item.count})</Count>}
             </StyledLink>
           </StyledItem>
         ))}
