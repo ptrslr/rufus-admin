@@ -26,6 +26,7 @@ type State = {
 class Posts extends React.Component<Props, State> {
   firebaseRef: ?Object;
   firebaseCallback: ?Function;
+  _isMounted: ?boolean;
 
   constructor(props: Props) {
     super(props);
@@ -37,12 +38,19 @@ class Posts extends React.Component<Props, State> {
   }
 
   componentDidMount = async () => {
+    this._isMounted = true;
     const posts = await fetchPosts();
 
-    this.setState({
-      isLoading: false,
-      posts,
-    });
+    if (this._isMounted) {
+      this.setState({
+        isLoading: false,
+        posts,
+      });
+    }
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   render() {

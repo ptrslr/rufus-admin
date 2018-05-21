@@ -33,6 +33,8 @@ type State = {
   currentIndex?: ?number,
 };
 class Team extends React.Component<Props, State> {
+  _isMounted: ?boolean;
+
   constructor() {
     super();
 
@@ -41,19 +43,29 @@ class Team extends React.Component<Props, State> {
       isSaving: false,
       isCreating: false,
       isDisableModalOpen: false,
+      isEnableModalOpen: false,
+      isDeleteModalOpen: false,
       items: {},
     };
   }
 
   componentDidMount = async () => {
+    this._isMounted = true;
+
     const items = this.props.disabled
       ? await fetchDisabledTeam()
       : await fetchActiveTeam();
 
-    this.setState({
-      isLoading: false,
-      items,
-    });
+    if (this._isMounted) {
+      this.setState({
+        isLoading: false,
+        items,
+      });
+    }
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   componentDidUpdate = async (prevProps: Props) => {

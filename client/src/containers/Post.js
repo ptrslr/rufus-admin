@@ -80,6 +80,7 @@ type State = {
 };
 
 class Post extends React.Component<Props, State> {
+  _isMounted: ?boolean;
   subtitleEditor: ?Editor;
   richEditor: ?Editor;
   firebaseRef: ?Object;
@@ -109,6 +110,8 @@ class Post extends React.Component<Props, State> {
   }
 
   componentDidMount = () => {
+    this._isMounted = true;
+
     const postId = this.state.postId;
 
     this.initCategories();
@@ -118,12 +121,19 @@ class Post extends React.Component<Props, State> {
       this.initPost(postId);
     } else {
       // editing new post
-      this.setState({
-        isLoading: false,
-        author: this.props.user,
-        authorRole: this.props.userRole,
-      });
+
+      if (this._isMounted) {
+        this.setState({
+          isLoading: false,
+          author: this.props.user,
+          authorRole: this.props.userRole,
+        });
+      }
     }
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   };
 
   componentDidUpdate = (prevProps: Props) => {
@@ -137,7 +147,7 @@ class Post extends React.Component<Props, State> {
   initPost = async (postId: string) => {
     fetchPost(postId)
       .then(post => {
-        if (post) {
+        if (post && this._isMounted) {
           const titleState = EditorState.createWithContent(
             ContentState.createFromText(post.title)
           );
@@ -159,9 +169,11 @@ class Post extends React.Component<Props, State> {
             fetchTeamMember(post.author),
           ]);
         } else {
-          this.setState({
-            noMatch: true,
-          });
+          if (this._isMounted) {
+            this.setState({
+              noMatch: true,
+            });
+          }
 
           throw new Error('Post not found');
         }
@@ -170,26 +182,27 @@ class Post extends React.Component<Props, State> {
         const content = data[0];
         const user = data[1];
 
-        if (content) {
-          const contentState = EditorState.createWithContent(
-            convertFromRaw(content)
-          );
+        if (this._isMounted) {
+          if (content) {
+            const contentState = EditorState.createWithContent(
+              convertFromRaw(content)
+            );
 
+            this.setState({
+              contentState,
+            });
+          }
+
+          if (user) {
+            this.setState({
+              author: user,
+              authorRole: user.customClaims.role,
+            });
+          }
           this.setState({
-            contentState,
+            isLoading: false,
           });
         }
-
-        if (user) {
-          this.setState({
-            author: user,
-            authorRole: user.customClaims.role,
-          });
-        }
-
-        this.setState({
-          isLoading: false,
-        });
       })
       .catch(error => {
         console.log(error);
@@ -206,7 +219,7 @@ class Post extends React.Component<Props, State> {
         };
       });
 
-      if (categoryOptions.length) {
+      if (categoryOptions.length && this._isMounted) {
         this.setState({
           categoryOptions: categoryOptions,
         });

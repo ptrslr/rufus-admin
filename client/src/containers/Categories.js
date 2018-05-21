@@ -48,6 +48,8 @@ type State = {
   deleteName?: ?string,
 };
 class Categories extends React.Component<Props, State> {
+  _isMounted: ?boolean;
+
   constructor() {
     super();
 
@@ -61,22 +63,29 @@ class Categories extends React.Component<Props, State> {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount = async () => {
+    this._isMounted = true;
     this.init();
-  }
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
+  };
 
   init = async () => {
     const items = await fetchCategories();
     const keys = await fetchCategoryKeys();
 
-    this.setState({
-      isLoading: false,
-      isSaving: false,
-      isCreating: false,
-      isModalOpen: false,
-      items,
-      keys,
-    });
+    if (this._isMounted) {
+      this.setState({
+        isLoading: false,
+        isSaving: false,
+        isCreating: false,
+        isModalOpen: false,
+        items,
+        keys,
+      });
+    }
   };
 
   onDragEnd = async (result: Object) => {

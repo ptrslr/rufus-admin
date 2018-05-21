@@ -22,10 +22,6 @@ const EditorWrapper = styled.div`
     display: none;
   }
 
-  div:not(:last-child) {
-    margin-bottom: 1.5em;
-  }
-
   h2,
   .h2,
   h3,
@@ -49,6 +45,10 @@ const EditorWrapper = styled.div`
   h4,
   .h4 {
     font-size: 1.25rem;
+  }
+
+  div:not(:last-child) {
+    margin-bottom: 1.5em;
   }
 `;
 
