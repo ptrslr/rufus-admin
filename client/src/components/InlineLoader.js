@@ -13,21 +13,22 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 const Icon = styled(ClipLoader)`
+  padding-top: .1em;
   margin-right: 0.5rem;
 `;
 
 type Props = {
   isLoading: boolean,
-  value?: string,
+  label?: string,
   size?: string,
 };
 const InlineLoader = (props: Props) => {
-  const { isLoading, value, size } = props;
+  const { isLoading, label, size } = props;
 
   return (
     <Wrapper isLoading={isLoading}>
       <Icon color={colors.primary} size={size ? size : '1rem'} />
-      {value && { value }}
+      {label}
     </Wrapper>
   );
 };

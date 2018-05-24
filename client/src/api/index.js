@@ -123,6 +123,8 @@ export const updatePost = (postId: string, post: Post) => {
     updates[`postContents/${postId}`] = contentStr;
   }
 
+  console.log(updates);
+
   return rootRef.update(updates);
 };
 

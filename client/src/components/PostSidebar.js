@@ -28,7 +28,7 @@ const Body = styled.div`
   padding: 1rem;
 `;
 const Item = styled.div`
-  padding: 0.75rem 0;
+  padding: 0.5rem 0;
 `;
 
 const Footer = styled.div`
@@ -73,6 +73,15 @@ const PostSidebar = (props: Props) => {
             name={props.authorName}
             title={props.authorRole}
             image={props.authorImage}
+          />
+        </Item>
+        <Item>
+          <Label>Poll:</Label>
+          <Button
+            theme="secondary"
+            block
+            iconLeft={icons.PLUS}
+            value="Create a poll"
           />
         </Item>
       </Body>

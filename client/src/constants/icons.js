@@ -1,8 +1,8 @@
 const icons = {
-  ARROW_DOWN: 'ArrowDown',
+  ARROW_BOTTOM: 'ArrowBottom',
   ARROW_LEFT: 'ArrowLeft',
   ARROW_RIGHT: 'ArrowRight',
-  ARROW_UP: 'arrowUp',
+  ARROW_TOP: 'ArrowTop',
   BLOCKQUOTE: 'Blockquote',
   BOLD: 'Bold',
   CALENDAR: 'Calendar',

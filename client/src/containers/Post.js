@@ -218,6 +218,10 @@ class Post extends React.Component<Props, State> {
           label: categories[key].name,
         };
       });
+      categoryOptions.splice(0, 0, {
+        value: null,
+        label: '- no category -',
+      });
 
       if (categoryOptions.length && this._isMounted) {
         this.setState({
@@ -246,9 +250,9 @@ class Post extends React.Component<Props, State> {
       .getPlainText();
     const content = convertToRaw(this.state.contentState.getCurrentContent());
     const status = this.state.status;
-    const category = this.state.category;
+    const category = this.state.category ? this.state.category : null;
     const author = this.state.author.uid;
-    const publishTime = this.state.publishTime;
+    const publishTime = this.state.publishTime ? this.state.publishTime : null;
 
     return {
       title,
