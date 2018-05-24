@@ -5,13 +5,13 @@ const prompt = require('co-prompt');
 const program = require('commander');
 const inquirer = require('inquirer');
 
-const serviceAccount = require('./project-rufus-firebase-adminsdk-bx2dx-28572f86b5.json');
+const firebaseConfig = require('./firebase-config.js');
 
 const maxPasswordLength = 6; // firebase
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://project-rufus.firebaseio.com',
+  credential: admin.credential.cert(firebaseConfig.serviceAccount),
+  databaseURL: firebaseConfig.url,
 });
 const teamRef = admin.database().ref('/team');
 
@@ -101,7 +101,7 @@ inquirer
  * https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
  */
 const validateEmail = function(email) {
-  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 };
 const createAdmin = function(email, password, displayName) {

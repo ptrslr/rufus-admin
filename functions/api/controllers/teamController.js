@@ -1,9 +1,9 @@
 'use strict';
 const admin = require('firebase-admin');
 
-const constants = require('../constants.js');
+const firebaseConfig = require('../../firebase-config.js');
 
-const url = constants.url;
+const url = firebaseConfig.url;
 
 const teamRef = admin.database().ref('/team');
 

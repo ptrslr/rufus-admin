@@ -3,7 +3,6 @@ import * as React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { firebaseAuth } from './../api';
-import { hot } from 'react-hot-loader';
 
 import Posts from './Posts';
 import Post from './Post';

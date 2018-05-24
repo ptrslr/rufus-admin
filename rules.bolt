@@ -38,7 +38,9 @@ path /postContents {
   read() { isSigned() }
   write() { isSigned() && (isAdmin() || isEditor()) }
 }
-path /postContents/{postId} is String;
+path /postContents/{postId} is String {
+  write() { isSigned() && isPostAuthor(postId) }
+}
 
 // polls
 path /polls {
@@ -84,7 +86,7 @@ type Post {
   subtitle: String | Null,
   author: String,
   status: Status,
-  category: String,
+  category: String | Null,
   publishTime: Number | Null,
 }
 
@@ -102,7 +104,7 @@ type PollOption {
 }
 
 type User {
-  pollVotes: Map<String, Number>
+  pollVotes: Map<String, Number> | Null
 }
 
 type Category {

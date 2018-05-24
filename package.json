@@ -6,14 +6,15 @@
   "scripts": {
     "client": "cd client && yarn  start || npm start",
     "server": "cd functions && firebase serve --only functions,hosting",
-    "start":
-      "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "build": "cd client && yarn build || npm build",
+    "start": "concurrently --kill-others-on-fail \"yarn server || npm run server\" \"yarn client || npm run client\"",
+    "build": "cd client && yarn build || npm run build",
     "rules": "firebase-bolt rules.bolt",
     "install-client": "cd client && yarn || npm install",
     "install-functions": "cd functions && yarn || npm install",
-    "install-all":
-      "concurrently \"yarn || npm install\" \"yarn || npm install-client\" \"yarn || npm install-functions\""
+    "install-all": "yarn || npm install && concurrently \"yarn install-client || npm run install-client\" \"yarn install-functions || npm run install-functions\"",
+    "setup": "./functions/setup.js",
+    "icons": "cd client && yarn icons || npm run icons",
+    "storybook": "cd client && yarn storybook || npm run storybook"
   },
   "repository": {
     "type": "git",
@@ -39,8 +40,5 @@
     "eslint-plugin-react": "^7.7.0",
     "firebase-bolt": "^0.8.3",
     "flow": "^0.2.3"
-  },
-  "bin": {
-    "setup": "./functions/setup.js"
   }
 }

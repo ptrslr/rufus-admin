@@ -8,14 +8,7 @@ import axios from 'axios';
 import role from '../constants/role';
 import type { Post } from '../utils/types';
 
-const config = {
-  apiKey: 'AIzaSyA0_eG1U3QHIKbr4UpmW8GLrH5YbF_La_E',
-  authDomain: 'project-rufus.firebaseapp.com',
-  databaseURL: 'https://project-rufus.firebaseio.com',
-  projectId: 'project-rufus',
-  storageBucket: 'project-rufus.appspot.com',
-  messagingSenderId: '83992737225',
-};
+import config from '../firebase-config.js';
 
 firebase.initializeApp(config);
 

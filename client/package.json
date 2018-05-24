@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:5001/project-rufus/us-central1/app/",
   "dependencies": {
+    "@storybook/addon-info": "^3.4.5",
     "axios": "^0.18.0",
     "draft-js": "^0.10.5",
     "eslint": "^4.19.1",
@@ -16,9 +17,7 @@
     "moment": "^2.22.1",
     "normalize.css": "^8.0.0",
     "polished": "^1.9.2",
-    "qs": "^6.5.1",
     "react": "^16.3.0",
-    "react-app-rewire-hot-loader": "^1.0.1",
     "react-app-rewired": "^1.5.0",
     "react-beautiful-dnd": "^6.0.2",
     "react-datetime": "^2.14.0",
@@ -40,9 +39,9 @@
     "react-scripts": "1.1.1"
   },
   "scripts": {
-    "start": "NODE_PATH=src react-app-rewired start",
-    "build": "NODE_PATH=src react-app-rewired build",
-    "test": "react-app-rewired test --env=jsdom",
+    "start": "NODE_PATH=src react-scripts start",
+    "build": "NODE_PATH=src react-scripts build",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "flow": "flow",
     "storybook": "start-storybook -p 9009 -s public",

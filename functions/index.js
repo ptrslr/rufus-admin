@@ -4,12 +4,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const serviceAccount = require('./project-rufus-firebase-adminsdk-bx2dx-28572f86b5.json');
+const firebaseConfig = require('./firebase-config.js');
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://project-rufus.firebaseio.com',
+  credential: admin.credential.cert(firebaseConfig.serviceAccount),
+  databaseURL: firebaseConfig.url,
 });
+// admin.initializeApp();
 
 const app = express();
 
@@ -48,10 +49,10 @@ teamRoutes(router);
 app.use('/api', router);
 
 // serve React app
-app.use(express.static(path.join(__dirname, '../client/build')));
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
+// app.use(express.static(path.join(__dirname, '../client/build')));
+// app.get('/*', function(req, res) {
+//   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+// });
 
 app.listen(5000);
 console.log('Magic happens on port ' + '5000');

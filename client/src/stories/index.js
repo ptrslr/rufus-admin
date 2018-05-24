@@ -1,11 +1,10 @@
 // @flow
 import React from 'react';
 
-import { storiesOf } from '@storybook/react';
+import { storiesOf, addDecorator } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { linkTo } from '@storybook/addon-links';
-
-import { Welcome } from '@storybook/react/demo';
+import { withInfo } from '@storybook/addon-info';
 
 import { BrowserRouter } from 'react-router-dom';
 
@@ -27,9 +26,8 @@ import InlineLoader from '../components/InlineLoader';
 import Modal from '../components/Modal';
 import ConfirmModal from '../components/ConfirmModal';
 
-storiesOf('Welcome', module).add('to Storybook', () => (
-  <Welcome showApp={linkTo('Button')} />
-));
+addDecorator((story, context) => withInfo()(story)(context));
+addDecorator(story => <div style={{ padding: '1rem 2rem' }}>{story()}</div>);
 
 storiesOf('Avatar', module)
   .add('Extra Small - xs', () => (
@@ -54,9 +52,7 @@ storiesOf('Button', module)
   .add('primary button', () => (
     <Button theme="primary" value="Primary button" />
   ))
-  .add('link-like button', () => (
-    <Button theme="link" value="Link-like button" />
-  ))
+  .add('link button', () => <Button theme="link" value="Link-like button" />)
   .add('Button with left icon', () => (
     <Button iconLeft={icons.PLUS} value="Button" />
   ))
@@ -155,20 +151,46 @@ storiesOf('InlineLoader', module)
     <InlineLoader isLoading="true" size="2rem" label="Saving" />
   ));
 
-storiesOf('Modal', module).add('default', () => (
-  <Modal isOpen="true" contentLabel="Hello world" closeModal={action('Close')}>
-    Hello World
-  </Modal>
-));
+storiesOf('Modal', module)
+  .add('open modal', () => (
+    <Modal
+      isOpen={true}
+      contentLabel="Hello world"
+      closeModal={action('Close')}
+    >
+      Hello World
+    </Modal>
+  ))
+  .add('closed modal', () => (
+    <Modal
+      isOpen={false}
+      contentLabel="Hello world"
+      closeModal={action('Close')}
+    >
+      Hello World
+    </Modal>
+  ));
 
-storiesOf('ConfirmModal', module).add('default', () => (
-  <ConfirmModal
-    isOpen="true"
-    closeModal={action('Close')}
-    title="Are you sure?"
-    subtitle={<p>Bears, beets, Battlestar Galactica.</p>}
-    onConfirm={action('Confirm')}
-    onCancel={action('Cancel')}
-    confirmValue="Confirm"
-  />
-));
+storiesOf('ConfirmModal', module)
+  .add('open modal', () => (
+    <ConfirmModal
+      isOpen={true}
+      closeModal={action('Close')}
+      title="Are you sure?"
+      subtitle={<p>Bears, beets, Battlestar Galactica.</p>}
+      onConfirm={action('Confirm')}
+      onCancel={action('<Cancel></Cancel>')}
+      confirmValue="Confirm"
+    />
+  ))
+  .add('closed modal', () => (
+    <ConfirmModal
+      isOpen={false}
+      closeModal={action('Close')}
+      title="Are you sure?"
+      subtitle={<p>Bears, beets, Battlestar Galactica.</p>}
+      onConfirm={action('Confirm')}
+      onCancel={action('<Cancel></Cancel>')}
+      confirmValue="Confirm"
+    />
+  ));
