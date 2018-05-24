@@ -19,10 +19,7 @@ const StyledIcon = styled.span`
 
 const Icon = (props: Props) => {
   const { name, opticalAlign, ...other } = props;
-
   const IconSvg = require(`./icons/${name}.js`).default;
-
-  // const Icon = StyledIcon.withComponent(IconSvg);
 
   return (
     <StyledIcon opticalAlign={opticalAlign} {...other}>

@@ -4,12 +4,16 @@
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "client": "cd client && yarn start",
+    "client": "cd client && yarn  start || npm start",
     "server": "cd functions && firebase serve --only functions,hosting",
     "start":
       "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "build": "cd client && yarn build",
-    "rules": "firebase-bolt rules.bolt"
+    "build": "cd client && yarn build || npm build",
+    "rules": "firebase-bolt rules.bolt",
+    "install-client": "cd client && yarn || npm install",
+    "install-functions": "cd functions && yarn || npm install",
+    "install-all":
+      "concurrently \"yarn || npm install\" \"yarn || npm install-client\" \"yarn || npm install-functions\""
   },
   "repository": {
     "type": "git",

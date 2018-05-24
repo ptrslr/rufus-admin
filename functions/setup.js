@@ -6,6 +6,7 @@ const program = require('commander');
 const inquirer = require('inquirer');
 
 const serviceAccount = require('./project-rufus-firebase-adminsdk-bx2dx-28572f86b5.json');
+
 const maxPasswordLength = 6; // firebase
 
 admin.initializeApp({

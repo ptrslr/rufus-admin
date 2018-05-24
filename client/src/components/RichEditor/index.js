@@ -13,6 +13,67 @@ type Props = {
   editorRef: Function,
 };
 
+const RichEditor = (props: Props) => {
+  const { editorState, onChange, editorRef } = props;
+
+  const handleKeyCommand = (command: string): 'handled' | 'not-handled' => {
+    const newState: ?EditorState = RichUtils.handleKeyCommand(
+      editorState,
+      command
+    );
+
+    if (newState) {
+      onChange(newState);
+      return 'handled';
+    }
+
+    return 'not-handled';
+  };
+
+  const mapKeyToEditorCommand = (e: SyntheticKeyboardEvent<>): string => {
+    if (e.keyCode === 9 /* TAB */) {
+      const newEditorState: EditorState = RichUtils.onTab(
+        e,
+        editorState,
+        4 /* maxDepth */
+      );
+      if (newEditorState !== editorState) {
+        onChange(newEditorState);
+      }
+      return 'tab';
+    }
+    return getDefaultKeyBinding(e);
+  };
+
+  let className = '';
+
+  const contentState = editorState.getCurrentContent();
+  className +=
+    !contentState.hasText() &&
+    contentState
+      .getBlockMap()
+      .first()
+      .getType() !== 'unstyled'
+      ? 'is-hiddenPlaceholder'
+      : '';
+
+  return (
+    <EditorWrapper className={className}>
+      <Editor
+        editorState={editorState}
+        handleKeyCommand={handleKeyCommand}
+        onChange={onChange}
+        keyBindingFn={mapKeyToEditorCommand}
+        ref={editorRef}
+        placeholder="Start writing here..."
+        onTab={mapKeyToEditorCommand}
+      />
+    </EditorWrapper>
+  );
+};
+
+export default RichEditor;
+
 const EditorWrapper = styled.div`
   font-size: 1.125rem;
   line-height: 1.5;
@@ -51,57 +112,3 @@ const EditorWrapper = styled.div`
     margin-bottom: 1.5em;
   }
 `;
-
-const RichEditor = (props: Props) => {
-  const { editorState, onChange, editorRef } = props;
-
-  const handleKeyCommand = command => {
-    const newState = RichUtils.handleKeyCommand(editorState, command);
-
-    if (newState) {
-      onChange(newState);
-      return 'handled';
-    }
-
-    return 'not-handled';
-  };
-
-  const mapKeyToEditorCommand = e => {
-    if (e.keyCode === 9 /* TAB */) {
-      const newEditorState = RichUtils.onTab(e, editorState, 4 /* maxDepth */);
-      if (newEditorState !== editorState) {
-        onChange(newEditorState);
-      }
-      return;
-    }
-    return getDefaultKeyBinding(e);
-  };
-
-  let className = '';
-
-  const contentState = editorState.getCurrentContent();
-  className +=
-    !contentState.hasText() &&
-    contentState
-      .getBlockMap()
-      .first()
-      .getType() !== 'unstyled'
-      ? 'is-hiddenPlaceholder'
-      : '';
-
-  return (
-    <EditorWrapper className={className}>
-      <Editor
-        editorState={editorState}
-        handleKeyCommand={handleKeyCommand}
-        onChange={onChange}
-        keyBindingFn={mapKeyToEditorCommand}
-        ref={editorRef}
-        placeholder="Start writing here..."
-        onTab={mapKeyToEditorCommand}
-      />
-    </EditorWrapper>
-  );
-};
-
-export default RichEditor;

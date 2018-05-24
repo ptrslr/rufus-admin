@@ -7,11 +7,6 @@ import Button from './Button.js';
 import icons from '../../constants/icons';
 import { colors } from '../../constants/theme.js';
 
-type Props = {
-  editorState: EditorState,
-  onChange: Function,
-};
-
 const StyledToolbar = styled.div`
   width: 100%;
   background: white;
@@ -38,20 +33,25 @@ const BLOCK_TYPES = [
   { label: 'Ol', style: 'ordered-list-item', icon: 'OL' },
 ];
 
+type Props = {
+  editorState: EditorState,
+  onChange: Function,
+};
+
 const Toolbar = (props: Props) => {
   const { editorState, onChange } = props;
 
-  const toggleInlineStyle = inlineStyle => {
+  const toggleInlineStyle = (inlineStyle: string): void => {
     onChange(RichUtils.toggleInlineStyle(editorState, inlineStyle));
   };
-  const toggleBlockType = blockType => {
+  const toggleBlockType = (blockType: string): void => {
     onChange(RichUtils.toggleBlockType(editorState, blockType));
   };
 
   const currentStyle = editorState.getCurrentInlineStyle();
 
   const selection = editorState.getSelection();
-  const blockType = editorState
+  const blockType: string = editorState
     .getCurrentContent()
     .getBlockForKey(selection.getStartKey())
     .getType();

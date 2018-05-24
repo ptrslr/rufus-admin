@@ -3,7 +3,7 @@ import * as React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { firebaseAuth } from './../api';
-import firebaseui from 'firebaseui';
+import { hot } from 'react-hot-loader';
 
 import Posts from './Posts';
 import Post from './Post';
@@ -36,6 +36,7 @@ const LayoutMain = styled.main`
 type Props = {};
 type State = {
   isLoading: boolean,
+  isUnauthorized?: boolean,
   user: ?Object,
   userRole: ?$Keys<typeof role>,
 };
@@ -55,19 +56,34 @@ class App extends React.Component<Props, State> {
     firebaseAuth.onAuthStateChanged(user => {
       if (user) {
         firebaseAuth.currentUser.getIdTokenResult().then(idToken => {
-          this.setState({ userRole: idToken.claims.role });
+          if (idToken.claims.role) {
+            this.setState({
+              user,
+              userRole: idToken.claims.role,
+            });
+          } else {
+            this.setState({
+              isUnauthorized: true,
+            });
+          }
+
+          this.setState({ isLoading: false });
         });
-        this.setState({ user });
+      } else {
+        this.setState({ isLoading: false });
       }
-      this.setState({ isLoading: false });
     });
   };
 
-  onLogin = (authResult: firebaseui.auth.AuthResult) => {
-    const user = authResult.user;
-
-    this.setState({ user });
-  };
+  //   onLogin = (authResult: firebaseui.auth.AuthResult) => {
+  //     const user = authResult.user;
+  //
+  //     isTeamMember(user.uid).then(teamMember => {
+  //       if (teamMember) {
+  //         this.setState({ user });
+  //       }
+  //     });
+  //   };
   render() {
     return (
       <Loader isLoading={this.state.isLoading}>
@@ -183,4 +199,4 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default App;
+export default hot(module)(App);

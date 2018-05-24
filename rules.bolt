@@ -40,6 +40,17 @@ path /postContents {
 }
 path /postContents/{postId} is String;
 
+// polls
+path /polls {
+  read() { isSigned() }
+  write() {
+    isSigned() && (isAdmin() || isEditor())
+  }
+}
+path /polls/{postId} is Poll {
+  write() { isSigned() && isPostAuthor(postId) }
+}
+
 // team
 path /team {
   read() { isSigned() && isTeamMember() }
@@ -48,6 +59,14 @@ path /team/{userId} is TeamMember {
   index() {["disabled"] }
   write() { isSigned() && isAdmin() }
 }
+
+//users
+path /users/{userId} is User {
+  read() { isSigned() && userId === auth.uid}
+  write() { isSigned() && userId === auth.uid }
+}
+
+
 
 
 // ==========================================================================
@@ -72,6 +91,19 @@ type Post {
 // type PostContent {
 //   content: Object
 // }
+
+type Poll {
+  question: String,
+  options: PollOption[],
+}
+type PollOption {
+  value: String,
+  voteCount: Number
+}
+
+type User {
+  pollVotes: Map<String, Number>
+}
 
 type Category {
   name: String

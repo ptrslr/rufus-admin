@@ -46,9 +46,6 @@ const Select = (props: Props) => {
   return (
     <Wrapper>
       <StyledSelect {...other}>
-        <option key="0" value="">
-          &mdash; no category &mdash;
-        </option>
         {options &&
           options.map(option => (
             <option key={option.value} value={option.value}>

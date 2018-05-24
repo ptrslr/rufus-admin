@@ -56,6 +56,35 @@
         ".validate": "newData.isString()"
       }
     },
+    "polls": {
+      ".read": "auth != null",
+      ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",
+      "$postId": {
+        ".validate": "newData.hasChildren(['question'])",
+        "question": {
+          ".validate": "newData.isString()"
+        },
+        "options": {
+          "$key1": {
+            ".validate": "newData.hasChildren(['value', 'voteCount'])",
+            "value": {
+              ".validate": "newData.isString()"
+            },
+            "voteCount": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          },
+          ".validate": "newData.hasChildren()"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".write": "auth != null && newData.parent().parent().child('posts/' + $postId + '/author').val() == auth.uid"
+      }
+    },
     "team": {
       ".read": "auth != null && auth.token.role != null",
       "$userId": {
@@ -70,6 +99,22 @@
         ".indexOn": [
           "disabled"
         ]
+      }
+    },
+    "users": {
+      "$userId": {
+        ".validate": "newData.hasChildren()",
+        "pollVotes": {
+          "$key2": {
+            ".validate": "newData.isNumber()"
+          },
+          ".validate": "newData.hasChildren()"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".read": "auth != null && $userId == auth.uid",
+        ".write": "auth != null && $userId == auth.uid"
       }
     }
   }

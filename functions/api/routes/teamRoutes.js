@@ -3,7 +3,7 @@
 module.exports = function(router) {
   var team = require('../controllers/teamController');
 
-  // posts Routes
+  // team routes
   router
     .route('/team')
     .get(team.getTeam)

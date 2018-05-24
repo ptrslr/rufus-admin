@@ -53,7 +53,7 @@ class Login extends React.Component<Props, State> {
         // Return type determines whether we continue the redirect automatically
         // or whether we leave that to developer to handle.
 
-        this.props.onLogin(authResult);
+        // this.props.onLogin(authResult);
 
         return true;
       },

@@ -1,8 +1,5 @@
 'use strict';
 const admin = require('firebase-admin');
-const axios = require('axios');
-const isEqual = require('lodash/isEqual');
-const cloneDeep = require('lodash/cloneDeep');
 
 const constants = require('../constants.js');
 
@@ -238,7 +235,16 @@ exports.getTeamMember = function(req, res) {
 
   const userId = req.params.userId;
 
-  return getUser(userId)
+  return admin
+    .auth()
+    .verifyIdToken(idToken)
+    .then(function(claims) {
+      if (!claims) {
+        return res.status(401).send('Not verified token');
+      }
+
+      return getUser(userId);
+    })
     .then(function(user) {
       return res.json(user);
     })

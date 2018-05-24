@@ -37,8 +37,6 @@ router.use(function(err, req, res, next) {
 // });
 
 // more routes for our API will happen here
-const postRoutes = require('./api/routes/postRoutes');
-const categoryRoutes = require('./api/routes/categoryRoutes');
 const teamRoutes = require('./api/routes/teamRoutes');
 
 // postRoutes(router);
