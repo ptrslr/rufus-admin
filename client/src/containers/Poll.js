@@ -7,6 +7,7 @@ import PollComponent from '../components/Poll';
 import NewPoll from '../components/NewPoll';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
+import ConfirmModal from '../components/ConfirmModal';
 
 import { fetchPoll, deletePoll } from '../api';
 
@@ -42,6 +43,7 @@ type State = {
   isLoading: boolean,
   isCreating: boolean,
   isPoll: boolean,
+  isDeleteModalOpen: boolean,
 } & PollType;
 
 type Props = {
@@ -62,6 +64,7 @@ class Poll extends React.Component<Props, State> {
       isLoading: true,
       isCreating: false,
       isPoll: false,
+      isDeleteModalOpen: false,
       question: '',
       options: newOptions(),
     };
@@ -149,10 +152,20 @@ class Poll extends React.Component<Props, State> {
   };
 
   onDelete = () => {
+    this.setState({ isDeleteModalOpen: true });
+  };
+
+  onDeleteConfirm = () => {
+    this.setState({
+      isLoading: true,
+      isDeleteModalOpen: false,
+    });
+
     deletePoll(this.props.postId)
       .then(() => {
         if (this._isMounted) {
           this.setState({
+            isLoading: false,
             isPoll: false,
             isCreating: false,
           });
@@ -160,6 +173,9 @@ class Poll extends React.Component<Props, State> {
       })
       .catch(err => {
         console.log(err);
+        this.setState({
+          isDeleteModalOpen: false,
+        });
       });
   };
 
@@ -213,61 +229,77 @@ class Poll extends React.Component<Props, State> {
     });
   };
 
-  render() {
-    if (this.state.isPoll)
-      return (
-        <Loader isLoading={this.state.isLoading}>
-          <PollComponent
-            question={this.state.question}
-            options={this.state.options}
-          />
-          <Button
-            theme="secondary"
-            block
-            iconLeft={icons.PLUS}
-            value="Delete the poll"
-            onClick={this.onDelete}
-          />
-        </Loader>
-      );
+  closeModal = () => {
+    this.setState({ isDeleteModalOpen: false });
+  };
 
-    if (this.state.isCreating)
-      return (
-        <Loader isLoading={this.state.isLoading}>
-          <NewPoll
-            question={this.state.question}
-            options={this.state.options}
-            onQuestionChange={this.onQuestionChange}
-            onOptionChange={this.onOptionChange}
-            onOptionDelete={this.onOptionDelete}
-            onDragEnd={this.onDragEnd}
-          />
-          <Action>
+  render() {
+    return (
+      <Loader isLoading={this.state.isLoading}>
+        {this.state.isPoll ? (
+          <div>
+            <PollComponent
+              question={this.state.question}
+              options={this.state.options}
+            />
             <Button
               theme="secondary"
               block
               iconLeft={icons.PLUS}
-              value="Add an option"
-              onClick={this.onOptionCreate}
+              value="Delete the poll"
+              onClick={this.onDelete}
             />
-          </Action>
+          </div>
+        ) : this.state.isCreating ? (
+          <div>
+            <NewPoll
+              question={this.state.question}
+              options={this.state.options}
+              onQuestionChange={this.onQuestionChange}
+              onOptionChange={this.onOptionChange}
+              onOptionDelete={this.onOptionDelete}
+              onDragEnd={this.onDragEnd}
+            />
+            <Action>
+              <Button
+                theme="secondary"
+                block
+                iconLeft={icons.PLUS}
+                value="Add an option"
+                onClick={this.onOptionCreate}
+              />
+            </Action>
+            <Button
+              theme="secondary"
+              block
+              iconLeft={icons.CLOSE}
+              value="Cancel"
+              onClick={this.onCancel}
+            />
+          </div>
+        ) : (
           <Button
             theme="secondary"
             block
-            iconLeft={icons.CLOSE}
-            value="Cancel"
-            onClick={this.onCancel}
+            iconLeft={icons.PLUS}
+            value="Create a poll"
+            onClick={this.onCreate}
           />
-        </Loader>
-      );
-    return (
-      <Loader isLoading={this.state.isLoading}>
-        <Button
-          theme="secondary"
-          block
-          iconLeft={icons.PLUS}
-          value="Create a poll"
-          onClick={this.onCreate}
+        )}
+
+        <ConfirmModal
+          isOpen={this.state.isDeleteModalOpen}
+          closeModal={this.closeModal}
+          title="Are you sure?"
+          subtitle={
+            <p>
+              You're about to delete this poll. This action{' '}
+              <strong>cannot</strong> be undone.
+            </p>
+          }
+          onConfirm={this.onDeleteConfirm}
+          onCancel={this.closeModal}
+          confirmValue="Delete"
         />
       </Loader>
     );
