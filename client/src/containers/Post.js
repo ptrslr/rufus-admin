@@ -85,6 +85,7 @@ class Post extends React.Component<Props, State> {
   richEditor: ?Editor;
   firebaseRef: ?Object;
   firebaseCallback: ?Function;
+  pollRef: ?Object;
 
   constructor(props: Props) {
     super(props);
@@ -107,6 +108,8 @@ class Post extends React.Component<Props, State> {
       publishTime: null,
       datetimeValue: Date.now(),
     };
+
+    this.pollRef = React.createRef();
   }
 
   componentDidMount = () => {
@@ -272,11 +275,12 @@ class Post extends React.Component<Props, State> {
 
     const postId = this.state.postId;
     const post: PostType = this.mapStateToPost();
+    const poll = this.pollRef.current.onSavePost();
 
     if (postId) {
-      await updatePost(postId, post);
+      await updatePost(postId, post, poll);
     } else {
-      const newPostId = await createPost(post);
+      const newPostId = await createPost(post, poll);
 
       this.setState({
         postId: newPostId,
@@ -499,11 +503,13 @@ class Post extends React.Component<Props, State> {
       return <NoMatch history={this.props.history} />;
     }
 
+    let author = null;
     let authorName = null;
     let authorRole = null;
     let authorImage = null;
 
     if (this.state.author) {
+      author = this.state.author.uid;
       authorName = this.state.author.displayName
         ? this.state.author.displayName
         : this.state.author.email;
@@ -537,6 +543,7 @@ class Post extends React.Component<Props, State> {
                   category={this.state.category}
                   categoryOptions={this.state.categoryOptions}
                   onCategoryChange={this.onCategoryChange}
+                  author={author}
                   authorName={authorName}
                   authorRole={authorRole}
                   authorImage={authorImage}
@@ -544,6 +551,8 @@ class Post extends React.Component<Props, State> {
                   onDelete={this.onDelete}
                   onPublish={this.onPublish}
                   onHide={this.onHide}
+                  pollRef={this.pollRef}
+                  postId={this.state.postId}
                 />
               </Loader>
             </LayoutSidebar>

@@ -94,15 +94,16 @@ type Post {
 //   content: Object
 // }
 
-type Poll {
-  question: String,
-  options: PollOption[],
-}
 type PollOption {
+  id: String,
   value: String,
   voteCount: Number
 }
 
+type Poll {
+  question: String,
+  options: Any // PollOption[] not working for some reason
+}
 type User {
   pollVotes: Map<String, Number> | Null
 }
@@ -136,4 +137,7 @@ isTeamMember() {
 }
 isPostAuthor(postId) {
   root.child('posts/' + postId + '/author').val() === auth.uid
+}
+isPollAuthor(pollId) {
+  root.child('polls/' + pollId + '/author').val() === auth.uid
 }

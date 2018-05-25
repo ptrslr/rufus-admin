@@ -21,3 +21,14 @@ export type PostUpdates = {
   author?: string,
   publishTime?: ?number,
 };
+
+export type PollOption = {
+  id: string,
+  value: string,
+  voteCount: number,
+};
+
+export type Poll = {
+  question: ?string,
+  options: ?Array<PollOption>,
+};

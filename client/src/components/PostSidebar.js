@@ -8,6 +8,7 @@ import type { SelectOptions } from './Select';
 import Button from './Button';
 import AvatarBox from './AvatarBox';
 import Label from './Label';
+import Poll from './../containers/Poll';
 
 import status from '../constants/status';
 import role from '../constants/role';
@@ -39,6 +40,7 @@ type Props = {
   status: $Keys<typeof status>,
   category: ?string,
   categoryOptions: ?SelectOptions,
+  author: ?string,
   authorName: ?string,
   authorRole: ?$Keys<typeof role>,
   authorImage: ?string,
@@ -46,6 +48,8 @@ type Props = {
   onDelete: Function,
   onPublish: Function,
   onHide: Function,
+  pollRef: ?Object,
+  postId: ?string,
 };
 const PostSidebar = (props: Props) => {
   return (
@@ -77,11 +81,10 @@ const PostSidebar = (props: Props) => {
         </Item>
         <Item>
           <Label>Poll:</Label>
-          <Button
-            theme="secondary"
-            block
-            iconLeft={icons.PLUS}
-            value="Create a poll"
+          <Poll
+            ref={props.pollRef}
+            postId={props.postId}
+            author={props.author}
           />
         </Item>
       </Body>

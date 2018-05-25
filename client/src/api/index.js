@@ -6,7 +6,7 @@ import 'firebase/database';
 import axios from 'axios';
 
 import role from '../constants/role';
-import type { Post } from '../utils/types';
+import type { Post, Poll } from '../utils/types';
 
 import config from '../firebase-config.js';
 
@@ -16,14 +16,15 @@ export const provider = new firebase.auth.GoogleAuthProvider();
 export const firebaseAuth = firebase.auth();
 export default firebase;
 
-const rootRef = firebase.database().ref();
-const postsRef = rootRef.child('posts');
+export const rootRef = firebase.database().ref();
+export const postsRef = rootRef.child('posts');
 // const postContentsRef = rootRef.child('postContents');
-const categoriesRef = rootRef.child('categories');
-const categoryKeysRef = rootRef.child('categoryKeys');
-const teamRef = rootRef.child('team');
+export const pollsRef = rootRef.child('polls');
+export const categoriesRef = rootRef.child('categories');
+export const categoryKeysRef = rootRef.child('categoryKeys');
+export const teamRef = rootRef.child('team');
 
-const authenticate = async (params = {}) => {
+export const authenticate = async (params = {}) => {
   const idToken = await firebaseAuth.currentUser.getIdToken();
 
   params['auth'] = idToken;
@@ -31,7 +32,7 @@ const authenticate = async (params = {}) => {
   return params;
 };
 
-const handleError = err => {
+export const handleError = err => {
   if (err.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
@@ -72,7 +73,7 @@ export const fetchPostContent = async (postId: string) => {
   return JSON.parse(contentData);
 };
 
-export const createPost = (post: Post): void => {
+export const createPost = (post: Post, poll: Poll = null): Promise<string> => {
   const postsRef = rootRef.child('posts');
   // const contentsRef = rootRef.child('postContents');
 
@@ -99,13 +100,14 @@ export const createPost = (post: Post): void => {
     publishTime,
   };
   updates[`postContents/${postId}`] = contentStr;
+  updates[`polls/${postId}`] = poll;
 
   return rootRef.update(updates).then(() => {
     return postId;
   });
 };
 
-export const updatePost = (postId: string, post: Post) => {
+export const updatePost = (postId: string, post: Post, poll: Poll = null) => {
   const { content, ...postUpdates } = post;
 
   const updates = {};
@@ -115,8 +117,11 @@ export const updatePost = (postId: string, post: Post) => {
     const contentStr = JSON.stringify(content);
     updates[`postContents/${postId}`] = contentStr;
   }
+  if (poll) {
+    updates[`polls/${postId}`] = poll;
+  }
 
-  console.log(updates);
+  // console.log(updates);
 
   return rootRef.update(updates);
 };
@@ -125,8 +130,27 @@ export const deletePost = (postId: string) => {
   const updates = {};
   updates[`posts/${postId}`] = null;
   updates[`postContents/${postId}`] = null;
+  updates[`polls/${postId}`] = null;
 
   return rootRef.update(updates);
+};
+
+/* ==========================================================================
+   Polls
+   ========================================================================== */
+export const createPoll = (postId: string, poll: Poll): Promise<string> => {
+  return pollsRef.child(postId).set(poll);
+};
+
+export const fetchPoll = async (postId: string) => {
+  const pollRef = pollsRef.child(postId);
+  const pollData = (await pollRef.once('value')).val();
+
+  return pollData;
+};
+
+export const deletePoll = (postId: string): Promise<void> => {
+  return pollsRef.child(postId).remove();
 };
 
 /*
