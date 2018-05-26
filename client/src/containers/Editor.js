@@ -2,6 +2,12 @@
 import * as React from 'react';
 
 import { EditorState } from 'draft-js';
+import { composeDecorators } from 'draft-js-plugins-editor';
+import createImagePlugin from 'draft-js-image-plugin';
+import createVideoPlugin from 'draft-js-video-plugin';
+import createFocusPlugin from 'draft-js-focus-plugin';
+import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
+
 // import 'draft-js/dist/Draft.css';
 import styled from 'styled-components';
 
@@ -9,18 +15,12 @@ import Toolbar from '../components/Toolbar';
 import TitleEditor from '../components/TitleEditor';
 import SubtitleEditor from '../components/SubtitleEditor';
 import RichEditor from '../components/RichEditor';
+import Modal from '../components/Modal';
+import Input from '../components/Input';
+import Button from '../components/Button';
 
-// import { colors } from '../../utils/theme';
-
-type Props = {
-  isEditable: boolean,
-  titleState: EditorState,
-  subtitleState: EditorState,
-  contentState: EditorState,
-  onTitleChange: Function,
-  onSubtitleChange: Function,
-  onContentChange: Function,
-};
+import icons from '../constants/icons';
+import { colors } from '../constants/theme';
 
 const Wrapper = styled.div`
   position: relative;
@@ -38,57 +38,219 @@ const Inner = styled.div`
 const Measure = styled.div`
   max-width: 40rem;
   margin: 0 auto;
+
+  .public-DraftEditorPlaceholder-root {
+    color: ${colors.grays[4]};
+  }
+  .public-DraftEditorPlaceholder-hasFocus {
+    color: ${colors.grays[2]};
+  }
 `;
 
-const Editor = (props: Props) => {
-  let subtitleEditor = null;
-  let richEditor = null;
+const Title = styled.h2`
+  margin: 0 0 1rem;
+`;
+const VideoForm = styled.form`
+  display: flex;
+`;
+const VideoAction = styled.span`
+  margin-left: 1rem;
+`;
+const VideoActions = styled.div`
+  text-align: right;
+  margin-top: 0.5rem;
+`;
 
-  const handleTitleReturn = () => {
-    subtitleEditor && subtitleEditor.focus();
-  };
-  const handleSubtitleReturn = () => {
-    focusRichEditor();
-  };
+const focusPlugin = createFocusPlugin();
+const blockDndPlugin = createBlockDndPlugin();
 
-  const focusRichEditor = () => {
-    richEditor && richEditor.focus();
-  };
+const decorator = composeDecorators(
+  focusPlugin.decorator,
+  blockDndPlugin.decorator
+);
 
-  return (
-    <Wrapper>
-      {props.isEditable && (
-        <Toolbar
-          editorState={props.contentState}
-          onChange={props.onContentChange}
-        />
-      )}
+const imagePlugin = createImagePlugin({ decorator });
+const videoPlugin = createVideoPlugin({
+  theme: {
+    iframeContainer: 'VideoIframeWrapper',
+    iframe: 'VideoIframe',
+  },
+});
 
-      <Inner>
-        <Measure>
-          <TitleEditor
-            editorState={props.titleState}
-            onChange={props.onTitleChange}
-            handleReturn={handleTitleReturn}
-            readOnly={!props.isEditable}
-          />
-          <SubtitleEditor
-            editorState={props.subtitleState}
-            onChange={props.onSubtitleChange}
-            handleReturn={handleSubtitleReturn}
-            editorRef={node => (subtitleEditor = node)}
-            readOnly={!props.isEditable}
-          />
-          <RichEditor
-            editorState={props.contentState}
-            onChange={props.onContentChange}
-            editorRef={node => (richEditor = node)}
-            readOnly={!props.isEditable}
-          />
-        </Measure>
-      </Inner>
-    </Wrapper>
-  );
+const plugins = [blockDndPlugin, focusPlugin, imagePlugin, videoPlugin];
+
+type Props = {
+  isEditable: boolean,
+  titleState: EditorState,
+  subtitleState: EditorState,
+  contentState: EditorState,
+  onTitleChange: Function,
+  onSubtitleChange: Function,
+  onContentChange: Function,
 };
+
+type State = {
+  isImageModalOpen: boolean,
+  isVideoModalOpen: boolean,
+  image: ?Object,
+  videoURL: string,
+};
+
+class Editor extends React.Component<Props, State> {
+  // let subtitleEditor = null;
+  // let richEditor = null;
+
+  constructor() {
+    super();
+
+    this.state = {
+      isImageModalOpen: false,
+      isVideoModalOpen: false,
+      image: null,
+      videoURL: '',
+    };
+
+    this.subtitleEditor = React.createRef();
+    this.richEditor = React.createRef();
+    this.videoInput = React.createRef();
+  }
+
+  handleTitleReturn = () => {
+    this.subtitleEditor && this.subtitleEditor.focus();
+  };
+  handleSubtitleReturn = () => {
+    this.focusRichEditor();
+  };
+
+  focusRichEditor = () => {
+    this.richEditor && this.richEditor.focus();
+  };
+
+  onVideoURLChange = (e: SyntheticEvent<HTMLInputElement>) => {
+    this.setState({ videoURL: e.currentTarget.value });
+  };
+
+  addImage = () => {
+    this.props.onContentChange(
+      imagePlugin.addImage(
+        this.props.contentState,
+        'https://picsum.photos/200/300'
+      )
+    );
+  };
+
+  addVideo = e => {
+    e.preventDefault();
+
+    if (this.state.videoURL.length) {
+      this.closeModal();
+
+      this.props.onContentChange(
+        videoPlugin.addVideo(this.props.contentState, {
+          src: this.state.videoURL,
+        })
+      );
+    }
+  };
+
+  onImage = () => {
+    this.setState({ isImageModalOpen: true });
+  };
+
+  onVideo = () => {
+    this.setState(
+      {
+        isVideoModalOpen: true,
+        videoURL: '',
+      },
+      () => {}
+    );
+  };
+
+  afterOpenModal = () => {
+    this.videoInput.focus();
+  };
+
+  closeModal = () => {
+    this.setState({
+      isImageModalOpen: false,
+      isVideoModalOpen: false,
+    });
+  };
+
+  render() {
+    return (
+      <Wrapper>
+        {this.props.isEditable && (
+          <Toolbar
+            editorState={this.props.contentState}
+            onChange={this.props.onContentChange}
+            onImage={this.onImage}
+            onVideo={this.onVideo}
+          />
+        )}
+
+        <Inner>
+          <Measure>
+            <TitleEditor
+              editorState={this.props.titleState}
+              onChange={this.props.onTitleChange}
+              handleReturn={this.handleTitleReturn}
+              readOnly={!this.props.isEditable}
+            />
+            <SubtitleEditor
+              editorState={this.props.subtitleState}
+              onChange={this.props.onSubtitleChange}
+              handleReturn={this.handleSubtitleReturn}
+              editorRef={node => (this.subtitleEditor = node)}
+              readOnly={!this.props.isEditable}
+            />
+            <RichEditor
+              editorState={this.props.contentState}
+              onChange={this.props.onContentChange}
+              editorRef={node => (this.richEditor = node)}
+              readOnly={!this.props.isEditable}
+              plugins={plugins}
+            />
+          </Measure>
+        </Inner>
+
+        <Modal
+          isOpen={this.state.isVideoModalOpen}
+          closeModal={this.closeModal}
+          onAfterOpen={this.afterOpenModal}
+          contentLabel="Add video"
+        >
+          <Title>Add video</Title>
+          <VideoForm onSubmit={this.addVideo}>
+            <Input
+              innerRef={node => (this.videoInput = node)}
+              value={this.state.videoURL}
+              onChange={this.onVideoURLChange}
+              placeholder="Video URL"
+              type="text"
+            />
+            <VideoAction>
+              <Button
+                theme="primary"
+                iconLeft={icons.PLUS}
+                value="Add video"
+                onClick={this.addVideo}
+              />
+            </VideoAction>
+            {/* <VideoAction> */}
+            {/*   <Button */}
+            {/*     theme="link" */}
+            {/*     iconLeft={icons.CLOSE} */}
+            {/*     value="" */}
+            {/*     onClick={this.closeModal} */}
+            {/*   /> */}
+            {/* </VideoAction> */}
+          </VideoForm>
+        </Modal>
+      </Wrapper>
+    );
+  }
+}
 
 export default Editor;

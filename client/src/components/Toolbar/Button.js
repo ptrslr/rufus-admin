@@ -8,10 +8,10 @@ import icons from '../../constants/icons';
 import Icon from '../Icon';
 
 type Props = {
-  active: boolean,
+  active?: boolean,
   label: string,
   icon: $Keys<typeof icons>,
-  style: string,
+  style?: string,
   onClick: Function,
   type?: string,
 };
@@ -47,7 +47,7 @@ const StyledButton = styled.button`
   }
 
   &:active {
-    background-color: ${colors.grays[1]};
+    background-color: ${colors.grays[2]};
   }
 `;
 const StyledIcon = styled(Icon)`

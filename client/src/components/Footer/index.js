@@ -13,6 +13,6 @@ const Wrapper = styled.footer`
   font-size: 13px;
 `;
 
-const Footer = () => <Wrapper>Rufus &mdash; made in brno</Wrapper>;
+const Footer = () => <Wrapper>Rufus &mdash; made in Brno</Wrapper>;
 
 export default Footer;

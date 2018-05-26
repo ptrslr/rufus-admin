@@ -38,6 +38,7 @@ const icons = {
   STRIKETHROUGH: 'Strikethrough',
   UL: 'Ul',
   UNDERLINE: 'Underline',
+  VIDEO: 'Video',
   VISIBILITY: 'Visibility',
   VISIBILITY_OFF: 'VisibilityOff',
 };

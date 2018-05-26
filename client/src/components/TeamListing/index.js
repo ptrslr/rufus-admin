@@ -48,7 +48,7 @@ const TeamListing = (props: Props) => {
           isEditable={isEditable}
           uid={item.uid}
           index={index}
-          avatar="https://picsum.photos/200"
+          avatar={item.photoURL}
           displayName={item.displayName}
           email={item.email}
           role={item.customClaims.role}

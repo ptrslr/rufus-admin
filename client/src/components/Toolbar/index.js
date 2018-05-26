@@ -3,7 +3,8 @@ import * as React from 'react';
 import { EditorState, RichUtils } from 'draft-js';
 import styled from 'styled-components';
 
-import Button from './Button.js';
+import Button from './Button';
+
 import icons from '../../constants/icons';
 import { colors } from '../../constants/theme.js';
 
@@ -36,10 +37,12 @@ const BLOCK_TYPES = [
 type Props = {
   editorState: EditorState,
   onChange: Function,
+  onImage: Function,
+  onVideo: Function,
 };
 
 const Toolbar = (props: Props) => {
-  const { editorState, onChange } = props;
+  const { editorState, onChange, onImage, onVideo } = props;
 
   const toggleInlineStyle = (inlineStyle: string): void => {
     onChange(RichUtils.toggleInlineStyle(editorState, inlineStyle));
@@ -80,6 +83,20 @@ const Toolbar = (props: Props) => {
             style={item.style}
           />
         ))}
+
+        <Button
+          key="toolbar-image"
+          label="Add image"
+          icon={icons.IMAGE}
+          onClick={onImage}
+        />
+
+        <Button
+          key="toolbar-video"
+          label="Add video"
+          icon={icons.VIDEO}
+          onClick={onVideo}
+        />
       </Inner>
     </StyledToolbar>
   );

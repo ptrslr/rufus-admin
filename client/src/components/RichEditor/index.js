@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
-import { Editor, EditorState, RichUtils, getDefaultKeyBinding } from 'draft-js';
+import { EditorState, RichUtils, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
+import Editor from 'draft-js-plugins-editor';
 
 import styled from 'styled-components';
 
@@ -12,10 +13,11 @@ type Props = {
   onChange: Function,
   editorRef: Function,
   readOnly: boolean,
+  plugins: Array<Object>,
 };
 
 const RichEditor = (props: Props) => {
-  const { editorState, onChange, editorRef, readOnly } = props;
+  const { editorState, onChange, editorRef, readOnly, plugins } = props;
 
   const handleKeyCommand = (command: string): 'handled' | 'not-handled' => {
     const newState: ?EditorState = RichUtils.handleKeyCommand(
@@ -69,6 +71,7 @@ const RichEditor = (props: Props) => {
         placeholder="Start writing here..."
         onTab={mapKeyToEditorCommand}
         readOnly={readOnly}
+        plugins={plugins}
       />
     </EditorWrapper>
   );
@@ -108,6 +111,31 @@ const EditorWrapper = styled.div`
   h4,
   .h4 {
     font-size: 1.25rem;
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  .VideoIframeWrapper {
+    width: 100%;
+    height: 0;
+    position: relative;
+    padding-bottom: 56.25%;
+  }
+
+  .VideoIframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .invalidVideoSrc {
+    text-align: center;
+    background-color: #eaeaea;
+    padding: 1em;
   }
 
   div:not(:last-child) {

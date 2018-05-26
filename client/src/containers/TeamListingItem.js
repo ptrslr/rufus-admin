@@ -117,25 +117,25 @@ class TeamListingItem extends React.Component<Props, State> {
     const { isDisabled } = this.props;
 
     const options = [
+      // {
+      //   value: 'admin',
+      //   label: 'admin',
+      // },
       {
-        value: 'admin',
-        label: 'admin',
+        value: role.EDITOR,
+        label: role.EDITOR,
       },
       {
-        value: 'editor',
-        label: 'editor',
-      },
-      {
-        value: 'author',
-        label: 'author',
+        value: role.AUTHOR,
+        label: role.AUTHOR,
       },
     ];
 
     const components = [
-      <UserAvatar key="0">
+      <UserAvatar key="avatar">
         <Avatar alt={this.props.email} size="sm" />
       </UserAvatar>,
-      <UserName key="2">
+      <UserName key="displayName">
         <Input
           value={this.props.displayName}
           readOnly={true}
@@ -143,7 +143,7 @@ class TeamListingItem extends React.Component<Props, State> {
           type="text"
         />
       </UserName>,
-      <UserEmail key="3">
+      <UserEmail key="email">
         <Input
           value={this.props.email}
           readOnly={true}
@@ -151,15 +151,19 @@ class TeamListingItem extends React.Component<Props, State> {
           type="email"
         />
       </UserEmail>,
-      <UserRole key="4">
-        <Select
-          innerRef={this.selectRef}
-          value={this.state.selectValue}
-          readOnly={!this.state.isEditing && !this.state.isEditable}
-          onChange={this.handleSelectChange}
-          disabled={isDisabled}
-          options={options}
-        />
+      <UserRole key="role">
+        {this.props.role === role.ADMIN ? (
+          <Input value={this.props.role} readOnly={true} type="text" />
+        ) : (
+          <Select
+            innerRef={this.selectRef}
+            value={this.state.selectValue}
+            readOnly={!this.state.isEditing && !this.state.isEditable}
+            onChange={this.handleSelectChange}
+            disabled={isDisabled}
+            options={options}
+          />
+        )}
       </UserRole>,
     ];
 

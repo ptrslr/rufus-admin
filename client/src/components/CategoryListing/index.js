@@ -88,6 +88,7 @@ const CategoryListing = (props: Props) => {
                   <CategoryListingItem
                     isNew={true}
                     isDisabled={isSaving}
+                    isEditable={true}
                     provided={provided}
                     snapshot={snapshot}
                     value=""
