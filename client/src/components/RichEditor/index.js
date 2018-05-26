@@ -11,10 +11,11 @@ type Props = {
   editorState: EditorState,
   onChange: Function,
   editorRef: Function,
+  readOnly: boolean,
 };
 
 const RichEditor = (props: Props) => {
-  const { editorState, onChange, editorRef } = props;
+  const { editorState, onChange, editorRef, readOnly } = props;
 
   const handleKeyCommand = (command: string): 'handled' | 'not-handled' => {
     const newState: ?EditorState = RichUtils.handleKeyCommand(
@@ -67,6 +68,7 @@ const RichEditor = (props: Props) => {
         ref={editorRef}
         placeholder="Start writing here..."
         onTab={mapKeyToEditorCommand}
+        readOnly={readOnly}
       />
     </EditorWrapper>
   );

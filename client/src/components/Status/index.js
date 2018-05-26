@@ -25,7 +25,6 @@ const Info = styled.div`
   display: flex;
   align-items: center;
   /*padding: 0 0.5rem;*/
-  margin-bottom: 1rem;
 `;
 const StyledIcon = styled(Icon)`
   margin-right: 0.5rem;
@@ -37,8 +36,12 @@ const Label = styled.div`
   flex: 1 1 auto;
   font-weight: 700;
 `;
+const Actions = styled.div`
+  margin-top: 1rem;
+`;
 
 type Props = {
+  isEditable: boolean,
   status: $Keys<typeof statusType>,
   publishTime: ?number,
   onPublish: Function,
@@ -98,32 +101,34 @@ const Status = (props: Props) => {
         <Label>{label}</Label>
       </Info>
 
-      <div>
-        {isPublished && (
-          <StyledButton
-            theme="primary"
-            block={true}
-            value="Hide"
-            onClick={props.onHide}
-          />
-        )}
-        {isScheduled && (
-          <StyledButton
-            theme="secondary"
-            block={true}
-            value="Hide"
-            onClick={props.onHide}
-          />
-        )}
-        {(isScheduled || isHidden || isDraft) && (
-          <StyledButton
-            theme="primary"
-            block={true}
-            value="Publish"
-            onClick={props.onPublish}
-          />
-        )}
-      </div>
+      {props.isEditable && (
+        <Actions>
+          {isPublished && (
+            <StyledButton
+              theme="primary"
+              block={true}
+              value="Hide"
+              onClick={props.onHide}
+            />
+          )}
+          {isScheduled && (
+            <StyledButton
+              theme="secondary"
+              block={true}
+              value="Hide"
+              onClick={props.onHide}
+            />
+          )}
+          {(isScheduled || isHidden || isDraft) && (
+            <StyledButton
+              theme="primary"
+              block={true}
+              value="Publish"
+              onClick={props.onPublish}
+            />
+          )}
+        </Actions>
+      )}
     </Wrapper>
   );
 };

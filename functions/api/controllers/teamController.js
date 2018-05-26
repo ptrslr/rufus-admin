@@ -103,7 +103,7 @@ exports.getTeam = function(req, res) {
     .auth()
     .verifyIdToken(idToken)
     .then(function(claims) {
-      if (claims.role !== 'admin') {
+      if (!claims.role) {
         return res.status(401).send('Not admin');
       }
 
@@ -146,7 +146,7 @@ exports.getActiveTeam = function(req, res) {
     .auth()
     .verifyIdToken(idToken)
     .then(function(claims) {
-      if (claims.role !== 'admin') {
+      if (!claims.role) {
         return res.status(401).send('Not admin');
       }
 
@@ -192,7 +192,7 @@ exports.getDisabledTeam = function(req, res) {
     .auth()
     .verifyIdToken(idToken)
     .then(function(claims) {
-      if (claims.role !== 'admin') {
+      if (!claims.role) {
         return res.status(401).send('Not admin');
       }
 
@@ -239,7 +239,7 @@ exports.getTeamMember = function(req, res) {
     .auth()
     .verifyIdToken(idToken)
     .then(function(claims) {
-      if (!claims) {
+      if (!claims.role) {
         return res.status(401).send('Not verified token');
       }
 

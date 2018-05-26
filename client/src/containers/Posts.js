@@ -12,7 +12,7 @@ import Loader from '../components/Loader';
 import status from '../constants/status';
 import icons from '../constants/icons';
 
-import { fetchPosts } from '../api';
+import { fetchPosts, fetchCategories } from '../api';
 
 type Props = {
   status?: $Keys<typeof status>,
@@ -21,6 +21,7 @@ type Props = {
 type State = {
   isLoading: boolean,
   posts?: Object,
+  categories: ?Object,
 };
 
 class Posts extends React.Component<Props, State> {
@@ -34,17 +35,20 @@ class Posts extends React.Component<Props, State> {
     this.state = {
       isLoading: true,
       posts: {},
+      categories: null,
     };
   }
 
   componentDidMount = async () => {
     this._isMounted = true;
     const posts = await fetchPosts();
+    const categories = await fetchCategories();
 
     if (this._isMounted) {
       this.setState({
         isLoading: false,
         posts,
+        categories,
       });
     }
   };
@@ -66,6 +70,7 @@ class Posts extends React.Component<Props, State> {
     const now = Date.now();
 
     const posts = this.state.posts ? this.state.posts : {};
+    const categories = this.state.categories;
 
     const postKeys = posts ? Object.keys(posts) : [];
     let keys = postKeys;
@@ -153,6 +158,28 @@ class Posts extends React.Component<Props, State> {
                     label="Title"
                     dataKey="title"
                     width={100}
+                    cellRenderer={data => {
+                      return <strong>{data.cellData}</strong>;
+                    }}
+                  />
+                  <Column
+                    flexGrow={1}
+                    label="Category"
+                    dataKey="category"
+                    width={100}
+                    cellRenderer={data => {
+                      const category = categories[data.cellData];
+                      return <div>{category ? category.name : ''}</div>;
+                    }}
+                  />
+                  <Column
+                    flexGrow={1}
+                    label="Status"
+                    dataKey="status"
+                    width={100}
+                    cellRenderer={data => {
+                      return <div>{data.cellData}</div>;
+                    }}
                   />
                   <Column
                     flexGrow={0}
@@ -160,8 +187,8 @@ class Posts extends React.Component<Props, State> {
                     width={100}
                     label="Actions"
                     dataKey="title"
-                    cellRenderer={cellData => {
-                      const id = keys[cellData.rowIndex];
+                    cellRenderer={data => {
+                      const id = keys[data.rowIndex];
 
                       return (
                         <Button

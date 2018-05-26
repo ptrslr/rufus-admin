@@ -12,6 +12,7 @@ type Props = {
   onChange: Function,
   handleReturn: Function,
   editorRef?: Function,
+  readOnly: boolean,
 };
 
 const EditorWrapper = styled.div`
@@ -28,7 +29,7 @@ const EditorWrapper = styled.div`
 `;
 
 const SubtitleEditor = (props: Props) => {
-  const { editorState, onChange, editorRef } = props;
+  const { editorState, onChange, editorRef, readOnly } = props;
   // let editor = null;
 
   // const focus = () => {
@@ -48,6 +49,7 @@ const SubtitleEditor = (props: Props) => {
         placeholder="Subtitle"
         handleReturn={handleReturn}
         ref={editorRef}
+        readOnly={readOnly}
       />
     </EditorWrapper>
   );

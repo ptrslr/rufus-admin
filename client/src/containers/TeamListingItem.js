@@ -35,6 +35,7 @@ const UserRole = styled.div`
 
 type Props = {
   isDisabled: boolean,
+  isEditable: boolean,
   uid: string,
   index: number,
   avatar: string,
@@ -154,7 +155,7 @@ class TeamListingItem extends React.Component<Props, State> {
         <Select
           innerRef={this.selectRef}
           value={this.state.selectValue}
-          readOnly={!this.state.isEditing}
+          readOnly={!this.state.isEditing && !this.state.isEditable}
           onChange={this.handleSelectChange}
           disabled={isDisabled}
           options={options}
@@ -166,6 +167,7 @@ class TeamListingItem extends React.Component<Props, State> {
       <ListingItem
         isDisabled={this.props.isDisabled}
         isEditing={this.state.isEditing}
+        isEditable={this.props.isEditable}
         components={components}
         onSave={this.handleSave}
         onDisable={

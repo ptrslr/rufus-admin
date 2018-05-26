@@ -18,6 +18,7 @@ const Error = styled.div`
 type Props = {
   isSaving: boolean,
   isCreating: boolean,
+  isEditable: boolean,
   items: Object,
   keys: Array<string>,
   onDragEnd: Function,
@@ -30,6 +31,7 @@ const CategoryListing = (props: Props) => {
   const {
     isSaving,
     isCreating,
+    isEditable,
     items,
     keys,
     onDragEnd,
@@ -53,12 +55,13 @@ const CategoryListing = (props: Props) => {
                   key={key}
                   draggableId={key}
                   index={index}
-                  isDragDisabled={isCreating}
+                  isDragDisabled={isCreating || !isEditable}
                 >
                   {(provided, snapshot) => (
                     <CategoryListingItem
                       isNew={false}
                       isDisabled={isCreating}
+                      isEditable={isEditable}
                       id={key}
                       index={index}
                       provided={provided}

@@ -7,6 +7,7 @@ import Input from '../components/Input';
 type Props = {
   isNew: boolean,
   isDisabled: boolean,
+  isEditable: boolean,
   id?: string,
   index?: number,
   provided: Object,
@@ -104,7 +105,7 @@ class CategoryListingItem extends React.Component<Props, State> {
         key="0"
         innerRef={this.inputRef}
         value={this.state.inputValue}
-        readOnly={!this.state.isEditing}
+        readOnly={!this.state.isEditing || !this.props.isEditable}
         onChange={this.handleChange}
         placeholder="Category"
         disabled={this.props.isDisabled}
@@ -116,6 +117,7 @@ class CategoryListingItem extends React.Component<Props, State> {
         isNew={this.props.isNew}
         isDisabled={this.props.isDisabled}
         isEditing={this.state.isEditing}
+        isEditable={this.props.isEditable}
         provided={this.props.provided}
         snapshot={this.props.snapshot}
         components={components}

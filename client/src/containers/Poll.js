@@ -8,10 +8,12 @@ import NewPoll from '../components/NewPoll';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
 import ConfirmModal from '../components/ConfirmModal';
+import Icon from '../components/Icon';
 
 import { fetchPoll, deletePoll } from '../api';
 
 import icons from '../constants/icons';
+import { colors } from '../constants/theme.js';
 import type { Poll as PollType } from '../utils/types';
 
 const newOptions = () => [
@@ -38,6 +40,9 @@ const reorder = (items, startIndex, endIndex) => {
 const Action = styled.div`
   margin-bottom: 0.5rem;
 `;
+const NoPoll = styled.div`
+  color: ${colors.grays[6]};
+`;
 
 type State = {
   isLoading: boolean,
@@ -47,6 +52,7 @@ type State = {
 } & PollType;
 
 type Props = {
+  isEditable: boolean,
   postId: ?string,
 };
 
@@ -141,7 +147,7 @@ class Poll extends React.Component<Props, State> {
     this.setState({
       isCreating: true,
       question: '',
-      option: newOptions(),
+      options: newOptions(),
     });
   };
 
@@ -242,13 +248,16 @@ class Poll extends React.Component<Props, State> {
               question={this.state.question}
               options={this.state.options}
             />
-            <Button
-              theme="secondary"
-              block
-              iconLeft={icons.PLUS}
-              value="Delete the poll"
-              onClick={this.onDelete}
-            />
+
+            {this.props.isEditable && (
+              <Button
+                theme="secondary"
+                block
+                iconLeft={icons.PLUS}
+                value="Delete the poll"
+                onClick={this.onDelete}
+              />
+            )}
           </div>
         ) : this.state.isCreating ? (
           <div>
@@ -277,14 +286,18 @@ class Poll extends React.Component<Props, State> {
               onClick={this.onCancel}
             />
           </div>
-        ) : (
+        ) : this.props.isEditable ? (
           <Button
             theme="secondary"
             block
-            iconLeft={icons.PLUS}
+            iconLeft={icons.POLL}
             value="Create a poll"
             onClick={this.onCreate}
           />
+        ) : (
+          <NoPoll>
+            <Icon name={icons.POLL} opticalAlign={true} /> No poll
+          </NoPoll>
         )}
 
         <ConfirmModal

@@ -64,6 +64,7 @@ type Props = {
   isNew?: boolean,
   isDisabled: boolean,
   isEditing?: boolean,
+  isEditable: boolean,
   provided?: Object,
   snapshot?: Object,
   components: Array<React.Node>,
@@ -81,6 +82,84 @@ const Item = (props: Props) => {
   const draggableProps = provided ? provided.draggableProps : null;
   const dragHandleProps = provided ? provided.dragHandleProps : null;
 
+  let actions = null;
+  if (props.isEditable) {
+    if (props.isEditing) {
+      actions = (
+        <Actions>
+          <Action>
+            <Button
+              theme="secondary"
+              iconLeft={icons.CLOSE}
+              value="Cancel"
+              onClick={props.onCancel}
+              disabled={isDisabled}
+            />
+          </Action>
+          <Action>
+            <Button
+              theme="primary"
+              iconLeft={icons.CHECK}
+              value="Save"
+              onClick={props.onSave}
+              disabled={isDisabled}
+              type="submit"
+            />
+          </Action>
+        </Actions>
+      );
+    } else {
+      actions = (
+        <Actions>
+          {props.onDelete && (
+            <Action>
+              <Button
+                theme="link"
+                iconLeft={icons.REMOVE}
+                value="Delete"
+                onClick={props.onDelete}
+                disabled={isDisabled}
+              />
+            </Action>
+          )}
+          {props.onDisable && (
+            <Action>
+              <Button
+                theme="link"
+                iconLeft={icons.DISABLE}
+                value="Disable"
+                onClick={props.onDisable}
+                disabled={isDisabled}
+              />
+            </Action>
+          )}
+          {props.onEnable && (
+            <Action>
+              <Button
+                theme="secondary"
+                iconLeft={icons.CHECK}
+                value="Enable"
+                onClick={props.onEnable}
+                disabled={isDisabled}
+              />
+            </Action>
+          )}
+          {props.onEdit && (
+            <Action>
+              <Button
+                theme="secondary"
+                iconLeft={icons.EDIT}
+                value="Edit"
+                onClick={props.onEdit}
+                disabled={isDisabled}
+              />
+            </Action>
+          )}
+        </Actions>
+      );
+    }
+  }
+
   return (
     <Wrapper
       className={isDisabled ? 'is-disabled' : ''}
@@ -93,82 +172,19 @@ const Item = (props: Props) => {
         {...draggableProps}
         {...dragHandleProps}
       >
-        {provided && (
-          <IconWrapper>
-            {isNew ? <Icon name={icons.PLUS} /> : <Icon name={icons.REORDER} />}
-          </IconWrapper>
-        )}
+        {props.isEditable &&
+          provided && (
+            <IconWrapper>
+              {isNew ? (
+                <Icon name={icons.PLUS} />
+              ) : (
+                <Icon name={icons.REORDER} />
+              )}
+            </IconWrapper>
+          )}
         <Body>{props.components.map((item, index) => item)}</Body>
-        {props.isEditing ? (
-          <Actions>
-            <Action>
-              <Button
-                theme="secondary"
-                iconLeft={icons.CLOSE}
-                value="Cancel"
-                onClick={props.onCancel}
-                disabled={isDisabled}
-              />
-            </Action>
-            <Action>
-              <Button
-                theme="primary"
-                iconLeft={icons.CHECK}
-                value="Save"
-                onClick={props.onSave}
-                disabled={isDisabled}
-                type="submit"
-              />
-            </Action>
-          </Actions>
-        ) : (
-          <Actions>
-            {props.onDelete && (
-              <Action>
-                <Button
-                  theme="link"
-                  iconLeft={icons.REMOVE}
-                  value="Delete"
-                  onClick={props.onDelete}
-                  disabled={isDisabled}
-                />
-              </Action>
-            )}
-            {props.onDisable && (
-              <Action>
-                <Button
-                  theme="link"
-                  iconLeft={icons.DISABLE}
-                  value="Disable"
-                  onClick={props.onDisable}
-                  disabled={isDisabled}
-                />
-              </Action>
-            )}
-            {props.onEnable && (
-              <Action>
-                <Button
-                  theme="secondary"
-                  iconLeft={icons.CHECK}
-                  value="Enable"
-                  onClick={props.onEnable}
-                  disabled={isDisabled}
-                />
-              </Action>
-            )}
-            {props.onEdit && (
-              <Action>
-                <Button
-                  theme="secondary"
-                  iconLeft={icons.EDIT}
-                  value="Edit"
-                  onClick={props.onEdit}
-                  disabled={isDisabled}
-                />
-              </Action>
-            )}
-          </Actions>
-        )}
+
+        {actions}
       </Inner>
       {provided && provided.placeholder}
     </Wrapper>

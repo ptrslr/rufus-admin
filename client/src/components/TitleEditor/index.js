@@ -12,6 +12,7 @@ type Props = {
   editorState: EditorState,
   onChange: Function,
   handleReturn: Function,
+  readOnly: boolean,
 };
 
 const blockRenderMap = Immutable.Map({
@@ -36,7 +37,7 @@ const EditorWrapper = styled.div`
 `;
 
 const TitleEditor = (props: Props) => {
-  const { editorState, onChange } = props;
+  const { editorState, onChange, readOnly } = props;
   // let editor = null;
 
   const handleReturn = e => {
@@ -52,6 +53,7 @@ const TitleEditor = (props: Props) => {
         placeholder="Title"
         blockRenderMap={blockRenderMap}
         handleReturn={handleReturn}
+        readOnly={readOnly}
         // ref={node => (editor = node)}
       />
     </EditorWrapper>

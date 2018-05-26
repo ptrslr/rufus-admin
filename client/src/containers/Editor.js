@@ -13,6 +13,7 @@ import RichEditor from '../components/RichEditor';
 // import { colors } from '../../utils/theme';
 
 type Props = {
+  isEditable: boolean,
   titleState: EditorState,
   subtitleState: EditorState,
   contentState: EditorState,
@@ -56,10 +57,12 @@ const Editor = (props: Props) => {
 
   return (
     <Wrapper>
-      <Toolbar
-        editorState={props.contentState}
-        onChange={props.onContentChange}
-      />
+      {props.isEditable && (
+        <Toolbar
+          editorState={props.contentState}
+          onChange={props.onContentChange}
+        />
+      )}
 
       <Inner>
         <Measure>
@@ -67,17 +70,20 @@ const Editor = (props: Props) => {
             editorState={props.titleState}
             onChange={props.onTitleChange}
             handleReturn={handleTitleReturn}
+            readOnly={!props.isEditable}
           />
           <SubtitleEditor
             editorState={props.subtitleState}
             onChange={props.onSubtitleChange}
             handleReturn={handleSubtitleReturn}
             editorRef={node => (subtitleEditor = node)}
+            readOnly={!props.isEditable}
           />
           <RichEditor
             editorState={props.contentState}
             onChange={props.onContentChange}
             editorRef={node => (richEditor = node)}
+            readOnly={!props.isEditable}
           />
         </Measure>
       </Inner>

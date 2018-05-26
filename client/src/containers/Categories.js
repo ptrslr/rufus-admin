@@ -11,6 +11,7 @@ import Button from '../components/Button';
 import ConfirmModal from '../components/ConfirmModal';
 
 import icons from '../constants/icons';
+import role from '../constants/role';
 
 import {
   createCategory,
@@ -42,6 +43,7 @@ type State = {
   isSaving: boolean,
   isCreating: boolean,
   isModalOpen: boolean,
+  userRole: $Keys<typeof role>,
   items: Object,
   keys: Array<string>,
   deleteIndex?: ?number,
@@ -196,13 +198,16 @@ class Categories extends React.Component<Props, State> {
   render() {
     const actions = [
       <InlineLoader size="1.25rem" isLoading={this.state.isSaving} />,
-      <Button
-        theme="primary"
-        value="Create new"
-        iconLeft={icons.PLUS}
-        onClick={this.handleCreate}
-        disabled={this.state.isCreating}
-      />,
+      (this.props.userRole === role.ADMIN ||
+        this.props.userRole === role.EDITOR) && (
+        <Button
+          theme="primary"
+          value="Create new"
+          iconLeft={icons.PLUS}
+          onClick={this.handleCreate}
+          disabled={this.state.isCreating}
+        />
+      ),
     ];
 
     const deleteName = this.state.deleteName;
@@ -216,6 +221,10 @@ class Categories extends React.Component<Props, State> {
             <CategoryListing
               isSaving={this.state.isSaving}
               isCreating={this.state.isCreating}
+              isEditable={
+                this.props.userRole === role.ADMIN ||
+                this.props.userRole === role.EDITOR
+              }
               onDragEnd={this.onDragEnd}
               onSave={this.onSave}
               onDelete={this.onDelete}

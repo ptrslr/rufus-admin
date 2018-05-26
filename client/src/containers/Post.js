@@ -61,6 +61,7 @@ type Props = {
 type State = {
   isLoading: boolean,
   isSaving: boolean,
+  isEditable: boolean,
   isDeleteModalOpen: boolean,
   isPublishModalOpen: boolean,
   isHideModalOpen: boolean,
@@ -92,6 +93,7 @@ class Post extends React.Component<Props, State> {
     this.state = {
       isLoading: true,
       isSaving: false,
+      isEditable: false,
       isDeleteModalOpen: false,
       isPublishModalOpen: false,
       isHideModalOpen: false,
@@ -128,6 +130,7 @@ class Post extends React.Component<Props, State> {
       if (this._isMounted) {
         this.setState({
           isLoading: false,
+          isEditable: true,
           author: this.props.user,
           authorRole: this.props.userRole,
         });
@@ -198,6 +201,10 @@ class Post extends React.Component<Props, State> {
 
           if (user) {
             this.setState({
+              isEditable:
+                this.props.userRole === role.ADMIN ||
+                this.props.userRole === role.EDITOR ||
+                this.props.user.uid === user.uid,
               author: user,
               authorRole: user.customClaims.role,
             });
@@ -490,13 +497,15 @@ class Post extends React.Component<Props, State> {
         iconLeft={icons.ARROW_LEFT}
         onClick={() => this.props.history.goBack()}
       />,
-      <Button
-        theme="primary"
-        value="Save"
-        iconLeft={icons.CHECK}
-        onClick={this.savePost}
-        disabled={this.state.isLoading}
-      />,
+      this.state.isEditable && (
+        <Button
+          theme="primary"
+          value="Save"
+          iconLeft={icons.CHECK}
+          onClick={this.savePost}
+          disabled={this.state.isLoading}
+        />
+      ),
     ];
 
     if (this.state.noMatch) {
@@ -527,6 +536,7 @@ class Post extends React.Component<Props, State> {
           <Loader isLoading={this.state.isLoading}>
             <LayoutMain>
               <Editor
+                isEditable={this.state.isEditable}
                 titleState={this.state.titleState}
                 subtitleState={this.state.subtitleState}
                 contentState={this.state.contentState}
@@ -539,6 +549,7 @@ class Post extends React.Component<Props, State> {
             <LayoutSidebar>
               <Loader isLoading={!this.state.categoryOptions && !authorRole}>
                 <PostSidebar
+                  isEditable={this.state.isEditable}
                   status={this.state.status}
                   category={this.state.category}
                   categoryOptions={this.state.categoryOptions}

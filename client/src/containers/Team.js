@@ -10,6 +10,8 @@ import Loader from '../components/Loader';
 import Button from '../components/Button';
 import ConfirmModal from '../components/ConfirmModal';
 
+import role from '../constants/role';
+
 import {
   fetchActiveTeam,
   fetchDisabledTeam,
@@ -26,6 +28,7 @@ type State = {
   isLoading: boolean,
   isSaving: boolean,
   isCreating: boolean,
+  isEditable: boolean,
   isDisableModalOpen: boolean,
   isEnableModalOpen: boolean,
   isDeleteModalOpen: boolean,
@@ -185,12 +188,14 @@ class Team extends React.Component<Props, State> {
 
     const actions = [
       <InlineLoader size="1.25rem" isLoading={this.state.isSaving} />,
-      <Button
-        theme="primary"
-        value="Add member"
-        to="/team/new-member"
-        iconLeft={icons.PLUS}
-      />,
+      this.props.userRole === role.ADMIN && (
+        <Button
+          theme="primary"
+          value="Add member"
+          to="/team/new-member"
+          iconLeft={icons.PLUS}
+        />
+      ),
     ];
 
     const currentIndex = this.state.currentIndex;
@@ -209,6 +214,7 @@ class Team extends React.Component<Props, State> {
             <TeamListing
               isSaving={this.state.isSaving}
               isCreating={this.state.isCreating}
+              isEditable={this.props.userRole === role.ADMIN}
               onSave={this.onSave}
               onDisable={!this.props.disabled ? this.onDisable : undefined}
               onEnable={this.props.disabled ? this.onEnable : undefined}

@@ -2,19 +2,31 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import firebaseui from 'firebaseui';
+import { Link } from 'react-router-dom';
 
 import AvatarBox from '../AvatarBox';
 import Loader from '../Loader';
 
 import role from '../../constants/role';
-import { space, grays } from '../../constants/theme.js';
+import { space, colors } from '../../constants/theme.js';
 
-const Wrapper = styled.div`
+const StyledLink = styled(Link)`
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   padding: ${space[2]} ${space[2]};
-  border-bottom: 1px solid ${grays[1]};
+  border-bottom: 1px solid ${colors.grays[1]};
+  color: inherit;
+  text-decoration: none;
+
+  transition: color 150ms, background-color 150ms;
+  outline: none;
+
+  &:hover,
+  &:focus,
+  &.active {
+    background-color: ${colors.grays[1]};
+  }
 `;
 
 type Props = {
@@ -33,11 +45,11 @@ const Account = (props: Props) => {
   }
 
   return (
-    <Wrapper>
+    <StyledLink to="/account">
       <Loader isLoading={!props.user} size="2.25rem">
         <AvatarBox name={name} title={role} image={image} />
       </Loader>
-    </Wrapper>
+    </StyledLink>
   );
 };
 

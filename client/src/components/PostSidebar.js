@@ -37,6 +37,7 @@ const Footer = styled.div`
 `;
 
 type Props = {
+  isEditable: boolean,
   status: $Keys<typeof status>,
   category: ?string,
   categoryOptions: ?SelectOptions,
@@ -55,6 +56,7 @@ const PostSidebar = (props: Props) => {
   return (
     <Wrapper>
       <Status
+        isEditable={props.isEditable}
         status={props.status}
         publishTime={props.publishTime}
         onPublish={props.onPublish}
@@ -69,6 +71,7 @@ const PostSidebar = (props: Props) => {
             options={props.categoryOptions}
             value={props.category}
             onChange={props.onCategoryChange}
+            readOnly={!props.isEditable}
           />
         </Item>
         <Item>
@@ -83,21 +86,23 @@ const PostSidebar = (props: Props) => {
           <Label>Poll:</Label>
           <Poll
             ref={props.pollRef}
+            isEditable={props.isEditable}
             postId={props.postId}
-            author={props.author}
           />
         </Item>
       </Body>
 
-      <Footer>
-        <Button
-          theme="link"
-          block
-          iconLeft={icons.REMOVE}
-          value="Delete"
-          onClick={props.onDelete}
-        />
-      </Footer>
+      {props.isEditable && (
+        <Footer>
+          <Button
+            theme="link"
+            block
+            iconLeft={icons.REMOVE}
+            value="Delete"
+            onClick={props.onDelete}
+          />
+        </Footer>
+      )}
     </Wrapper>
   );
 };

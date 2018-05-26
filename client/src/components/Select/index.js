@@ -28,15 +28,13 @@ const StyledIcon = styled(Icon)`
   pointer-events: none;
   opacity: 1;
   transition: opacity 250ms;
-
-  ${StyledSelect} [readonly="true"] + & {
-    opacity: 0;
-  }
 `;
 
 export type SelectOptions = Array<{ value: string, label: string }>;
 
 type Props = {
+  readOnly?: boolean,
+  value: string,
   options: ?SelectOptions,
 };
 
@@ -54,7 +52,7 @@ const Select = (props: Props) => {
           ))};
       </StyledSelect>
 
-      <StyledIcon name={icons.CHEVRON_DOWN} />
+      {!props.readOnly && <StyledIcon name={icons.CHEVRON_DOWN} />}
     </Wrapper>
   );
 };

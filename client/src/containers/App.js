@@ -155,12 +155,27 @@ class App extends React.Component<Props, State> {
                             />
                           )}
                         />
-                        <Route exact path="/posts/:id" component={Post} />
+                        <Route
+                          exact
+                          path="/posts/:id"
+                          render={props => (
+                            <Post
+                              user={this.state.user}
+                              userRole={this.state.userRole}
+                              {...props}
+                            />
+                          )}
+                        />
 
                         <Route
                           exact
                           path="/categories"
-                          component={Categories}
+                          render={props => (
+                            <Categories
+                              userRole={this.state.userRole}
+                              {...props}
+                            />
+                          )}
                         />
 
                         <Redirect exact from="/team" to="/team/active" />
@@ -168,19 +183,33 @@ class App extends React.Component<Props, State> {
                         <Route
                           exact
                           path="/team/active"
-                          render={props => <Team disabled={false} {...props} />}
+                          render={props => (
+                            <Team
+                              disabled={false}
+                              userRole={this.state.userRole}
+                              {...props}
+                            />
+                          )}
                         />
                         <Route
                           exact
                           path="/team/disabled"
-                          render={props => <Team disabled={true} {...props} />}
+                          render={props => (
+                            <Team
+                              disabled={true}
+                              userRole={this.state.userRole}
+                              {...props}
+                            />
+                          )}
                         />
 
-                        <Route
-                          exact
-                          path="/team/new-member"
-                          component={NewTeamMember}
-                        />
+                        {this.state.userRole === role.ADMIN && (
+                          <Route
+                            exact
+                            path="/team/new-member"
+                            component={NewTeamMember}
+                          />
+                        )}
 
                         <Route component={NoMatch} />
                       </Switch>

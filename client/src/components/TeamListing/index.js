@@ -17,6 +17,7 @@ const Error = styled.div`
 type Props = {
   isSaving: boolean,
   isCreating: boolean,
+  isEditasble: boolean,
   items: Object,
   onSave: Function,
   onDisable?: Function,
@@ -24,7 +25,15 @@ type Props = {
   onDelete?: Function,
 };
 const TeamListing = (props: Props) => {
-  const { isCreating, items, onSave, onDisable, onEnable, onDelete } = props;
+  const {
+    isCreating,
+    isEditable,
+    items,
+    onSave,
+    onDisable,
+    onEnable,
+    onDelete,
+  } = props;
 
   if (items == null || items.length === 0) {
     return <Error>So empty&hellip;</Error>;
@@ -36,6 +45,7 @@ const TeamListing = (props: Props) => {
         <TeamListingItem
           key={index}
           isDisabled={isCreating}
+          isEditable={isEditable}
           uid={item.uid}
           index={index}
           avatar="https://picsum.photos/200"
