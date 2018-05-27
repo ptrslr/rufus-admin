@@ -102,7 +102,7 @@ class CategoryListingItem extends React.Component<Props, State> {
   render() {
     const components = [
       <Input
-        key="0"
+        key="category"
         innerRef={this.inputRef}
         value={this.state.inputValue}
         readOnly={!this.state.isEditing || !this.props.isEditable}

@@ -22,7 +22,7 @@ const blockRenderMap = Immutable.Map({
 });
 
 const EditorWrapper = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 
   .public-DraftEditorPlaceholder-root,
   h1 {

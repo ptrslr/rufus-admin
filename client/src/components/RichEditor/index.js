@@ -82,7 +82,7 @@ export default RichEditor;
 const EditorWrapper = styled.div`
   font-size: 1.125rem;
   line-height: 1.5;
-  font-family: 'Georgia';
+  font-family: 'PT Serif', Georgia, serif;
 
   &.is-hiddenPlaceholder .public-DraftEditorPlaceholder-root {
     display: none;

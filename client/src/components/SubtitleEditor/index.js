@@ -16,7 +16,7 @@ type Props = {
 };
 
 const EditorWrapper = styled.div`
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 
   .public-DraftEditorPlaceholder-root,
   .DraftEditor-editorContainer {

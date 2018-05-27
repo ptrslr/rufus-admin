@@ -1,16 +1,18 @@
 // @flow
 import * as React from 'react';
-import { AutoSizer, Table, Column } from 'react-virtualized';
-import 'react-virtualized/styles.css';
 
 import Page from '../components/Page';
 import PageHeader from '../components/PageHeader';
 import PageBody from '../components/PageBody';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
+import PostListing from '../components/PostListing';
 
 import status from '../constants/status';
 import icons from '../constants/icons';
+import { colors } from '../constants/theme';
+
+import type { Posts as PostsType, Categories } from '../utils/types';
 
 import { fetchPosts, fetchCategories } from '../api';
 
@@ -21,7 +23,7 @@ type Props = {
 type State = {
   isLoading: boolean,
   posts?: Object,
-  categories: ?Object,
+  categories: ?Categories,
 };
 
 class Posts extends React.Component<Props, State> {
@@ -136,73 +138,16 @@ class Posts extends React.Component<Props, State> {
       },
     ];
 
-    const rowCount = posts ? keys.length : 0;
-
     return (
       <Page>
         <PageHeader title="Posts" menu={menu} actions={actions} />
         <PageBody>
           <Loader isLoading={this.state.isLoading}>
-            <AutoSizer>
-              {({ height, width }) => (
-                <Table
-                  headerHeight={30}
-                  height={height}
-                  rowCount={rowCount}
-                  rowGetter={({ index }) => posts[keys[index]]}
-                  rowHeight={50}
-                  width={width}
-                >
-                  <Column
-                    flexGrow={2}
-                    label="Title"
-                    dataKey="title"
-                    width={100}
-                    cellRenderer={data => {
-                      return <strong>{data.cellData}</strong>;
-                    }}
-                  />
-                  <Column
-                    flexGrow={1}
-                    label="Category"
-                    dataKey="category"
-                    width={100}
-                    cellRenderer={data => {
-                      const category = categories[data.cellData];
-                      return <div>{category ? category.name : ''}</div>;
-                    }}
-                  />
-                  <Column
-                    flexGrow={1}
-                    label="Status"
-                    dataKey="status"
-                    width={100}
-                    cellRenderer={data => {
-                      return <div>{data.cellData}</div>;
-                    }}
-                  />
-                  <Column
-                    flexGrow={0}
-                    flexShrink={0}
-                    width={100}
-                    label="Actions"
-                    dataKey="title"
-                    cellRenderer={data => {
-                      const id = keys[data.rowIndex];
-
-                      return (
-                        <Button
-                          theme="secondary"
-                          iconLeft={icons.EDIT}
-                          value="Edit"
-                          to={`/posts/${id}`}
-                        />
-                      );
-                    }}
-                  />
-                </Table>
-              )}
-            </AutoSizer>
+            <PostListing
+              posts={this.state.posts}
+              keys={keys}
+              categories={this.state.categories}
+            />
           </Loader>
         </PageBody>
       </Page>
