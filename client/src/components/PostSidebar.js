@@ -8,6 +8,7 @@ import type { SelectOptions } from './Select';
 import Button from './Button';
 import AvatarBox from './AvatarBox';
 import Label from './Label';
+import Switch from './Switch';
 import Poll from './../containers/Poll';
 
 import status from '../constants/status';
@@ -31,6 +32,16 @@ const Body = styled.div`
 const Item = styled.div`
   padding: 0.5rem 0;
 `;
+const FeaturedItem = styled(Item)`
+  display: flex;
+  padding-top: 1rem;
+  padding-bottom: 0.125rem;
+  align-items: center;
+`;
+const FeaturedLabel = styled(Label)`
+  flex: 1 1 auto;
+  margin: 0;
+`;
 
 const Footer = styled.div`
   padding: 1rem;
@@ -39,12 +50,14 @@ const Footer = styled.div`
 type Props = {
   isEditable: boolean,
   status: $Keys<typeof status>,
+  featured: boolean,
   category: ?string,
   categoryOptions: ?SelectOptions,
   author: ?string,
   authorName: ?string,
   authorRole: ?$Keys<typeof role>,
   authorImage: ?string,
+  onFeatureChange: Function,
   onCategoryChange: Function,
   onDelete: Function,
   onPublish: Function,
@@ -64,6 +77,14 @@ const PostSidebar = (props: Props) => {
       />
 
       <Body>
+        <FeaturedItem>
+          <FeaturedLabel htmlFor="featured">Featured:</FeaturedLabel>
+          <Switch
+            id="featured"
+            checked={props.featured}
+            onChange={props.onFeaturedChange}
+          />
+        </FeaturedItem>
         <Item>
           <Label for="category">Category:</Label>
           <Select

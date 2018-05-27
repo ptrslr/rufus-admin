@@ -86,6 +86,7 @@ type Post {
   subtitle: String | Null,
   author: String,
   status: Status,
+  featured: Boolean,
   category: String | Null,
   publishTime: Number | Null,
 }

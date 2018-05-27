@@ -40,8 +40,9 @@ import type { Post as PostType } from '../utils/types';
 // import { colors } from '../utils/theme';
 
 const Layout = styled.div`
+  flex: 1 1 auto;
   display: flex;
-  height: 100%;
+  overflow: hidden;
 `;
 const LayoutSidebar = styled.div`
   flex: 0 0 16rem;
@@ -71,6 +72,7 @@ type State = {
   subtitleState: EditorState,
   contentState: EditorState,
   status: $Keys<typeof status>,
+  featured: boolean,
   categoryOptions: ?SelectOptions,
   category: ?string,
   author: Object,
@@ -102,6 +104,7 @@ class Post extends React.Component<Props, State> {
       subtitleState: EditorState.createEmpty(),
       contentState: EditorState.createEmpty(),
       status: status.DRAFT,
+      featured: false,
       categoryOptions: null,
       category: '',
       author: props.user,
@@ -164,8 +167,9 @@ class Post extends React.Component<Props, State> {
           this.setState({
             titleState,
             subtitleState,
-            category: post.category,
             status: post.status,
+            featured: post.featured,
+            category: post.category,
             publishTime: post.publishTime,
             datetimeValue: post.publishTime,
           });
@@ -260,6 +264,7 @@ class Post extends React.Component<Props, State> {
       .getPlainText();
     const content = convertToRaw(this.state.contentState.getCurrentContent());
     const status = this.state.status;
+    const featured = this.state.featured;
     const category = this.state.category ? this.state.category : null;
     const author = this.state.author.uid;
     const publishTime = this.state.publishTime ? this.state.publishTime : null;
@@ -269,6 +274,7 @@ class Post extends React.Component<Props, State> {
       subtitle,
       content,
       status,
+      featured,
       category,
       author,
       publishTime,
@@ -488,6 +494,10 @@ class Post extends React.Component<Props, State> {
     return current.isAfter(yesterday);
   };
 
+  onFeaturedChange = (checked: boolean) => {
+    this.setState({ featured: checked });
+  };
+
   render() {
     const actions = [
       <InlineLoader size="1.25rem" isLoading={this.state.isSaving} />,
@@ -551,6 +561,8 @@ class Post extends React.Component<Props, State> {
                 <PostSidebar
                   isEditable={this.state.isEditable}
                   status={this.state.status}
+                  featured={this.state.featured}
+                  onFeaturedChange={this.onFeaturedChange}
                   category={this.state.category}
                   categoryOptions={this.state.categoryOptions}
                   onCategoryChange={this.onCategoryChange}

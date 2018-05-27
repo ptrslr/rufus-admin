@@ -75,7 +75,14 @@ const videoPlugin = createVideoPlugin({
     iframeContainer: 'VideoIframeWrapper',
     iframe: 'VideoIframe',
   },
+  decorato: decorator,
 });
+// const videoPlugin = createVideoPlugin({
+//   theme: {
+//     iframeContainer: 'VideoIframeWrapper',
+//     iframe: 'VideoIframe',
+//   },
+// });
 
 const plugins = [blockDndPlugin, focusPlugin, imagePlugin, videoPlugin];
 
@@ -107,6 +114,7 @@ class Editor extends React.Component<Props, State> {
       isImageModalOpen: false,
       isVideoModalOpen: false,
       image: null,
+      imageURL: '',
       videoURL: '',
     };
 
@@ -126,16 +134,18 @@ class Editor extends React.Component<Props, State> {
     this.richEditor && this.richEditor.focus();
   };
 
+  onImageURLChange = (e: SyntheticEvent<HTMLInputElement>) => {
+    this.setState({ imageURL: e.currentTarget.value });
+  };
   onVideoURLChange = (e: SyntheticEvent<HTMLInputElement>) => {
     this.setState({ videoURL: e.currentTarget.value });
   };
 
-  addImage = () => {
+  addImage = e => {
+    e.preventDefault();
+
     this.props.onContentChange(
-      imagePlugin.addImage(
-        this.props.contentState,
-        'https://picsum.photos/200/300'
-      )
+      imagePlugin.addImage(this.props.contentState, this.state.imageURL)
     );
   };
 
@@ -238,14 +248,31 @@ class Editor extends React.Component<Props, State> {
                 onClick={this.addVideo}
               />
             </VideoAction>
-            {/* <VideoAction> */}
-            {/*   <Button */}
-            {/*     theme="link" */}
-            {/*     iconLeft={icons.CLOSE} */}
-            {/*     value="" */}
-            {/*     onClick={this.closeModal} */}
-            {/*   /> */}
-            {/* </VideoAction> */}
+          </VideoForm>
+        </Modal>
+
+        <Modal
+          isOpen={this.state.isImageModalOpen}
+          closeModal={this.closeModal}
+          contentLabel="Add image"
+        >
+          <Title>Add image</Title>
+          <div>Enter Youtube or Vimeo video url</div>
+          <VideoForm onSubmit={this.addImage}>
+            <Input
+              value={this.state.imageURL}
+              onChange={this.onImageURLChange}
+              placeholder="Image URL"
+              type="text"
+            />
+            <VideoAction>
+              <Button
+                theme="primary"
+                iconLeft={icons.PLUS}
+                value="Add image"
+                onClick={this.addImage}
+              />
+            </VideoAction>
           </VideoForm>
         </Modal>
       </Wrapper>

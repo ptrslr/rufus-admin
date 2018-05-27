@@ -6,7 +6,7 @@ import Editor from 'draft-js-plugins-editor';
 
 import styled from 'styled-components';
 
-// import { colors } from '../../utils/theme';
+import { colors } from '../../constants/theme';
 
 type Props = {
   editorState: EditorState,
@@ -82,7 +82,7 @@ export default RichEditor;
 const EditorWrapper = styled.div`
   font-size: 1.125rem;
   line-height: 1.5;
-  /*font-family: 'Noto Serif';*/
+  font-family: 'Georgia';
 
   &.is-hiddenPlaceholder .public-DraftEditorPlaceholder-root {
     display: none;
@@ -94,8 +94,8 @@ const EditorWrapper = styled.div`
   .h3,
   h4,
   .h4 {
-    /*font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;*/
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 
     line-height: 1.25;
   }
@@ -107,14 +107,26 @@ const EditorWrapper = styled.div`
   h3,
   .h3 {
     font-size: 1.5rem;
+    color: ${colors.grays[7]};
   }
   h4,
   .h4 {
     font-size: 1.25rem;
   }
 
+  blockquote,
   figure {
     margin: 0;
+  }
+
+  blockquote {
+    padding: .5rem 2rem;
+    border-left: 0.25rem solid ${colors.grays[2]};
+    font-style: italic;
+  }
+
+  img {
+    max-width: 100%;
   }
 
   .VideoIframeWrapper {
@@ -138,7 +150,11 @@ const EditorWrapper = styled.div`
     padding: 1em;
   }
 
-  div:not(:last-child) {
-    margin-bottom: 1.5em;
+  div,
+  figure,
+  blockquote {
+    &:not(:last-child) {
+      margin-bottom: 1.5em;
+    }
   }
 `;
