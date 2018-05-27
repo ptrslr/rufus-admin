@@ -13,6 +13,7 @@ import icons from '../constants/icons';
 import { colors } from '../constants/theme';
 
 import type { Posts as PostsType, Categories } from '../utils/types';
+import { isScheduled, isPublished, isHidden, isDraft } from '../utils';
 
 import { fetchPosts, fetchCategories } from '../api';
 
@@ -77,20 +78,14 @@ class Posts extends React.Component<Props, State> {
     const postKeys = posts ? Object.keys(posts) : [];
     let keys = postKeys;
 
-    const scheduledKeys = postKeys.filter(
-      key =>
-        posts[key].status === status.PUBLISHED && posts[key].publishTime > now
+    const scheduledKeys = postKeys.filter(key =>
+      isScheduled(posts[key].status, posts[key].publishTime, now)
     );
-    const publishedKeys = postKeys.filter(
-      key =>
-        posts[key].status === status.PUBLISHED && posts[key].publishTime <= now
+    const publishedKeys = postKeys.filter(key =>
+      isPublished(posts[key].status, posts[key].publishTime, now)
     );
-    const hiddenKeys = postKeys.filter(
-      key => posts[key].status === status.HIDDEN
-    );
-    const draftKeys = postKeys.filter(
-      key => posts[key].status === status.DRAFT
-    );
+    const hiddenKeys = postKeys.filter(key => isHidden(posts[key].status));
+    const draftKeys = postKeys.filter(key => isDraft(posts[key].status));
 
     if (this.props.status) {
       switch (this.props.status) {
