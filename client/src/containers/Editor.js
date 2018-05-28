@@ -50,6 +50,9 @@ const Measure = styled.div`
 const Title = styled.h2`
   margin: 0 0 1rem;
 `;
+const Subtitle = styled.div`
+  margin: 0 0 1rem;
+`
 const VideoForm = styled.form`
   display: flex;
 `;
@@ -232,6 +235,7 @@ class Editor extends React.Component<Props, State> {
           contentLabel="Add video"
         >
           <Title>Add video</Title>
+          <Subtitle>Enter a Youtube or Vimeo video url</Subtitle>
           <VideoForm onSubmit={this.addVideo}>
             <Input
               innerRef={node => (this.videoInput = node)}
@@ -257,7 +261,6 @@ class Editor extends React.Component<Props, State> {
           contentLabel="Add image"
         >
           <Title>Add image</Title>
-          <div>Enter Youtube or Vimeo video url</div>
           <VideoForm onSubmit={this.addImage}>
             <Input
               value={this.state.imageURL}

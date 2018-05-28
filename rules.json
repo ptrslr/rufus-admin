@@ -24,7 +24,7 @@
       ".read": "auth != null",
       ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",
       "$postId": {
-        ".validate": "newData.hasChildren(['title', 'author', 'status'])",
+        ".validate": "newData.hasChildren(['title', 'author', 'status', 'featured'])",
         "title": {
           ".validate": "newData.isString()"
         },
@@ -36,6 +36,9 @@
         },
         "status": {
           ".validate": "newData.isString() && (newData.val() == 'published' || newData.val() == 'draft' || newData.val() == 'hidden')"
+        },
+        "featured": {
+          ".validate": "newData.isBoolean()"
         },
         "category": {
           ".validate": "newData.isString()"
@@ -61,29 +64,40 @@
       ".read": "auth != null",
       ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",
       "$postId": {
-        ".validate": "newData.hasChildren(['question'])",
+        ".validate": "newData.hasChildren(['question', 'options'])",
         "question": {
           ".validate": "newData.isString()"
         },
         "options": {
-          "$key1": {
-            ".validate": "newData.hasChildren(['value', 'voteCount'])",
-            "value": {
-              ".validate": "newData.isString()"
-            },
-            "voteCount": {
-              ".validate": "newData.isNumber()"
-            },
-            "$other": {
-              ".validate": "false"
-            }
-          },
-          ".validate": "newData.hasChildren()"
+          ".validate": "true"
         },
         "$other": {
           ".validate": "false"
         },
         ".write": "auth != null && newData.parent().parent().child('posts/' + $postId + '/author').val() == auth.uid"
+      }
+    },
+    "pages": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.role == 'admin'",
+      "$pageId": {
+        ".validate": "newData.hasChildren(['title'])",
+        "title": {
+          ".validate": "newData.isString()"
+        },
+        "subtitle": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": "false"
+        }
+      }
+    },
+    "pageContents": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.role == 'admin'",
+      "$pageId": {
+        ".validate": "newData.isString()"
       }
     },
     "team": {
@@ -106,7 +120,7 @@
       "$userId": {
         ".validate": "newData.hasChildren()",
         "pollVotes": {
-          "$key2": {
+          "$key1": {
             ".validate": "newData.isNumber()"
           },
           ".validate": "newData.hasChildren()"

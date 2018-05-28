@@ -10,7 +10,7 @@ import Icon from '../Icon';
 type Props = {
   active?: boolean,
   label: string,
-  icon: $Keys<typeof icons>,
+  icon: $Values<typeof icons>,
   style?: string,
   onClick: Function,
   type?: string,

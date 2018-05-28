@@ -53,6 +53,21 @@ path /polls/{postId} is Poll {
   write() { isSigned() && isPostAuthor(postId) }
 }
 
+// pages
+path /pages {
+  read() { isSigned() }
+  write() { isSigned() && (isAdmin()) }
+}
+path /pages/{pageId} is Page {}
+
+
+// pageContents
+path /pageContents {
+  read() { isSigned() }
+  write() { isSigned() && (isAdmin()) }
+}
+path /pageContents/{pageId} is String {}
+
 // team
 path /team {
   read() { isSigned() && isTeamMember() }
@@ -111,6 +126,11 @@ type User {
 
 type Category {
   name: String
+}
+
+type Page {
+  title: String,
+  subtitle: String | Null,
 }
 
 type TeamMember {

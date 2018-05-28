@@ -9,11 +9,6 @@ import Footer from './Footer';
 import role from '../constants/role.js';
 import { colors } from '../constants/theme.js';
 
-type Props = {
-  user: ?Object,
-  userRole: ?$Keys<typeof role>,
-};
-
 const Wrapper = styled.nav`
   display: flex;
   flex-direction: column;
@@ -32,15 +27,22 @@ const Body = styled.div`
   overflow-y: auto;
 `;
 
+type Props = {
+  name: string,
+  image: string,
+  role: ?$Values<typeof role>,
+  onLogout: Function,
+};
+
 const Navigation = (props: Props) => {
   return (
     <Wrapper>
       <Header>
-        <Account user={props.user} userRole={props.userRole} />
+        <Account name={props.name} role={props.role} image={props.image} />
       </Header>
       <Body>
         <Menu />
-        <Footer />
+        <Footer onLogout={props.onLogout} />
       </Body>
     </Wrapper>
   );

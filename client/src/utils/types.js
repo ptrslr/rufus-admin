@@ -8,7 +8,7 @@ export type Post = {
   subtitle: ?string,
   content: Object,
   featured: boolean,
-  status: $Keys<typeof status>,
+  status: $Values<typeof status>,
   category: ?string,
   author: string,
   publishTime?: ?number,
@@ -18,7 +18,7 @@ export type PostUpdates = {
   title?: string,
   subtitle?: ?string,
   content?: Object,
-  status?: $Keys<typeof status>,
+  status?: $Values<typeof status>,
   category?: ?string,
   author?: string,
   publishTime?: ?number,
@@ -38,3 +38,10 @@ export type Poll = {
 export type Category = string;
 
 export type Categories = { [string]: Category };
+
+export type Pages = { [string]: Page };
+export type Page = {
+  title: string,
+  subtitle: ?string,
+  content: Object,
+};

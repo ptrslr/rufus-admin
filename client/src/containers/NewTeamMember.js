@@ -19,7 +19,7 @@ type State = {
   displayName: string,
   password: string,
   repeatPassword: string,
-  role: $Keys<typeof role>,
+  role: $Values<typeof role>,
 };
 type FormComponent = SyntheticEvent<HTMLInputElement> &
   SyntheticEvent<HTMLSelectElement>;

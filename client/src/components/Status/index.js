@@ -42,7 +42,7 @@ const Actions = styled.div`
 
 type Props = {
   isEditable: boolean,
-  status: $Keys<typeof statusType>,
+  status: $Values<typeof statusType>,
   publishTime: ?number,
   onPublish: Function,
   onHide: Function,

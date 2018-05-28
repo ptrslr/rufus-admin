@@ -50,7 +50,7 @@ type Props = {
 type State = {
   isEditing: boolean,
   value: string,
-  selectValue: $Keys<typeof role>,
+  selectValue: $Values<typeof role>,
 };
 
 class TeamListingItem extends React.Component<Props, State> {

@@ -30,24 +30,15 @@ const StyledLink = styled(Link)`
 `;
 
 type Props = {
-  user: ?firebaseui.User,
-  userRole: ?$Keys<typeof role>,
+  name: string,
+  role: $Values<typeof role>,
+  image: string,
 };
 const Account = (props: Props) => {
-  let name = null;
-  let role = null;
-  let image = null;
-
-  if (props.user != null) {
-    name = props.user.displayName ? props.user.displayName : props.user.email;
-    role = props.userRole;
-    image = props.user.photoURL;
-  }
-
   return (
     <StyledLink to="/account">
-      <Loader isLoading={!props.user} size="2.25rem">
-        <AvatarBox name={name} title={role} image={image} />
+      <Loader isLoading={!props.role} size="2.25rem">
+        <AvatarBox name={props.name} title={props.role} image={props.image} />
       </Loader>
     </StyledLink>
   );

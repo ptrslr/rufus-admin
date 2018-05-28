@@ -10,8 +10,10 @@ import moment from 'moment';
 import Button from '../Button';
 import { labelStyles } from '../Label';
 import Icon from '../Icon';
+import StatusLabel from '../StatusLabel';
 
 import icons from '../../constants/icons';
+import status from '../../constants/status';
 import { colors } from '../../constants/theme';
 import type { Post, Posts, Categories } from '../../utils/types';
 import { isScheduled, isPublished, isHidden, isDraft } from '../../utils';
@@ -19,6 +21,15 @@ import { isScheduled, isPublished, isHidden, isDraft } from '../../utils';
 const StyledTable = styled(Table)`
   .ReactVirtualized__Table__Grid {
     outline: none;
+  }
+
+  .ReactVirtualized__Table__headerColumn,
+  .ReactVirtualized__Table__rowColumn {
+    margin-right: 1rem;
+
+    &:first-child {
+      margin-left: 2rem;
+    }
   }
 
   .ReactVirtualized__Table__headerColumn {
@@ -45,6 +56,7 @@ const Title = styled.strong`
     }
   }
 `;
+
 type Props = {
   posts: Posts,
   keys: Array<string>,
@@ -65,7 +77,7 @@ const PostListing = (props: Props) => {
           height={height}
           rowCount={rowCount}
           rowGetter={({ index }) => posts[keys[index]]}
-          rowHeight={50}
+          rowHeight={64}
           width={width}
         >
           <Column
@@ -73,8 +85,6 @@ const PostListing = (props: Props) => {
             label="Title"
             dataKey="title"
             width={100}
-            style={{ marginLeft: 0 }}
-            headerStyle={{ marginLeft: 0 }}
             cellRenderer={data => {
               const id = keys[data.rowIndex];
               return (
@@ -105,32 +115,13 @@ const PostListing = (props: Props) => {
               const publishTime = posts[id].publishTime;
 
               if (isScheduled(status, publishTime, now)) {
-                return (
-                  <div>
-                    <Icon name={icons.CLOCK} opticalAlign={true} />&thinsp;
-                    scheduled
-                  </div>
-                );
+                return <StatusLabel status="scheduled" />;
               } else if (isPublished(status, publishTime, now)) {
-                return (
-                  <div>
-                    <Icon name={icons.VISIBILITY} opticalAlign={true} />&thinsp;
-                    published
-                  </div>
-                );
+                return <StatusLabel status={status} />;
               } else if (isHidden(status)) {
-                return (
-                  <div>
-                    <Icon name={icons.VISIBILITY_OFF} opticalAlign={true} />&thinsp;
-                    hidden
-                  </div>
-                );
+                return <StatusLabel status={status} />;
               } else {
-                return (
-                  <div>
-                    <Icon name={icons.EDIT} opticalAlign={true} />&thinsp; draft
-                  </div>
-                );
+                return <StatusLabel status={status} />;
               }
             }}
           />

@@ -18,7 +18,7 @@ import { isScheduled, isPublished, isHidden, isDraft } from '../utils';
 import { fetchPosts, fetchCategories } from '../api';
 
 type Props = {
-  status?: $Keys<typeof status>,
+  status?: $Values<typeof status>,
   scheduled?: boolean,
 };
 type State = {
@@ -28,8 +28,6 @@ type State = {
 };
 
 class Posts extends React.Component<Props, State> {
-  firebaseRef: ?Object;
-  firebaseCallback: ?Function;
   _isMounted: ?boolean;
 
   constructor(props: Props) {
@@ -136,7 +134,7 @@ class Posts extends React.Component<Props, State> {
     return (
       <Page>
         <PageHeader title="Posts" menu={menu} actions={actions} />
-        <PageBody>
+        <PageBody padding="2rem 0 0">
           <Loader isLoading={this.state.isLoading}>
             <PostListing
               posts={this.state.posts}

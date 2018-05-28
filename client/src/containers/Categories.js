@@ -43,7 +43,7 @@ type State = {
   isSaving: boolean,
   isCreating: boolean,
   isModalOpen: boolean,
-  userRole: $Keys<typeof role>,
+  userRole: $Values<typeof role>,
   items: Object,
   keys: Array<string>,
   deleteIndex?: ?number,

@@ -49,13 +49,13 @@ const Footer = styled.div`
 
 type Props = {
   isEditable: boolean,
-  status: $Keys<typeof status>,
+  status: $Values<typeof status>,
   featured: boolean,
   category: ?string,
   categoryOptions: ?SelectOptions,
   author: ?string,
   authorName: ?string,
-  authorRole: ?$Keys<typeof role>,
+  authorRole: ?$Values<typeof role>,
   authorImage: ?string,
   onFeatureChange: Function,
   onCategoryChange: Function,

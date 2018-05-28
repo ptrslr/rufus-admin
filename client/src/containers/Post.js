@@ -55,7 +55,7 @@ const LayoutMain = styled.main`
 `;
 type Props = {
   user: Object,
-  userRole?: ?$Keys<typeof role>,
+  userRole?: ?$Values<typeof role>,
   history: Object,
   match: Object,
 };
@@ -71,12 +71,12 @@ type State = {
   titleState: EditorState,
   subtitleState: EditorState,
   contentState: EditorState,
-  status: $Keys<typeof status>,
+  status: $Values<typeof status>,
   featured: boolean,
   categoryOptions: ?SelectOptions,
   category: ?string,
   author: Object,
-  authorRole: ?$Keys<typeof role>,
+  authorRole: ?$Values<typeof role>,
   publishType: string,
   publishTime: ?number,
   datetimeValue: number,

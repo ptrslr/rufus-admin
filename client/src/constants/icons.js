@@ -35,6 +35,7 @@ const icons = {
   PLUS: 'Plus',
   POLL: 'Poll',
   POSTS: 'Posts',
+  POWER: 'Power',
   REMOVE: 'Remove',
   REORDER: 'Reorder',
   STAR: 'Star',

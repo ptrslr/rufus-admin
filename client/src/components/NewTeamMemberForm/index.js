@@ -35,14 +35,10 @@ type Props = {
   displayName: string,
   password: string,
   repeatPassword: string,
-  role: $Keys<typeof role>,
+  role: $Values<typeof role>,
 };
 
 const options = [
-  {
-    value: role.ADMIN,
-    label: role.ADMIN,
-  },
   {
     value: role.EDITOR,
     label: role.EDITOR,

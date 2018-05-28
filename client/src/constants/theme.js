@@ -20,14 +20,28 @@ export const white = '#fff';
 export const black = grays[9];
 
 export const blue = '#07c';
+export const washedBlue = '#e4f0f9';
+
 export const red = '#B71C1C';
+export const washedRed = '#faeaeb';
+
+export const washedGreen = '#e3f9ec';
+
+export const yellow = '#ffeb3b';
+export const washedYellow = '#fffacc';
+
 export const primary = black;
 
 export const colors = {
   white,
   black,
   blue,
+  washedBlue,
   red,
+  washedRed,
+  washedGreen,
+  yellow,
+  washedYellow,
   primary,
   grays,
 };

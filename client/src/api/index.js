@@ -22,6 +22,7 @@ export const postsRef = rootRef.child('posts');
 export const pollsRef = rootRef.child('polls');
 export const categoriesRef = rootRef.child('categories');
 export const categoryKeysRef = rootRef.child('categoryKeys');
+export const pagesRef = rootRef.child('pages');
 export const teamRef = rootRef.child('team');
 
 export const authenticate = async (params = {}) => {
@@ -210,6 +211,70 @@ export const deleteCategory = async (id: string, keys: Array<string>) => {
 };
 
 /*
+  PAGES
+ */
+export const fetchPages = async () => {
+  const pages = (await pagesRef.once('value')).val();
+
+  return pages;
+};
+export const fetchPage = async (pageId: string) => {
+  const pageRef = rootRef.child(`/pages/${pageId}`);
+  const pageData = (await pageRef.once('value')).val();
+
+  return pageData;
+};
+
+export const fetchPageContent = async (pageId: string) => {
+  const contentRef = rootRef.child(`/pageContents/${pageId}`);
+  const contentData = (await contentRef.once('value')).val();
+
+  return JSON.parse(contentData);
+};
+
+export const createPage = (page: Page): Promise<string> => {
+  // const contentsRef = rootRef.child('postContents');
+
+  const pageId = pagesRef.push().key;
+
+  const { title, subtitle, content } = page;
+  const contentStr = JSON.stringify(content);
+
+  const updates = {};
+  updates[`pages/${pageId}`] = {
+    title,
+    subtitle,
+  };
+  updates[`pageContents/${pageId}`] = contentStr;
+
+  return rootRef.update(updates).then(() => {
+    return pageId;
+  });
+};
+
+export const updatePage = (pageId: string, page: Page) => {
+  const { content, ...pageUpdates } = page;
+
+  const updates = {};
+  updates[`pages/${pageId}`] = pageUpdates;
+
+  if (content) {
+    const contentStr = JSON.stringify(content);
+    updates[`pageContents/${pageId}`] = contentStr;
+  }
+
+  return rootRef.update(updates);
+};
+
+export const deletePage = (pageId: string) => {
+  const updates = {};
+  updates[`pages/${pageId}`] = null;
+  updates[`pageContents/${pageId}`] = null;
+
+  return rootRef.update(updates);
+};
+
+/*
   TEAM
  */
 export const fetchTeam = async () => {
@@ -251,7 +316,7 @@ export const createTeamMember = async (
   email: string,
   password: string,
   displayName: string,
-  role: $Keys<typeof role>
+  role: $Values<typeof role>
 ) => {
   try {
     const params = await authenticate();
