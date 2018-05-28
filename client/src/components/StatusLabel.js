@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   display: inline-block;
   padding: 0.375rem 0.5rem;
   border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, .1);
   color: #004d84;
   background: #fbf1a9;
 

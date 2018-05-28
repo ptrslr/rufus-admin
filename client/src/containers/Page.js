@@ -259,7 +259,10 @@ class Page extends React.Component<Props, State> {
           value="Save"
           iconLeft={icons.CHECK}
           onClick={this.savePage}
-          disabled={this.state.isLoading}
+          disabled={
+            this.state.isLoading ||
+            !this.state.titleState.getCurrentContent().hasText()
+          }
         />
       ),
     ];

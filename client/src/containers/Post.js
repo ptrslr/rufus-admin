@@ -290,19 +290,25 @@ class Post extends React.Component<Props, State> {
     const post: PostType = this.mapStateToPost();
     const poll = this.pollRef.current.onSavePost();
 
-    if (postId) {
-      await updatePost(postId, post, poll);
-    } else {
-      const newPostId = await createPost(post, poll);
+    try {
+      if (postId) {
+        await updatePost(postId, post, poll);
+      } else {
+        const newPostId = await createPost(post, poll);
+
+        this.setState({
+          postId: newPostId,
+        });
+      }
 
       this.setState({
-        postId: newPostId,
+        isSaving: false,
+      });
+    } catch (err) {
+      this.setState({
+        isSaving: false,
       });
     }
-
-    this.setState({
-      isSaving: false,
-    });
   };
 
   closeModal = () => {
@@ -513,7 +519,10 @@ class Post extends React.Component<Props, State> {
           value="Save"
           iconLeft={icons.CHECK}
           onClick={this.savePost}
-          disabled={this.state.isLoading}
+          disabled={
+            this.state.isLoading ||
+            !this.state.titleState.getCurrentContent().hasText()
+          }
         />
       ),
     ];

@@ -90,6 +90,7 @@ export const createPost = (post: Post, poll: Poll = null): Promise<string> => {
     category,
     publishTime = null,
   } = post;
+
   const contentStr = JSON.stringify(content);
 
   const updates = {};

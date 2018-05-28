@@ -97,6 +97,7 @@ type Role extends String {
 }
 
 type Post {
+  validate() { this.title.length > 0 && this.title.length <= 128 && this.subtitle.length <= 256}
   title: String,
   subtitle: String | Null,
   author: String,
@@ -111,12 +112,15 @@ type Post {
 // }
 
 type PollOption {
+  validate() { this.value.length > 0 && this.value.length <= 128 }
+
   id: String,
   value: String,
   voteCount: Number
 }
 
 type Poll {
+  validate() { this.question.length > 0 && this.question.length <= 128 }
   question: String,
   options: Any // PollOption[] not working for some reason
 }
@@ -125,10 +129,12 @@ type User {
 }
 
 type Category {
+  validate() { this.name.length > 0 && this.name.length <= 32 }
   name: String
 }
 
 type Page {
+  validate() { this.title.length > 0 && this.title.length <= 128 && this.subtitle.length <= 256 }
   title: String,
   subtitle: String | Null,
 }
