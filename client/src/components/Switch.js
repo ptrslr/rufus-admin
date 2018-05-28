@@ -16,16 +16,10 @@ const StyledIcon = styled(Icon)`
 const uncheckedIcon = <StyledIcon name={icons.CLOSE} />;
 const checkedIcon = <StyledIcon name={icons.CHECK} />;
 
-type Props = {
-  id: string,
-  checked: boolean,
-  onChange: Function,
-};
+type Props = {};
 const Switch = (props: Props) => {
   return (
     <ReactSwitch
-      onChange={props.onChange}
-      checked={props.checked}
       activeBoxShadow={`0 0 0 2px ${rgba(colors.grays[5], 0.75)}`}
       offColor={colors.grays[3]}
       onColor={colors.primary}
@@ -33,7 +27,7 @@ const Switch = (props: Props) => {
       checkedIcon={checkedIcon}
       width={48}
       height={24}
-      id={props.id}
+      {...props}
     />
   );
 };

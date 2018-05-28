@@ -83,6 +83,7 @@ const PostSidebar = (props: Props) => {
             id="featured"
             checked={props.featured}
             onChange={props.onFeaturedChange}
+            disabled={!props.isEditable}
           />
         </FeaturedItem>
         <Item>
