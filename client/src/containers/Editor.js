@@ -103,7 +103,8 @@ type State = {
   isImageModalOpen: boolean,
   isVideoModalOpen: boolean,
   image: ?Object,
-  videoURL: string,
+  imageURL: ?string,
+  videoURL: ?string,
 };
 
 class Editor extends React.Component<Props, State> {

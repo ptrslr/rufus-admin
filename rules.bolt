@@ -42,6 +42,14 @@ path /postContents/{postId} is String {
   write() { isSigned() && isPostAuthor(postId) }
 }
 
+// postContentsHTML
+path /postContentsHTML {
+  read() { isSigned() }
+  write() { isSigned() && (isAdmin() || isEditor()) }
+}
+path /postContentsHTML/{postId} is String {
+  write() { isSigned() && isPostAuthor(postId) }
+}
 // polls
 path /polls {
   read() { isSigned() }
@@ -67,6 +75,7 @@ path /pageContents {
   write() { isSigned() && (isAdmin()) }
 }
 path /pageContents/{pageId} is String {}
+
 
 // team
 path /team {

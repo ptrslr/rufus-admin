@@ -63,6 +63,14 @@
         ".write": "auth != null && newData.parent().parent().child('posts/' + $postId + '/author').val() == auth.uid"
       }
     },
+    "postContentsHTML": {
+      ".read": "auth != null",
+      ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",
+      "$postId": {
+        ".validate": "newData.isString()",
+        ".write": "auth != null && newData.parent().parent().child('posts/' + $postId + '/author').val() == auth.uid"
+      }
+    },
     "polls": {
       ".read": "auth != null",
       ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",

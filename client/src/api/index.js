@@ -84,6 +84,7 @@ export const createPost = (post: Post, poll: Poll = null): Promise<string> => {
     title,
     subtitle,
     content,
+    contentHTML,
     author,
     status,
     featured,
@@ -106,6 +107,7 @@ export const createPost = (post: Post, poll: Poll = null): Promise<string> => {
     publishTime,
   };
   updates[`postContents/${postId}`] = contentStr;
+  updates[`postContentsHTML/${postId}`] = contentHTML;
   updates[`polls/${postId}`] = poll;
 
   return rootRef.update(updates).then(() => {
@@ -114,7 +116,7 @@ export const createPost = (post: Post, poll: Poll = null): Promise<string> => {
 };
 
 export const updatePost = (postId: string, post: Post, poll: Poll = null) => {
-  const { content, ...postUpdates } = post;
+  const { content, contentHTML, ...postUpdates } = post;
 
   const updates = {};
   updates[`posts/${postId}`] = postUpdates;
@@ -123,6 +125,11 @@ export const updatePost = (postId: string, post: Post, poll: Poll = null) => {
     const contentStr = JSON.stringify(content);
     updates[`postContents/${postId}`] = contentStr;
   }
+
+  if (contentHTML) {
+    updates[`postContentsHTML/${postId}`] = contentHTML;
+  }
+
   if (poll) {
     updates[`polls/${postId}`] = poll;
   }
@@ -136,6 +143,7 @@ export const deletePost = (postId: string) => {
   const updates = {};
   updates[`posts/${postId}`] = null;
   updates[`postContents/${postId}`] = null;
+  updates[`postContentsHTML/${postId}`] = null;
   updates[`polls/${postId}`] = null;
 
   return rootRef.update(updates);
