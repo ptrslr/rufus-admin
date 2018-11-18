@@ -14,7 +14,7 @@
     "draft-js-plugins-editor": "^2.0.8",
     "draft-js-video-plugin": "^2.0.1",
     "eslint": "^4.19.1",
-    "firebase": "^5.0.2",
+    "firebase": "^5.5.8",
     "firebaseui": "^3.0.0",
     "flow": "^0.2.3",
     "flow-bin": "^0.69.0",
