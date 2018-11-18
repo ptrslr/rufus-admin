@@ -143,7 +143,7 @@ const PostListing = (props: Props) => {
             flexGrow={1}
             label="Featured"
             dataKey="featured"
-            width={100}
+            width={80}
             style={{ textAlign: 'center' }}
             headerStyle={{ textAlign: 'center' }}
             cellRenderer={data => {
@@ -153,6 +153,22 @@ const PostListing = (props: Props) => {
                 // <Icon name={icons.STAR_OUTLINE} />
                 ''
               );
+            }}
+          />
+          <Column
+            flexGrow={1}
+            label="Paid"
+            dataKey="paid"
+            width={50}
+            style={{ textAlign: 'center' }}
+            headerStyle={{ textAlign: 'center' }}
+            cellRenderer={data => {
+              return data.cellData ? (
+                <Icon name={icons.MONEY} />
+              ) : (
+                  // <Icon name={icons.STAR_OUTLINE} />
+                  ''
+                );
             }}
           />
           {/*           <Column */}

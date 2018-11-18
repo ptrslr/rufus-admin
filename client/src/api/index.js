@@ -87,6 +87,7 @@ export const createPost = (post: Post, poll: Poll = null): Promise<string> => {
     author,
     status,
     featured,
+    paid,
     category,
     publishTime = null,
   } = post;
@@ -100,6 +101,7 @@ export const createPost = (post: Post, poll: Poll = null): Promise<string> => {
     author,
     status,
     featured,
+    paid,
     category,
     publishTime,
   };

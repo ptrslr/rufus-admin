@@ -73,6 +73,7 @@ type State = {
   contentState: EditorState,
   status: $Values<typeof status>,
   featured: boolean,
+  paid: boolean,
   categoryOptions: ?SelectOptions,
   category: ?string,
   author: Object,
@@ -105,6 +106,7 @@ class Post extends React.Component<Props, State> {
       contentState: EditorState.createEmpty(),
       status: status.DRAFT,
       featured: false,
+      paid: false,
       categoryOptions: null,
       category: '',
       author: props.user,
@@ -169,6 +171,7 @@ class Post extends React.Component<Props, State> {
             subtitleState,
             status: post.status,
             featured: post.featured,
+            paid: !!post.paid,
             category: post.category,
             publishTime: post.publishTime,
             datetimeValue: post.publishTime,
@@ -265,6 +268,7 @@ class Post extends React.Component<Props, State> {
     const content = convertToRaw(this.state.contentState.getCurrentContent());
     const status = this.state.status;
     const featured = this.state.featured;
+    const paid = this.state.paid;
     const category = this.state.category ? this.state.category : null;
     const author = this.state.author.uid;
     const publishTime = this.state.publishTime ? this.state.publishTime : null;
@@ -275,6 +279,7 @@ class Post extends React.Component<Props, State> {
       content,
       status,
       featured,
+      paid,
       category,
       author,
       publishTime,
@@ -504,6 +509,10 @@ class Post extends React.Component<Props, State> {
     this.setState({ featured: checked });
   };
 
+  onPaidChange = (checked: boolean) => {
+    this.setState({ paid: checked });
+  };
+
   render() {
     const actions = [
       <InlineLoader size="1.25rem" isLoading={this.state.isSaving} />,
@@ -572,6 +581,8 @@ class Post extends React.Component<Props, State> {
                   status={this.state.status}
                   featured={this.state.featured}
                   onFeaturedChange={this.onFeaturedChange}
+                  paid={this.state.paid}
+                  onPaidChange={this.onPaidChange}
                   category={this.state.category}
                   categoryOptions={this.state.categoryOptions}
                   onCategoryChange={this.onCategoryChange}

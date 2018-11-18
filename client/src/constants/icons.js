@@ -27,6 +27,7 @@ const icons = {
   IMAGE: 'Image',
   ITALIC: 'Italic',
   LINK: 'Link',
+  MONEY: 'Money',
   MOVE_VERTICAL: 'MoveVertical',
   OL: 'Ol',
   PAGE: 'Page',

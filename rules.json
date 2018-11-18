@@ -6,7 +6,7 @@
       ".read": "auth != null",
       ".write": "auth != null && auth.token.role == 'admin'",
       "$categoryId": {
-        ".validate": "newData.hasChildren(['name'])",
+        ".validate": "newData.hasChildren(['name']) && newData.child('name').val().length > 0 && newData.child('name').val().length <= 32",
         "name": {
           ".validate": "newData.isString()"
         },
@@ -24,7 +24,7 @@
       ".read": "auth != null",
       ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",
       "$postId": {
-        ".validate": "newData.hasChildren(['title', 'author', 'status', 'featured'])",
+        ".validate": "newData.hasChildren(['title', 'author', 'status', 'featured', 'paid']) && newData.child('title').val().length > 0 && newData.child('title').val().length <= 128 && newData.child('subtitle').val().length <= 256",
         "title": {
           ".validate": "newData.isString()"
         },
@@ -38,6 +38,9 @@
           ".validate": "newData.isString() && (newData.val() == 'published' || newData.val() == 'draft' || newData.val() == 'hidden')"
         },
         "featured": {
+          ".validate": "newData.isBoolean()"
+        },
+        "paid": {
           ".validate": "newData.isBoolean()"
         },
         "category": {
@@ -64,7 +67,7 @@
       ".read": "auth != null",
       ".write": "auth != null && (auth.token.role == 'admin' || auth.token.role == 'editor')",
       "$postId": {
-        ".validate": "newData.hasChildren(['question', 'options'])",
+        ".validate": "newData.hasChildren(['question', 'options']) && newData.child('question').val().length > 0 && newData.child('question').val().length <= 128",
         "question": {
           ".validate": "newData.isString()"
         },
@@ -81,7 +84,7 @@
       ".read": "auth != null",
       ".write": "auth != null && auth.token.role == 'admin'",
       "$pageId": {
-        ".validate": "newData.hasChildren(['title'])",
+        ".validate": "newData.hasChildren(['title']) && newData.child('title').val().length > 0 && newData.child('title').val().length <= 128 && newData.child('subtitle').val().length <= 256",
         "title": {
           ".validate": "newData.isString()"
         },

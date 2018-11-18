@@ -103,6 +103,7 @@ type Post {
   author: String,
   status: Status,
   featured: Boolean,
+  paid: Boolean,
   category: String | Null,
   publishTime: Number | Null,
 }

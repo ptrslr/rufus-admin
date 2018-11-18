@@ -28,7 +28,7 @@
   "homepage": "https://github.com/ptrslr/rufus-admin#readme",
   "description": "",
   "dependencies": {
-    "babel-eslint": "^8.2.2",
+    "babel-eslint": "^8.2.3",
     "co": "^4.6.0",
     "co-prompt": "^1.0.0",
     "commander": "^2.15.1",

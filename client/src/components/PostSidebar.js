@@ -32,13 +32,13 @@ const Body = styled.div`
 const Item = styled.div`
   padding: 0.5rem 0;
 `;
-const FeaturedItem = styled(Item)`
+const HorizontalItem = styled(Item)`
   display: flex;
   padding-top: 1rem;
   padding-bottom: 0.125rem;
   align-items: center;
 `;
-const FeaturedLabel = styled(Label)`
+const HorizontalLabel = styled(Label)`
   flex: 1 1 auto;
   margin: 0;
 `;
@@ -51,6 +51,7 @@ type Props = {
   isEditable: boolean,
   status: $Values<typeof status>,
   featured: boolean,
+  paid: boolean,
   category: ?string,
   categoryOptions: ?SelectOptions,
   author: ?string,
@@ -77,15 +78,24 @@ const PostSidebar = (props: Props) => {
       />
 
       <Body>
-        <FeaturedItem>
-          <FeaturedLabel htmlFor="featured">Featured:</FeaturedLabel>
+        <HorizontalItem>
+          <HorizontalLabel htmlFor="featured">Featured:</HorizontalLabel>
           <Switch
             id="featured"
             checked={props.featured}
             onChange={props.onFeaturedChange}
             disabled={!props.isEditable}
           />
-        </FeaturedItem>
+        </HorizontalItem>
+        <HorizontalItem>
+          <HorizontalLabel htmlFor="paid">Paid:</HorizontalLabel>
+          <Switch
+            id="paid"
+            checked={props.paid}
+            onChange={props.onPaidChange}
+            disabled={!props.isEditable}
+          />
+        </HorizontalItem>
         <Item>
           <Label for="category">Category:</Label>
           <Select
