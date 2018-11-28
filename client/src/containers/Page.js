@@ -6,6 +6,8 @@ import {
   convertFromRaw,
   ContentState,
 } from 'draft-js';
+import { stateToHTML } from 'draft-js-export-html';
+import getVideoId from 'get-video-id';
 import styled from 'styled-components';
 
 import {
@@ -177,16 +179,47 @@ class Page extends React.Component<Props, State> {
     this.setState({ contentState });
 
   mapStateToPage = (): PostType => {
+    let HTMLOptions = {
+      entityStyleFn: (entity) => {
+        const entityType = entity.get('type').toLowerCase();
+        if (entityType === 'draft-js-video-plugin-video') {
+          const data = entity.getData();
+          const { id, service } = getVideoId(data.src);
+
+          let src = '';
+          if (service === 'youtube') {
+            src = `https://www.youtube.com/embed/${id}`;
+          } else if (service === 'vimeo') {
+            src = `https://player.vimeo.com/video/${id}`
+          }
+
+          return {
+            element: 'iframe',
+            attributes: {
+              src,
+              frameborder: 0,
+              allowfullscreen: true
+            },
+            style: {
+              // Put styles here...
+            },
+          };
+        }
+      },
+    }
+
     const title = this.state.titleState.getCurrentContent().getPlainText();
     const subtitle = this.state.subtitleState
       .getCurrentContent()
       .getPlainText();
     const content = convertToRaw(this.state.contentState.getCurrentContent());
+    const contentHTML = stateToHTML(this.state.contentState.getCurrentContent());
 
     return {
       title,
       subtitle,
       content,
+      contentHTML
     };
   };
 

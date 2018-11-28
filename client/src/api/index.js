@@ -250,7 +250,7 @@ export const createPage = (page: Page): Promise<string> => {
 
   const pageId = pagesRef.push().key;
 
-  const { title, subtitle, content } = page;
+  const { title, subtitle, content, contentHTML } = page;
   const contentStr = JSON.stringify(content);
 
   const updates = {};
@@ -259,6 +259,7 @@ export const createPage = (page: Page): Promise<string> => {
     subtitle,
   };
   updates[`pageContents/${pageId}`] = contentStr;
+  updates[`pageContentsHTML/${pageId}`] = contentHTML;
 
   return rootRef.update(updates).then(() => {
     return pageId;
@@ -266,7 +267,7 @@ export const createPage = (page: Page): Promise<string> => {
 };
 
 export const updatePage = (pageId: string, page: Page) => {
-  const { content, ...pageUpdates } = page;
+  const { content, contentHTML, ...pageUpdates } = page;
 
   const updates = {};
   updates[`pages/${pageId}`] = pageUpdates;
@@ -276,6 +277,10 @@ export const updatePage = (pageId: string, page: Page) => {
     updates[`pageContents/${pageId}`] = contentStr;
   }
 
+  if (contentHTML) {
+    updates[`pageContentsHTML/${pageId}`] = contentHTML;
+  }
+
   return rootRef.update(updates);
 };
 
@@ -283,6 +288,7 @@ export const deletePage = (pageId: string) => {
   const updates = {};
   updates[`pages/${pageId}`] = null;
   updates[`pageContents/${pageId}`] = null;
+  updates[`pageContentsHTML/${pageId}`] = null;
 
   return rootRef.update(updates);
 };
