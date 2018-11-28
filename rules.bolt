@@ -76,6 +76,13 @@ path /pageContents {
 }
 path /pageContents/{pageId} is String {}
 
+// pageContentsHTML
+path /pageContentsHTML {
+  read() { isSigned() }
+  write() { isSigned() && (isAdmin()) }
+}
+path /pageContentsHTML/{pageId} is String {}
+
 
 // team
 path /team {
@@ -114,6 +121,7 @@ type Post {
   featured: Boolean,
   paid: Boolean,
   category: String | Null,
+  image: String | Null,
   publishTime: Number | Null,
 }
 

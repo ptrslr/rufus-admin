@@ -46,6 +46,9 @@
         "category": {
           ".validate": "newData.isString()"
         },
+        "image": {
+          ".validate": "newData.isString()"
+        },
         "publishTime": {
           ".validate": "newData.isNumber()"
         },
@@ -105,6 +108,13 @@
       }
     },
     "pageContents": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.role == 'admin'",
+      "$pageId": {
+        ".validate": "newData.isString()"
+      }
+    },
+    "pageContentsHTML": {
       ".read": "auth != null",
       ".write": "auth != null && auth.token.role == 'admin'",
       "$pageId": {

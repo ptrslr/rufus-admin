@@ -80,6 +80,7 @@ type State = {
   category: ?string,
   author: Object,
   authorRole: ?$Values<typeof role>,
+  image: ?string,
   publishType: string,
   publishTime: ?number,
   datetimeValue: number,
@@ -116,6 +117,7 @@ class Post extends React.Component<Props, State> {
       publishType: 'publish',
       publishTime: null,
       datetimeValue: Date.now(),
+      image: "",
     };
 
     this.pollRef = React.createRef();
@@ -175,6 +177,7 @@ class Post extends React.Component<Props, State> {
             featured: post.featured,
             paid: !!post.paid,
             category: post.category,
+            image: post.image,
             publishTime: post.publishTime,
             datetimeValue: post.publishTime,
           });
@@ -262,6 +265,18 @@ class Post extends React.Component<Props, State> {
     });
   };
 
+  onImageChange = (e: SyntheticEvent<HTMLInputElement>) => {
+    this.setState({
+      image: e.currentTarget.value,
+    });
+  }
+
+  onImageRemove = (e: SyntheticEvent<HTMLButtonElement>) => {
+    this.setState({
+      image: ""
+    });
+  }
+
   mapStateToPost = (): PostType => {
     let HTMLOptions = {
       entityStyleFn: (entity) => {
@@ -303,6 +318,7 @@ class Post extends React.Component<Props, State> {
     const paid = this.state.paid;
     const category = this.state.category ? this.state.category : null;
     const author = this.state.author.uid;
+    const image = this.state.image;
     const publishTime = this.state.publishTime ? this.state.publishTime : null;
 
     return {
@@ -315,6 +331,7 @@ class Post extends React.Component<Props, State> {
       paid,
       category,
       author,
+      image,
       publishTime,
     };
   };
@@ -623,6 +640,9 @@ class Post extends React.Component<Props, State> {
                   authorName={authorName}
                   authorRole={authorRole}
                   authorImage={authorImage}
+                  image={this.state.image}
+                  onImageChange={this.onImageChange}
+                  onImageRemove={this.onImageRemove}
                   publishTime={this.state.publishTime}
                   onDelete={this.onDelete}
                   onPublish={this.onPublish}

@@ -1,14 +1,17 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
+import { rgba } from 'polished';
 
 import Status from './Status';
 import Select from './Select';
+import Input from './Input';
 import type { SelectOptions } from './Select';
 import Button from './Button';
 import AvatarBox from './AvatarBox';
 import Label from './Label';
 import Switch from './Switch';
+import Icon from './Icon';
 import Poll from './../containers/Poll';
 
 import status from '../constants/status';
@@ -43,6 +46,74 @@ const HorizontalLabel = styled(Label)`
   margin: 0;
 `;
 
+const ImageWrapper = styled.div`
+  position: relative;
+  margin-top: .5rem;
+  border-radius: 3px;
+  overflow: hidden;
+  background-color: ${colors.grays[1]}
+
+  &::before {
+    content: '';
+    display: block;
+    padding-bottom: 56.25%;
+  }
+`
+const Image = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+
+  &::after {
+    content: "Oops, seems like that URL is not working!";
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+
+  }
+`
+
+const ImageRemove = styled.button`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  border: none;
+  opacity: 0;
+
+  background: ${rgba(colors.black, .75)};
+  color: ${colors.white};
+
+  cursor: pointer;
+  transition: opacity 250ms ease-out;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+`
+
+const ImageRemoveIcon = styled(Icon)`
+  margin-top: -.2em;
+  margin-right: .25rem;
+`
+
+
 const Footer = styled.div`
   padding: 1rem;
 `;
@@ -58,6 +129,9 @@ type Props = {
   authorName: ?string,
   authorRole: ?$Values<typeof role>,
   authorImage: ?string,
+  image: ?string,
+  onImageChange: Function,
+  onImageRemove: Function,
   onFeatureChange: Function,
   onCategoryChange: Function,
   onDelete: Function,
@@ -113,6 +187,27 @@ const PostSidebar = (props: Props) => {
             title={props.authorRole}
             image={props.authorImage}
           />
+        </Item>
+        <Item>
+          <Label for="image">Post image:</Label>
+          <Input
+            id="image"
+            name="image"
+            onChange={props.onImageChange}
+            placeholder="Image URL"
+            type="text"
+            value={props.image}
+          />
+          { props.image && props.image.length && (
+            <ImageWrapper>
+              <Image src={props.image} />
+              <ImageRemove onClick={props.onImageRemove}>
+                <ImageRemoveIcon className="icon" name={icons.REMOVE} />
+                Remove
+              </ImageRemove>
+            </ImageWrapper>
+          )}
+
         </Item>
         <Item>
           <Label>Poll:</Label>

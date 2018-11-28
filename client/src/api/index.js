@@ -90,6 +90,7 @@ export const createPost = (post: Post, poll: Poll = null): Promise<string> => {
     featured,
     paid,
     category,
+    image,
     publishTime = null,
   } = post;
 
@@ -104,6 +105,7 @@ export const createPost = (post: Post, poll: Poll = null): Promise<string> => {
     featured,
     paid,
     category,
+    image,
     publishTime,
   };
   updates[`postContents/${postId}`] = contentStr;
