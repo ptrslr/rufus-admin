@@ -4,8 +4,8 @@
 
 // root
 path / {
-  read() { isSigned() && isAdmin() }
-  write() { isSigned() && isAdmin() }
+  read() { isSigned()}
+  write() { isSigned()}
 }
 
 // categories
@@ -144,6 +144,11 @@ type Poll {
 }
 type User {
   pollVotes: Map<String, Number> | Null
+  credits: Number | Null
+  readArticles: Any
+  staticPage: Any
+  boughtArticles: Any
+  savedArticles: Any
 }
 
 type Category {
